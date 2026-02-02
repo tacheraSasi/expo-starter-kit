@@ -79,7 +79,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 {(userInfo as any)?.fullName || (userInfo as any)?.name || 'Rider'}
               </Text>
               <Text style={[styles.userEmail, { color: theme.isDark ? 'rgba(26,26,26,0.8)' : 'rgba(255,255,255,0.8)' }]} numberOfLines={1}>
-                {(userInfo as any)?.email || 'rider@flit.com'}
+                {(userInfo as any)?.email || 'rider@expo.com'}
               </Text>
             </View>
           </View>

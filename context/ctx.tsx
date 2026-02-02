@@ -50,7 +50,7 @@ interface AuthContextType {
 
   // Utility
   refreshUserData: () => Promise<void>;
-  
+
   // Development helper
   signInWithDummyUser: () => void;
 }
@@ -62,17 +62,17 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   isOnboarded: false,
   isOnboardingLoading: false,
-  completeOnboarding: () => {},
-  signIn: async () => {},
-  signUp: async () => {},
-  signOut: async () => {},
-  sendVerificationEmail: async () => {},
-  verifyAccount: async () => {},
-  forgotPassword: async () => {},
-  verifyResetCode: async () => {},
-  resetPassword: async () => {},
-  refreshUserData: async () => {},
-  signInWithDummyUser: () => {},
+  completeOnboarding: () => { },
+  signIn: async () => { },
+  signUp: async () => { },
+  signOut: async () => { },
+  sendVerificationEmail: async () => { },
+  verifyAccount: async () => { },
+  forgotPassword: async () => { },
+  verifyResetCode: async () => { },
+  resetPassword: async () => { },
+  refreshUserData: async () => { },
+  signInWithDummyUser: () => { },
 });
 
 // Use this hook to access the user info.
@@ -257,7 +257,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const dummyUser: User = {
       id: 1,
       name: "Demo User",
-      email: "demo@flit.com",
+      email: "demo@expo.com",
       display_name: "Demo User",
       role: "rider",
       is_active: true,
@@ -278,7 +278,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     setIsAuthenticated(true);
     setSession("authenticated");
     setOnboardingComplete();
-    
+
     router.replace("/(core)/(tabs)/ride");
   };
 

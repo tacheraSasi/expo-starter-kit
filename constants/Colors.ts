@@ -6,8 +6,8 @@ export const brandColor = "#98a75e";
 
 export const Colors = {
   tabColors: {
-    home: "#178764ff", // Flit yellow accent for ride booking
-    profile: "#98a75e", // Flit green accent for profile
+    home: "#178764ff", // expo yellow accent for ride booking
+    profile: "#98a75e", // expo green accent for profile
     feed: "#178764ff", // Spotify-like green for listening/audio
     insights: "#6366f1", // Purple for analytics/data
     "voice-memory": "#FFA726", // Amber for memories/nostalgia
@@ -52,7 +52,7 @@ export const Colors = {
     success: "#30d158",
     warning: "#ff9f0a",
     error: "#ff453a",
-    // Button colors - flit accent color
+    // Button colors - expo accent color
     buttonBackground: "#ad8d19ff",
     buttonText: "#000000",
     // Input colors - dark inputs with white text

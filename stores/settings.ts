@@ -137,7 +137,7 @@ export const useSettingsStore = create<SettingsState>()(
       },
     }),
     {
-      name: "flit-rider-settings",
+      name: "expo-rider-settings",
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => {
         // Only persist settings, not functions

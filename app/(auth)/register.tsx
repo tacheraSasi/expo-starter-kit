@@ -99,7 +99,7 @@ export default function Register() {
 
       // Show success message and navigate to verification
       toast.success(
-        "Welcome to flit! Please check your email for verification instructions"
+        "Welcome to expo! Please check your email for verification instructions"
       );
 
       // Navigate to login after a brief delay
@@ -151,7 +151,7 @@ export default function Register() {
                   style={styles.iconImage}
                   source={require("@/assets/images/android/play_store_512.png")}
                 />
-                <Text style={styles.logoText}>flit</Text>
+                <Text style={styles.logoText}>expo</Text>
               </View>
 
               <Text style={styles.title}>Create Account</Text>

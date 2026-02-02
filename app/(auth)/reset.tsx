@@ -111,7 +111,7 @@ export default function ResetPassword() {
                   style={styles.iconImage}
                   source={require("@/assets/images/android/play_store_512.png")}
                 />
-                <Text style={styles.logoText}>flit</Text>
+                <Text style={styles.logoText}>expo</Text>
               </View>
 
               <Text style={styles.title}>Reset Password</Text>

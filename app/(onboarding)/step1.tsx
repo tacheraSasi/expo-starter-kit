@@ -46,7 +46,7 @@ export default function Step1() {
               source={require("@/assets/images/android/play_store_512.png")}
             // source={require("@/assets/images/icon-black-and-white.png")}
             />
-            <Text style={styles.logoText}>flit</Text>
+            <Text style={styles.logoText}>expo</Text>
           </View>
 
           <View style={styles.decorativeLines}>
@@ -61,11 +61,11 @@ export default function Step1() {
           <Text style={styles.title}>
             Your Journey{"\n"}
             <Text style={styles.titleAccent}>Starts Here</Text>{"\n"}
-            with flit
+            with expo
           </Text>
 
           <Text style={styles.subtitle}>
-            Book rides seamlessly. Whether you're a guest, visitor, or need special hire vehicles - flit connects you with reliable drivers instantly.
+            Book rides seamlessly. Whether you're a guest, visitor, or need special hire vehicles - expo connects you with reliable drivers instantly.
           </Text>
         </View>
 

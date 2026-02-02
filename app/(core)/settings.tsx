@@ -418,7 +418,7 @@ export default function Settings() {
 
           <SettingItem
             title="Push Notifications"
-            subtitle="Enable notifications from flit"
+            subtitle="Enable notifications from expo"
             icon="notifications"
             rightElement={
               <Switch
@@ -696,7 +696,7 @@ export default function Settings() {
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.mutedText }]}>
-            FLIT • Special Hire Vehicle Platform © 2024
+            expo • Special Hire Vehicle Platform © 2024
           </Text>
         </View>
       </ScrollView>

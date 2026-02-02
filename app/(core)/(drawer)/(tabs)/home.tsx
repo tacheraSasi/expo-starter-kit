@@ -183,11 +183,11 @@ const VehicleTypeCard: React.FC<VehicleTypeCardProps> = ({
 
     const hasSurge = fareEstimate.surgeMultiplier > 1.0;
     const fareText = `${fareEstimate.currency} ${fareEstimate.estimatedFare.toLocaleString()}`;
-    
+
     if (hasSurge) {
       return `${fareText} (${fareEstimate.surgeMultiplier}x)`;
     }
-    
+
     return fareText;
   };
 
@@ -414,9 +414,9 @@ export default function RideScreen() {
       };
 
       const createdRide = await Api.createRide(rideData);
-      
+
       toast.success("Ride booked successfully!");
-      
+
       // Navigate to active ride screen with the ride ID
       router.push({
         pathname: "/(core)/ride/active",
@@ -436,7 +436,7 @@ export default function RideScreen() {
     setDestinationCoordinates(location.coordinates);
     setShowLocationPicker(false);
     bottomSheetRef.current?.snapToIndex(1);
-    
+
     // Fetch fare estimates for all vehicle types
     if (pickupCoordinates) {
       await fetchFareEstimates(pickupCoordinates, location.coordinates);
@@ -450,7 +450,7 @@ export default function RideScreen() {
     setIsLoadingFares(true);
     try {
       const estimates: Record<string, FareEstimate> = {};
-      
+
       // Fetch estimates for all vehicle types in parallel
       await Promise.all(
         VEHICLE_TYPES.map(async (vehicleType) => {
@@ -468,7 +468,7 @@ export default function RideScreen() {
           }
         })
       );
-      
+
       setFareEstimates(estimates);
     } catch (error) {
       console.error("Error fetching fare estimates:", error);
@@ -726,12 +726,12 @@ export default function RideScreen() {
                         </Text>
                       </Pressable> */}
                     </View>
-                    
+
                     {/* Welcome Message */}
                     <View style={[styles.welcomeCard, { backgroundColor: `${theme.primary}08`, borderColor: `${theme.primary}30` }]}>
                       <Ionicons name="information-circle-outline" size={20} color={theme.primary} style={styles.welcomeIcon} />
                       <Text style={[styles.welcomeText, { color: theme.text }]}>
-                        Start a new ride with Flit, the best special hire & ride sharing app in Tanzania.
+                        Start a new ride with expo, the best special hire & ride sharing app in Tanzania.
                       </Text>
                     </View>
                   </View>

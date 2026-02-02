@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "flit",
-    "slug": "flit",
+    "name": "expo",
+    "slug": "expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "flit",
+    "scheme": "expo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -15,7 +15,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ekilie.flit",
+      "bundleIdentifier": "com.ekilie.expo",
       "icon": "./assets/images/ios/AppIcon~ios-marketing.png",
       "infoPlist": {
         "UIBackgroundModes": [
@@ -33,7 +33,7 @@
       "playStoreIcon": "./assets/images/android/play_store_512.png",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.tach.flit",
+      "package": "com.tach.expo",
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS"
