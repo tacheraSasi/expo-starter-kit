@@ -2,7 +2,6 @@ import Colors from "@/constants/Colors";
 import { ThemeStatusBar, useCurrentTheme } from "@/context/CentralTheme";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
-import React from "react";
 import { View, StyleSheet } from "react-native";
 
 function TabBarIcon(props: {
@@ -57,11 +56,11 @@ export default function TabsLayout() {
       >
         {/* MAIN RIDE TAB */}
         <Tabs.Screen
-          name="ride"
+          name="home"
           options={{
-            title: "Ride",
+            title: "Home",
             tabBarIcon: ({ focused }) => (
-              <TabBarIcon name="map-marker" tabName="ride" focused={focused} />
+              <TabBarIcon name="home" tabName="home" focused={focused} />
             ),
           }}
         />

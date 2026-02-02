@@ -69,7 +69,7 @@ interface InfoRowProps {
   iconColor?: string;
 }
 
-const InfoRow: React.FC<InfoRowProps> = ({ icon, label, value, iconColor }) => {
+const InfoRow: React.FC<InfoRowProps> = ({ icon, label, value, iconColor }: InfoRowProps) => {
   const theme = useCurrentTheme();
 
   return (
