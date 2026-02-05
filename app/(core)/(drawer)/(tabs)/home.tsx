@@ -486,7 +486,7 @@ export default function RideScreen() {
   }, [pickupCoordinates, destinationCoordinates]);
 
   return (
-    <ScreenLayout styles={{ backgroundColor: Colors.light.background }} fullScreen>
+    <ScreenLayout styles={{ backgroundColor: Colors.light.background }} fullScreen insideTabs>
       <StatusBar style="light" translucent backgroundColor="transparent" />
       <View style={styles.container}>
         {/* Hamburger Menu Button */}

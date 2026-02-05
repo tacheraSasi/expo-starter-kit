@@ -230,7 +230,7 @@ export default function Profile() {
 
   if (!user) {
     return (
-      <ScreenLayout>
+      <ScreenLayout insideTabs>
         <View style={styles.centerContainer}>
           <View style={styles.errorContent}>
             <MaterialIcons
