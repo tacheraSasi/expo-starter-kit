@@ -455,9 +455,6 @@ class Api {
 
       // If we have a response, throw the error to be handled by the caller
       if (err.response) {
-          status: err.response.status,
-          data: err.response.data,
-        });
         throw error;
       }
 
