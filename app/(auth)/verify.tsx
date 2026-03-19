@@ -43,7 +43,6 @@ export default function Verify() {
         },
       ]);
     } catch (error) {
-      console.error("Verification failed:", error);
     }
   };
 
@@ -56,7 +55,6 @@ export default function Verify() {
     try {
       await sendVerificationEmail(email.trim());
     } catch (error) {
-      console.error("Failed to resend code:", error);
     }
   };
 

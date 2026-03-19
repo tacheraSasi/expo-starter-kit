@@ -56,7 +56,6 @@ export const usePodcasts = (): UsePodcastsReturn => {
       const trending = await Api.getTrendingPodcasts();
       setTrendingPodcasts(trending || []);
     } catch (err: any) {
-      console.error("Failed to fetch trending podcasts:", err.message);
     }
   }, []);
 
@@ -65,7 +64,6 @@ export const usePodcasts = (): UsePodcastsReturn => {
       const subscribed = await Api.getUserPodcastSubscriptions();
       setSubscribedPodcasts(subscribed || []);
     } catch (err: any) {
-      console.error("Failed to fetch subscribed podcasts:", err.message);
     }
   }, []);
 
@@ -74,7 +72,6 @@ export const usePodcasts = (): UsePodcastsReturn => {
       const episodes = await Api.getRecentPodcastEpisodes();
       setRecentEpisodes(episodes || []);
     } catch (err: any) {
-      console.error("Failed to fetch recent episodes:", err.message);
     }
   }, []);
 
@@ -146,7 +143,6 @@ export const usePodcasts = (): UsePodcastsReturn => {
         )
       );
     } catch (err: any) {
-      console.error("Failed to update progress:", err.message);
     }
   }, []);
 
@@ -160,7 +156,6 @@ export const usePodcasts = (): UsePodcastsReturn => {
         fetchRecentEpisodes(),
       ]);
     } catch (err: any) {
-      console.error("Failed to refresh:", err.message);
     } finally {
       setRefreshing(false);
     }

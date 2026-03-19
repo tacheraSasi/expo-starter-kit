@@ -72,7 +72,6 @@ const ProfileEdit: React.FC = () => {
         linkedin: userData.metadata?.linkedin || "",
       });
     } catch (error) {
-      console.error("Failed to load user data:", error);
       toast.error("Failed to load profile data");
       router.back();
     } finally {
@@ -141,7 +140,6 @@ const ProfileEdit: React.FC = () => {
       toast.success("Profile updated successfully");
       router.back();
     } catch (error) {
-      console.error("Failed to update profile:", error);
       toast.error(
         error instanceof Error ? error.message : "Failed to update profile"
       );

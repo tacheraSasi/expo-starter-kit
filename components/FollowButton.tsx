@@ -35,7 +35,6 @@ export default function FollowButton({
       const status = await Api.isFollowing(userId);
       setIsFollowing(status);
     } catch (error) {
-      console.error("Failed to check follow status:", error);
     } finally {
       setChecking(false);
     }

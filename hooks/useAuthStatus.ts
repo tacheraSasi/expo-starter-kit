@@ -36,16 +36,7 @@ export function useAuthStatus(): AuthStatusResult {
 
       setIsAuthenticated(hasTokens);
       setTokenInfo(info);
-
-      // Log token status for debugging (remove in production)
-      if (__DEV__) {
-        console.log("Auth Status Check:", {
-          isAuthenticated: hasTokens,
-          tokenInfo: info,
-        });
-      }
     } catch (error) {
-      console.error("Error checking auth status:", error);
       setIsAuthenticated(false);
       setTokenInfo(null);
     } finally {
@@ -95,11 +86,9 @@ export function useTokenExpirationMonitor(refreshThresholdMinutes = 5) {
         const info = await getTokenExpirationInfo();
         if (!info) return;
 
-        // TODO: Implement more sophisticated expiration checking
-        // For now, we rely on the existing refresh mechanism
+        // Rely on the existing refresh mechanism in API config
         setNeedsRefreshSoon(false);
       } catch (error) {
-        console.error("Error checking token expiration:", error);
       }
     };
 

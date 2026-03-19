@@ -291,7 +291,6 @@ export default function RideScreen() {
                 getCurrentLocation();
               }).catch((error) => {
                 alert.error('Error granting permission\n Please try again');
-                console.error(error);
               });
             },
           },
@@ -302,7 +301,6 @@ export default function RideScreen() {
         accuracy: Location.Accuracy.High,
       });
 
-      console.log('location', location);
       if (location) {
         setLocation(location);
         setPickupLocation(location.coords.latitude.toString() + ', ' + location.coords.longitude.toString());
@@ -311,7 +309,6 @@ export default function RideScreen() {
           longitude: location.coords.longitude,
         };
         setPickupCoordinates(coords);
-        console.log('pickupCoordinates', pickupCoordinates);
 
 
 
@@ -327,7 +324,6 @@ export default function RideScreen() {
 
       } else {
         alert.error('Error getting current location\n Please try again');
-        console.error('error');
         HapticFeedback("error");
         alert.dialog('Error', 'Error getting current location\n Please try again', [
           {
@@ -423,7 +419,6 @@ export default function RideScreen() {
         params: { rideId: createdRide.id }
       });
     } catch (error: any) {
-      console.error("Failed to book ride:", error);
       toast.error(error.message || "Failed to book ride");
       haptics.error();
     } finally {
@@ -464,14 +459,12 @@ export default function RideScreen() {
             });
             estimates[vehicleType.id] = estimate;
           } catch (error) {
-            console.error(`Failed to fetch fare for ${vehicleType.id}:`, error);
           }
         })
       );
 
       setFareEstimates(estimates);
     } catch (error) {
-      console.error("Error fetching fare estimates:", error);
       toast.error("Failed to calculate fares");
     } finally {
       setIsLoadingFares(false);

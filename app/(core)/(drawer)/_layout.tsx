@@ -24,7 +24,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       await signOut();
       router.replace('/(auth)/login');
     } catch (error) {
-      console.error('Sign out error:', error);
     } finally {
       setIsLoading(false);
     }

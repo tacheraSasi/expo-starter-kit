@@ -59,7 +59,6 @@ export default function MiniPlayer() {
   };
 
   const handlePress = () => {
-    console.log("MiniPlayer pressed - navigations diabled for now");
     // router.push("/(core)/(modals)/full-player");
   };
 

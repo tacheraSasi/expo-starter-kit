@@ -82,16 +82,13 @@ export default function PostItem({
       handlePlayComplete();
     },
     onError: (error) => {
-      console.error("Audio playback error:", error);
     },
   });
 
-  // Initialize like state from post data (you might want to check user's actual like status from backend)
+  // Initialize like state from post data
   useEffect(() => {
     setLikeCount(post.like_count || 0);
     setPlayCount(post.play_count || 0);
-    // TODO: Check if current user has liked this post
-    // setIsLiked(checkUserLikeStatus(post.id));
   }, [post.like_count, post.play_count]);
 
   // Handle recording play when audio stops or user seeks significantly
@@ -106,7 +103,6 @@ export default function PostItem({
         onPlayUpdate?.(post.id, newPlayCount);
         setHasRecordedPlay(true);
       } catch (error) {
-        console.error("Failed to record play:", error);
       }
     },
     [post.id, playCount, onPlayUpdate]
@@ -233,7 +229,6 @@ export default function PostItem({
       // Revert optimistic update on error
       setIsLiked(!newIsLiked);
       setLikeCount(likeCount);
-      console.error("Failed to like post:", error);
       toast.error("Failed to like post. Please try again.");
     } finally {
       setIsLiking(false);
@@ -260,7 +255,6 @@ export default function PostItem({
         toast.success("Post shared successfully!");
       }
     } catch (error) {
-      console.error("Error sharing post:", error);
       toast.error("Failed to share post. Please try again.");
     }
   };
@@ -268,7 +262,6 @@ export default function PostItem({
   const handleBookmark = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onBookmark?.(post);
-    // TODO: Implement actual bookmark functionality
     toast.info("Bookmark functionality coming soon!");
   };
 

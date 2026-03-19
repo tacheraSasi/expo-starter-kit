@@ -71,29 +71,24 @@ const api = (authenticate: any) => {
 let refreshTokenPromise: Promise<string | null> | null = null;
 
 async function refreshAuthToken(): Promise<string | null> {
-  router.replace("/(auth)/login");
-  // // Return existing refresh promise if one is already in progress
-  // if (refreshTokenPromise) {
-  //   return refreshTokenPromise;
-  // }
+  // Return existing refresh promise if one is already in progress
+  if (refreshTokenPromise) {
+    return refreshTokenPromise;
+  }
 
-  // refreshTokenPromise = performTokenRefresh();
-  // const result = await refreshTokenPromise;
-  // refreshTokenPromise = null; // Reset after completion
+  refreshTokenPromise = performTokenRefresh();
+  const result = await refreshTokenPromise;
+  refreshTokenPromise = null; // Reset after completion
 
-  // return result;
-  return null;
+  return result;
 }
 
 async function performTokenRefresh(): Promise<string | null> {
   try {
     const refreshToken = await authToken("refresh");
     if (!refreshToken || isJwtExpired(refreshToken)) {
-      console.warn("Refresh token is null or expired");
       return null;
     }
-
-    console.log("Attempting to refresh token...");
 
     // Use the refresh token in Authorization header as per API spec
     const response = await axios.post(
@@ -116,17 +111,16 @@ async function performTokenRefresh(): Promise<string | null> {
       refresh: refresh_token,
     });
 
-    console.log("Token refresh successful");
     return token;
   } catch (error) {
-    console.error("Token refresh failed:", error);
-
     // Clear invalid tokens to prevent repeated failed attempts
     await setAuthToken({
       access: null,
       refresh: null,
     });
 
+    // Redirect to login on failure
+    router.replace("/(auth)/login");
     return null;
   }
 }

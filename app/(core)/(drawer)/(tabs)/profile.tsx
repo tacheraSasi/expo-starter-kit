@@ -113,7 +113,6 @@ export default function Profile() {
     try {
       // API.getCurrentUser() already extracts data from {success: true, data: {...}}
       const userData = await Api.getCurrentUser();
-      console.log("User data:", userData);
 
       setUser(userData as BackendUser);
 
@@ -125,11 +124,9 @@ export default function Profile() {
           const rStats = await Api.getRideStatistics(userData.id);
           setRideStats(rStats);
         } catch (error) {
-          console.error("Failed to fetch ride statistics:", error);
         }
       }
     } catch (error) {
-      console.error("Failed to fetch user data:", error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -170,7 +167,6 @@ export default function Profile() {
             signOut();
             router.replace("/(auth)/login");
           } catch (error) {
-            console.error("Logout error:", error);
           }
         },
       },

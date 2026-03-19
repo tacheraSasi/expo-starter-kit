@@ -70,7 +70,6 @@ export function useVoiceMemos(
       const errorMessage =
         err instanceof Error ? err.message : "Failed to fetch voice memos";
       setError(errorMessage);
-      console.error("Error fetching voice memos:", err);
     } finally {
       setLoading(false);
     }
@@ -82,7 +81,6 @@ export function useVoiceMemos(
       const data = await Api.getVoiceMemoCategories();
       setCategories(data);
     } catch (err) {
-      console.error("Error fetching categories:", err);
       // Don't set error for categories as it's not critical
     } finally {
       setCategoriesLoading(false);
@@ -95,7 +93,6 @@ export function useVoiceMemos(
       const data = await Api.getVoiceMemoStats();
       setStats(data);
     } catch (err) {
-      console.error("Error fetching stats:", err);
       // Don't set error for stats as it's not critical
     } finally {
       setStatsLoading(false);
@@ -136,7 +133,6 @@ export function useVoiceMemos(
         )
       );
     } catch (err) {
-      console.error("Error recording play:", err);
       // Don't show error to user as this is background functionality
     }
   }, []);
