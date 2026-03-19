@@ -19,7 +19,6 @@ export const usePodcastPlayer = () => {
       setEpisodes(fetchedEpisodes);
       return fetchedEpisodes;
     } catch (error) {
-      console.error("Failed to fetch episodes:", error);
       Toast.show({
         type: "error",
         text1: "Error",

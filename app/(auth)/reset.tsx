@@ -69,7 +69,6 @@ export default function ResetPassword() {
       toast.error(
         "Failed to reset password. Please check your code and try again."
       );
-      console.error("Reset password failed:", error);
     }
   };
 

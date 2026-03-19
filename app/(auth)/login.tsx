@@ -40,7 +40,6 @@ export default function Login() {
     } catch (error) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       toast.error("Please check your credentials and try again");
-      console.error("Login failed:", error);
     }
   };
 

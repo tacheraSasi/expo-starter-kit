@@ -109,7 +109,6 @@ export default function Register() {
     } catch (error) {
       // Error alert handled in API class, but we can add custom handling
       toast.error("Registration failed. Please try again or contact support");
-      console.error("Registration failed:", error);
     }
   };
 

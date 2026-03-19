@@ -49,7 +49,6 @@ export default function ForgotPassword() {
       }, 1000);
     } catch (error) {
       toast.error("Failed to send reset instructions. Please try again.");
-      console.error("Reset password failed:", error);
     }
   };
 

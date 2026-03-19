@@ -130,7 +130,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
         setSession(null);
       }
     } catch (error) {
-      console.error("Auth initialization error:", error);
       setUser(null);
       setIsAuthenticated(false);
       setSession(null);
@@ -188,7 +187,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
       setIsLoading(true);
       await Api.logout();
     } catch (error) {
-      console.warn("Logout error:", error);
     } finally {
       // Clear all auth state and session
       clearAuthState();
@@ -247,7 +245,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
         setUser(userData as any);
       }
     } catch (error) {
-      console.error("Error refreshing user data:", error);
     }
   };
 

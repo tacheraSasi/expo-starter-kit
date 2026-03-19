@@ -32,7 +32,6 @@ const storage = {
 };
 
 export const authToken = async (tokenType: string) => {
-  //TODO:Will add custom token prefixing mechanism
   const _key = `ekili-expo:${tokenType}-token`;
   return (await storage.getItem(_key)) || null;
 };
@@ -50,7 +49,6 @@ export const setAuthToken = async (tokens: {
       }
     }
   } catch (error) {
-    console.error("Error saving auth tokens:", error);
     throw error;
   }
 };
@@ -105,7 +103,6 @@ export const hasValidTokens = async (): Promise<boolean> => {
 
     return hasValidAccess || hasValidRefresh;
   } catch (error) {
-    console.error("Error checking token validity:", error);
     return false;
   }
 };
@@ -128,7 +125,6 @@ export const getTokenExpirationInfo = async () => {
       refreshTokenExpired: refreshToken ? isJwtExpired(refreshToken) : null,
     };
   } catch (error) {
-    console.error("Error getting token expiration info:", error);
     return null;
   }
 };
@@ -140,7 +136,6 @@ export const storeNotificationPayload = async (
   try {
     await storage.setItem(`notification_${callUUID}`, JSON.stringify(payload));
   } catch (error) {
-    console.error("Error storing notification payload:", error);
   }
 };
 
@@ -153,7 +148,6 @@ export const retrieveStoredNotificationPayload = async (callUUID: string) => {
     }
     return null;
   } catch (error) {
-    console.error("Error retrieving stored notification payload:", error);
     return null;
   }
 };

@@ -50,7 +50,6 @@ export const pricingApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting fare estimate:", error);
       const err = error as {
         response?: { data?: { error?: string; message?: string } };
       };
@@ -70,7 +69,6 @@ export const pricingApi = {
       const response = await api(false).get<PricingConfig[]>("/pricing/configs");
       return response.data;
     } catch (error) {
-      console.error("Error getting pricing configs:", error);
       const err = error as {
         response?: { data?: { error?: string; message?: string } };
       };
@@ -92,7 +90,6 @@ export const pricingApi = {
       );
       return response.data;
     } catch (error) {
-      console.error("Error getting pricing config:", error);
       const err = error as {
         response?: { data?: { error?: string; message?: string } };
       };

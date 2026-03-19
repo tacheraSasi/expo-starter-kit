@@ -37,8 +37,6 @@ class Api {
       const res = await api(false).post("/register", payload);
       const responseData = res.data;
 
-      console.log("Registration response:", responseData);
-
       // Handle actual backend response structure
       if (responseData.user) {
         await saveUser({
@@ -85,8 +83,6 @@ class Api {
         throw new Error("Invalid response structure from server");
       }
     } catch (error: any) {
-      console.log("Registration error details:", error);
-
       // Handle network errors specifically
       if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
         throw new Error(
@@ -116,7 +112,6 @@ class Api {
       const res = await api(false).post("/login", payload);
       const responseData = res.data;
 
-      console.log("Login response:", responseData);
 
       // Store tokens and user data
       if (responseData.token && responseData.user) {
@@ -171,7 +166,6 @@ class Api {
         throw new Error("Invalid response structure from server");
       }
     } catch (error: any) {
-      console.log("Login error details:", error);
 
       // Handle network errors specifically
       if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
@@ -208,7 +202,6 @@ class Api {
     try {
       await api(true).post("/logout");
     } catch (error) {
-      console.warn("Logout API call failed:", error);
     } finally {
       await clearCache();
     }
@@ -218,7 +211,6 @@ class Api {
     try {
       const res = await api(true).get("/users/me");
       const responseData = res.data;
-      console.log("Current user data:", responseData);
       if (responseData.data && responseData.success) {
         return responseData.data;
       }
@@ -240,7 +232,6 @@ class Api {
     try {
       const res = await api(true).put("/users/me/edit", payload);
       const responseData = res.data;
-      console.log("Updated user data:", responseData);
 
       // Extract user data from wrapper if it exists
       const userData =
@@ -417,7 +408,6 @@ class Api {
     mimeType: string
   ): Promise<UploadResponse> {
     try {
-      console.log("Preparing upload for:", { fileUri, fileName, mimeType });
 
       // Ensure we have valid file information
       if (!fileUri) {
@@ -436,10 +426,8 @@ class Api {
         type: mimeType || "application/octet-stream",
       };
 
-      console.log("File object for upload:", fileObject);
       formData.append("file", fileObject as any);
 
-      console.log("Sending upload request to /media/upload");
 
       const res = await api(true).post("/media/upload", formData, {
         headers: {
@@ -448,8 +436,6 @@ class Api {
         timeout: 60000, // 60 second timeout for larger files
       });
 
-      console.log("Upload response status:", res.status);
-      console.log("Upload response data:", res.data);
 
       // Validate response structure
       if (!res.data) {
@@ -458,7 +444,6 @@ class Api {
 
       return res.data;
     } catch (error) {
-      console.error("Upload error:", error);
       const err = error as {
         response?: {
           data?: { error?: string; message?: string; status?: string };
@@ -470,15 +455,10 @@ class Api {
 
       // If we have a response, throw the error to be handled by the caller
       if (err.response) {
-        console.error("Server error response:", {
-          status: err.response.status,
-          data: err.response.data,
-        });
         throw error;
       }
 
       // Network or other error
-      console.error("Network/other error:", err.message || err.code);
       return {
         status: "error",
         message:
@@ -941,15 +921,10 @@ class Api {
   }
 
   // Additional helper methods
-  // TODO: Backend doesn't have follow/follower functionality yet
-  // This is a placeholder that returns default values
   static async getFollowStats(userId: number): Promise<{ followers_count: number; following_count: number }> {
     try {
-      // This is a placeholder - the backend doesn't have this endpoint yet
-      // Return default values for now
       return { followers_count: 0, following_count: 0 };
     } catch (error) {
-      console.error("Failed to fetch follow stats:", error);
       return { followers_count: 0, following_count: 0 };
     }
   }
@@ -986,7 +961,6 @@ class Api {
         averageRating: ratingData.average || 0,
       };
     } catch (error) {
-      console.error("Failed to fetch ride statistics:", error);
       return {
         totalRides: 0,
         thisMonth: 0,

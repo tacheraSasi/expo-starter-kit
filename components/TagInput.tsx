@@ -57,7 +57,6 @@ export default function TagInput({
       const popularTags = await Api.getPopularTags(20);
       setTags(popularTags);
     } catch (error) {
-      console.error("Failed to load popular tags:", error);
     } finally {
       setLoading(false);
     }
@@ -69,7 +68,6 @@ export default function TagInput({
       const searchResults = await Api.searchTags(searchQuery);
       setTags(searchResults);
     } catch (error) {
-      console.error("Failed to search tags:", error);
     } finally {
       setLoading(false);
     }
