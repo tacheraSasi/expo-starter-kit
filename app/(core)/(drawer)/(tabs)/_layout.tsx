@@ -14,8 +14,8 @@ function TabBarIcon(props: {
   const iconColor = props.focused
     ? Colors.tabColors[props.tabName]
     : theme.isDark
-    ? "#666666"
-    : "#999999";
+      ? "#666666"
+      : "#999999";
 
   return (
     <FontAwesome
@@ -54,7 +54,7 @@ export default function TabsLayout() {
           },
         })}
       >
-        {/* MAIN RIDE TAB */}
+        {/* HOME TAB */}
         <Tabs.Screen
           name="home"
           options={{

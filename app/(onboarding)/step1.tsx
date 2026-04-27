@@ -44,7 +44,7 @@ export default function Step1() {
             <Image
               style={{ position: "absolute", width: 64, height: 64 }}
               source={require("@/assets/images/android/play_store_512.png")}
-            // source={require("@/assets/images/icon-black-and-white.png")}
+              // source={require("@/assets/images/icon-black-and-white.png")}
             />
             <Text style={styles.logoText}>starter</Text>
           </View>
@@ -60,11 +60,13 @@ export default function Step1() {
         <View style={styles.mainContent}>
           <Text style={styles.title}>
             Your Journey{"\n"}
-            <Text style={styles.titleAccent}>Starts Here</Text>{"\n"}
+            <Text style={styles.titleAccent}>Starts Here</Text>
+            {"\n"}
           </Text>
 
           <Text style={styles.subtitle}>
-            A powerful starter template with authentication, navigation, theming, and more. Build your next mobile app faster.
+            A powerful starter template with authentication, navigation,
+            theming, and more. Build your next mobile app faster.
           </Text>
         </View>
 

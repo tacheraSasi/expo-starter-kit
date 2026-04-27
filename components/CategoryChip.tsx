@@ -1,13 +1,18 @@
 import { useCurrentTheme } from "@/context/CentralTheme";
-import { VoiceMemoCategory } from "@/lib/api/types";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
+interface Category {
+  name: string;
+  color?: string;
+  icon?: string;
+}
+
 interface CategoryChipProps {
-  category: VoiceMemoCategory;
+  category: Category;
   isSelected?: boolean;
-  onPress: (category: VoiceMemoCategory) => void;
+  onPress: (category: Category) => void;
   showCount?: boolean;
   count?: number;
 }
@@ -37,8 +42,8 @@ const CategoryChip: React.FC<CategoryChipProps> = ({
           backgroundColor: isSelected
             ? categoryColor + "20"
             : pressed
-            ? theme.card + "CC"
-            : theme.card,
+              ? theme.card + "CC"
+              : theme.card,
           borderColor: isSelected ? categoryColor : theme.border,
           borderWidth: isSelected ? 2 : 1,
         },

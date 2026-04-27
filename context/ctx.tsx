@@ -62,17 +62,17 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   isOnboarded: false,
   isOnboardingLoading: false,
-  completeOnboarding: () => { },
-  signIn: async () => { },
-  signUp: async () => { },
-  signOut: async () => { },
-  sendVerificationEmail: async () => { },
-  verifyAccount: async () => { },
-  forgotPassword: async () => { },
-  verifyResetCode: async () => { },
-  resetPassword: async () => { },
-  refreshUserData: async () => { },
-  signInWithDummyUser: () => { },
+  completeOnboarding: () => {},
+  signIn: async () => {},
+  signUp: async () => {},
+  signOut: async () => {},
+  sendVerificationEmail: async () => {},
+  verifyAccount: async () => {},
+  forgotPassword: async () => {},
+  verifyResetCode: async () => {},
+  resetPassword: async () => {},
+  refreshUserData: async () => {},
+  signInWithDummyUser: () => {},
 });
 
 // Use this hook to access the user info.
@@ -244,8 +244,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
       if (userData) {
         setUser(userData as any);
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const signInWithDummyUser = () => {
@@ -254,9 +253,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const dummyUser: User = {
       id: 1,
       name: "Demo User",
-      email: "demo@expo.com",
+      email: "demo@app.com",
       display_name: "Demo User",
-      role: "rider",
+      role: "user",
       is_active: true,
       created_at: now,
       updated_at: now,
@@ -276,7 +275,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     setSession("authenticated");
     setOnboardingComplete();
 
-    router.replace("/(core)/(tabs)/ride");
+    router.replace("/(core)/(drawer)/(tabs)/home" as any);
   };
 
   const contextValue: AuthContextType = {

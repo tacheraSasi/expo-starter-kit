@@ -42,8 +42,7 @@ export default function Verify() {
           onPress: () => router.replace("/(auth)/login"),
         },
       ]);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleResendCode = async () => {
@@ -54,8 +53,7 @@ export default function Verify() {
 
     try {
       await sendVerificationEmail(email.trim());
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const handleBackToLogin = () => {
@@ -101,7 +99,7 @@ export default function Verify() {
 
               <Text style={styles.title}>Verify Account</Text>
               <Text style={styles.subtitle}>
-                Enter the code sent to your email to start booking rides
+                Enter the code sent to your email to verify your account
               </Text>
             </View>
 
@@ -184,9 +182,7 @@ export default function Verify() {
                 disabled={isLoading}
                 activeOpacity={0.7}
               >
-                <Text style={styles.secondaryButtonText}>
-                  Back to Sign In
-                </Text>
+                <Text style={styles.secondaryButtonText}>Back to Sign In</Text>
               </TouchableOpacity>
             </View>
           </View>

@@ -6,7 +6,7 @@ export const brandColor = "#98a75e";
 
 export const Colors = {
   tabColors: {
-    home: "#178764ff", // expo yellow accent for ride booking
+    home: "#178764ff", // home tab accent
     profile: "#98a75e", // expo green accent for profile
     feed: "#178764ff", // Spotify-like green for listening/audio
     insights: "#6366f1", // Purple for analytics/data

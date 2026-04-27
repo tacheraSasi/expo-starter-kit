@@ -55,7 +55,8 @@ export default function Register() {
       return false;
     }
 
-    const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
+    const phoneRegex =
+      /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,9}$/;
     if (!phoneRegex.test(phoneNumber.trim())) {
       toast.error("Please enter a valid phone number");
       return false;
@@ -97,7 +98,7 @@ export default function Register() {
 
       // Show success message and navigate to verification
       toast.success(
-        "Welcome! Please check your email for verification instructions"
+        "Welcome! Please check your email for verification instructions",
       );
 
       // Navigate to login after a brief delay
@@ -152,9 +153,7 @@ export default function Register() {
               </View>
 
               <Text style={styles.title}>Create Account</Text>
-              <Text style={styles.subtitle}>
-                Get started in minutes
-              </Text>
+              <Text style={styles.subtitle}>Get started in minutes</Text>
             </View>
 
             {/* Form */}
@@ -274,9 +273,7 @@ export default function Register() {
                     },
                   ]}
                 >
-                  {agreeToTerms && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
+                  {agreeToTerms && <Text style={styles.checkmark}>✓</Text>}
                 </View>
                 <View style={styles.checkboxTextContainer}>
                   <Text style={styles.checkboxText}>I agree to the </Text>

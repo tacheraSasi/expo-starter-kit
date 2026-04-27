@@ -88,12 +88,8 @@ export default function Login() {
                 <Text style={styles.logoText}>expo</Text>
               </View>
 
-              <Text style={styles.title}>
-                Welcome Back
-              </Text>
-              <Text style={styles.subtitle}>
-                Your ride is just a tap away
-              </Text>
+              <Text style={styles.title}>Welcome Back</Text>
+              <Text style={styles.subtitle}>Sign in to continue</Text>
             </View>
 
             {/* Form */}
