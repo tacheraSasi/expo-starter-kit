@@ -1,7 +1,6 @@
 import ScreenLayout from "@/components/ScreenLayout";
 import { useCurrentTheme } from "@/context/CentralTheme";
 import {
-  NotificationFrequency,
   useSettingsStore,
 } from "@/stores/settings";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -149,19 +148,11 @@ export default function Settings() {
     hapticsEnabled,
     soundEffectsEnabled,
     pushNotificationsEnabled,
-    notificationFrequency,
-    notifyOnDriverArrival,
-    notifyOnRideUpdates,
-    notifyOnPromotions,
     shareAnalytics,
     allowLocationAccess,
-    saveRideHistory,
     dataSaverMode,
     preloadContent,
     reduceMotion,
-    autoConfirmPickup,
-    showDriverDetails,
-    emergencyContactsEnabled,
     updateSetting,
     resetToDefaults,
     exportSettings,
@@ -174,28 +165,6 @@ export default function Settings() {
     if (value) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
-  };
-
-  const handleNotificationFrequencySelect = () => {
-    const frequencies: NotificationFrequency[] = [
-      "never",
-      "low",
-      "medium",
-      "high",
-    ];
-    const options = frequencies.map((freq) => ({
-      text: freq.charAt(0).toUpperCase() + freq.slice(1),
-      onPress: () => updateSetting("notificationFrequency", freq),
-      style: (freq === notificationFrequency ? "default" : "cancel") as
-        | "default"
-        | "cancel"
-        | "destructive",
-    }));
-
-    Alert.alert("Notification Frequency", "How often should we notify you?", [
-      ...options,
-      { text: "Cancel", style: "cancel" as const },
-    ]);
   };
 
   const handleResetSettings = () => {
@@ -282,91 +251,6 @@ export default function Settings() {
           />
         </View> */}
 
-        {/* Ride Settings */}
-        <View
-          style={[styles.section, { backgroundColor: theme.cardBackground }]}
-        >
-          <SectionHeader
-            title="Ride Preferences"
-            subtitle="Customize your ride experience"
-          />
-
-          <SettingItem
-            title="Default Vehicle Type"
-            subtitle="Economy"
-            icon="car"
-            onPress={() => {
-              const types = ["Economy", "Comfort", "Premium", "XL"];
-              Alert.alert("Default Vehicle", "Select your preferred vehicle type", [
-                ...types.map((type) => ({
-                  text: type,
-                  onPress: () => toast.success(`Default vehicle set to ${type}`),
-                })),
-                { text: "Cancel", style: "cancel" },
-              ]);
-            }}
-            showChevron
-          />
-
-          <SettingItem
-            title="Auto-Confirm Pickup"
-            subtitle="Automatically confirm when arriving at pickup"
-            icon="checkmark-circle"
-            rightElement={
-              <Switch
-                value={autoConfirmPickup}
-                onValueChange={(value) => {
-                  updateSetting("autoConfirmPickup", value);
-                  if (hapticsEnabled) {
-                    Haptics.selectionAsync();
-                  }
-                  toast.success(value ? "Auto-confirm enabled" : "Auto-confirm disabled");
-                }}
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={autoConfirmPickup ? "white" : theme.mutedText}
-              />
-            }
-          />
-
-          <SettingItem
-            title="Show Driver Details"
-            subtitle="Display driver info before accepting ride"
-            icon="person"
-            rightElement={
-              <Switch
-                value={showDriverDetails}
-                onValueChange={(value) => {
-                  updateSetting("showDriverDetails", value);
-                  if (hapticsEnabled) {
-                    Haptics.selectionAsync();
-                  }
-                }}
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={showDriverDetails ? "white" : theme.mutedText}
-              />
-            }
-          />
-
-          <SettingItem
-            title="Share ETA"
-            subtitle="Automatically share arrival time with contacts"
-            icon="share-social"
-            rightElement={
-              <Switch
-                value={false}
-                onValueChange={(value) => {
-                  if (hapticsEnabled) {
-                    Haptics.selectionAsync();
-                  }
-                  toast.info(value ? "ETA sharing enabled" : "ETA sharing disabled");
-                }}
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor="white"
-              />
-            }
-          />
-        </View>
-
         {/* Interaction Settings */}
         <View
           style={[styles.section, { backgroundColor: theme.cardBackground }]}
@@ -418,7 +302,7 @@ export default function Settings() {
 
           <SettingItem
             title="Push Notifications"
-            subtitle="Enable notifications from expo"
+            subtitle="Enable push notifications"
             icon="notifications"
             rightElement={
               <Switch
@@ -433,66 +317,6 @@ export default function Settings() {
               />
             }
           />
-
-          <SettingItem
-            title="Notification Frequency"
-            subtitle={`Current: ${notificationFrequency}`}
-            icon="time"
-            onPress={handleNotificationFrequencySelect}
-            showChevron
-            disabled={!pushNotificationsEnabled}
-          />
-
-          <SettingItem
-            title="Driver Arrival"
-            subtitle="Notify when driver is arriving"
-            icon="car-sport"
-            rightElement={
-              <Switch
-                value={notifyOnDriverArrival}
-                onValueChange={(value) =>
-                  updateSetting("notifyOnDriverArrival", value)
-                }
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={notifyOnDriverArrival ? "white" : theme.mutedText}
-              />
-            }
-            disabled={!pushNotificationsEnabled}
-          />
-
-          <SettingItem
-            title="Ride Updates"
-            subtitle="Notify for ride status changes"
-            icon="information-circle"
-            rightElement={
-              <Switch
-                value={notifyOnRideUpdates}
-                onValueChange={(value) =>
-                  updateSetting("notifyOnRideUpdates", value)
-                }
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={notifyOnRideUpdates ? "white" : theme.mutedText}
-              />
-            }
-            disabled={!pushNotificationsEnabled}
-          />
-
-          <SettingItem
-            title="Promotions & Offers"
-            subtitle="Receive special offers and deals"
-            icon="pricetag"
-            rightElement={
-              <Switch
-                value={notifyOnPromotions}
-                onValueChange={(value) =>
-                  updateSetting("notifyOnPromotions", value)
-                }
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={notifyOnPromotions ? "white" : theme.mutedText}
-              />
-            }
-            disabled={!pushNotificationsEnabled}
-          />
         </View>
 
         {/* Privacy & Data */}
@@ -502,22 +326,6 @@ export default function Settings() {
           <SectionHeader
             title="Privacy & Data"
             subtitle="Control your privacy and data usage"
-          />
-
-          <SettingItem
-            title="Save Ride History"
-            subtitle="Store your ride history for easy access"
-            icon="time"
-            rightElement={
-              <Switch
-                value={saveRideHistory}
-                onValueChange={(value) =>
-                  updateSetting("saveRideHistory", value)
-                }
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={saveRideHistory ? "white" : theme.mutedText}
-              />
-            }
           />
 
           <SettingItem
@@ -564,52 +372,6 @@ export default function Settings() {
                 thumbColor={dataSaverMode ? "white" : theme.mutedText}
               />
             }
-          />
-        </View>
-
-        {/* Safety & Security */}
-        <View
-          style={[styles.section, { backgroundColor: theme.cardBackground }]}
-        >
-          <SectionHeader
-            title="Safety & Security"
-            subtitle="Keep yourself safe during rides"
-          />
-
-          <SettingItem
-            title="Emergency Contacts"
-            subtitle="Set up emergency contacts for rides"
-            icon="shield-checkmark"
-            rightElement={
-              <Switch
-                value={emergencyContactsEnabled}
-                onValueChange={(value) =>
-                  updateSetting("emergencyContactsEnabled", value)
-                }
-                trackColor={{ false: theme.border, true: theme.primary }}
-                thumbColor={emergencyContactsEnabled ? "white" : theme.mutedText}
-              />
-            }
-          />
-
-          <SettingItem
-            title="Share Trip Status"
-            subtitle="Let trusted contacts track your ride"
-            icon="people"
-            onPress={() => {
-              toast.info("Trip sharing settings");
-            }}
-            showChevron
-          />
-
-          <SettingItem
-            title="Safety Center"
-            subtitle="Access safety resources and help"
-            icon="medical"
-            onPress={() => {
-              toast.info("Opening Safety Center");
-            }}
-            showChevron
           />
         </View>
 
@@ -696,7 +458,7 @@ export default function Settings() {
         {/* Footer */}
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.mutedText }]}>
-            expo • Special Hire Vehicle Platform © 2024
+            expo Starter Kit
           </Text>
         </View>
       </ScrollView>

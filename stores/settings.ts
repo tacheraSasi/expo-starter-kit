@@ -8,11 +8,6 @@ interface SettingsState {
   themeMode: "light" | "dark" | "system";
   themeEnabled: false; // Always false for now
 
-  // Ride Preferences
-  defaultVehicleType: "economy" | "comfort" | "premium" | "xl";
-  autoConfirmPickup: boolean;
-  showDriverDetails: boolean;
-
   // Interaction settings
   hapticsEnabled: boolean;
   soundEffectsEnabled: boolean;
@@ -20,18 +15,9 @@ interface SettingsState {
   // Privacy settings
   shareAnalytics: boolean;
   allowLocationAccess: boolean;
-  saveRideHistory: boolean;
 
   // Notification settings
   pushNotificationsEnabled: boolean;
-  notificationFrequency: NotificationFrequency;
-  notifyOnDriverArrival: boolean;
-  notifyOnRideUpdates: boolean;
-  notifyOnPromotions: boolean;
-
-  // Safety & Security
-  emergencyContactsEnabled: boolean;
-  shareTripStatus: boolean;
 
   // Performance settings
   dataSaverMode: boolean;
@@ -63,11 +49,6 @@ const defaultSettings: Omit<
   themeMode: "light",
   themeEnabled: false,
 
-  // Ride Preferences
-  defaultVehicleType: "economy",
-  autoConfirmPickup: false,
-  showDriverDetails: true,
-
   // Interaction settings
   hapticsEnabled: true,
   soundEffectsEnabled: true,
@@ -75,18 +56,9 @@ const defaultSettings: Omit<
   // Privacy settings
   shareAnalytics: true,
   allowLocationAccess: true,
-  saveRideHistory: true,
 
   // Notification settings
   pushNotificationsEnabled: true,
-  notificationFrequency: "medium",
-  notifyOnDriverArrival: true,
-  notifyOnRideUpdates: true,
-  notifyOnPromotions: false,
-
-  // Safety & Security
-  emergencyContactsEnabled: false,
-  shareTripStatus: false,
 
   // Performance settings
   dataSaverMode: false,
@@ -137,7 +109,7 @@ export const useSettingsStore = create<SettingsState>()(
       },
     }),
     {
-      name: "expo-rider-settings",
+      name: "app-settings",
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => {
         // Only persist settings, not functions

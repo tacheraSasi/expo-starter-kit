@@ -1,7 +1,6 @@
 import AvatarModal from "@/components/AvatarModal";
 import ScreenLayout from "@/components/ScreenLayout";
 import MePageSkeleton from "@/components/skeletons/MePageSkeleton";
-import StatCard from "@/components/StatCard";
 import { useCurrentTheme } from "@/context/CentralTheme";
 import { useSession } from "@/context/ctx";
 import Api from "@/lib/api";
@@ -98,12 +97,6 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
-  const [rideStats, setRideStats] = useState<{
-    totalRides: number;
-    thisMonth: number;
-    totalSpent: number;
-    averageRating: number;
-  } | null>(null);
 
   const { signOut } = useSession();
 
@@ -116,16 +109,7 @@ export default function Profile() {
 
       setUser(userData as BackendUser);
 
-      // Fetch follow stats
-      if (userData?.id) {
 
-        // Fetch ride statistics
-        try {
-          const rStats = await Api.getRideStatistics(userData.id);
-          setRideStats(rStats);
-        } catch (error) {
-        }
-      }
     } catch (error) {
     } finally {
       setLoading(false);
@@ -347,112 +331,6 @@ export default function Profile() {
               />
             </Pressable>
           </View>
-        </View>
-
-        {/* Ride Stats Grid */}
-        <View style={styles.statsSection}>
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>
-              Ride Statistics
-            </Text>
-            <MaterialIcons name="directions-car" size={20} color={theme.mutedText} />
-          </View>
-          <View style={styles.statsGrid}>
-            <StatCard
-              title="Total Rides"
-              value={rideStats?.totalRides || 0}
-              description="Completed trips"
-              icon="car"
-              color="#98a75e"
-            />
-            <StatCard
-              title="This Month"
-              value={rideStats?.thisMonth || 0}
-              description="Rides"
-              icon="calendar"
-              color="#45B7D1"
-            />
-            <StatCard
-              title="Total Spent"
-              value={`TSh ${(rideStats?.totalSpent || 0).toLocaleString()}`}
-              description="All time"
-              icon="cash"
-              color="#96CEB4"
-            />
-            <StatCard
-              title="Rating"
-              value={rideStats?.averageRating?.toFixed(1) || "0.0"}
-              description="Average"
-              icon="star"
-              color="#FFA726"
-            />
-          </View>
-        </View>
-
-        {/* Quick Actions */}
-        <View
-          style={[styles.section, { backgroundColor: theme.cardBackground }]}
-        >
-          <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>
-              Quick Actions
-            </Text>
-            <Ionicons name="flash" size={20} color={theme.mutedText} />
-          </View>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.actionItem,
-              {
-                backgroundColor: pressed ? theme.highlight : "transparent",
-                opacity: pressed ? 0.8 : 1,
-              },
-            ]}
-            onPress={() => {
-              HapticFeedback("light");
-              router.push("/(core)/ride/history" as any);
-            }}
-          >
-            <View style={[styles.actionIcon, { backgroundColor: `${"black"}15` }]}>
-              <Ionicons name="time-outline" size={22} color={"black"} />
-            </View>
-            <View style={styles.actionContent}>
-              <Text style={[styles.actionTitle, { color: theme.text }]}>Ride History</Text>
-              <Text style={[styles.actionSubtitle, { color: theme.subtleText }]}>
-                View your past trips
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.mutedText} />
-          </Pressable>
-
-          <View
-            style={[styles.separator, { backgroundColor: theme.border }]}
-          />
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.actionItem,
-              {
-                backgroundColor: pressed ? theme.highlight : "transparent",
-                opacity: pressed ? 0.8 : 1,
-              },
-            ]}
-            onPress={() => {
-              HapticFeedback("light");
-              router.push("/(core)/ride/payment" as any);
-            }}
-          >
-            <View style={[styles.actionIcon, { backgroundColor: `${"black"}15` }]}>
-              <Ionicons name="card-outline" size={22} color={"black"} />
-            </View>
-            <View style={styles.actionContent}>
-              <Text style={[styles.actionTitle, { color: theme.text }]}>Payment Methods</Text>
-              <Text style={[styles.actionSubtitle, { color: theme.subtleText }]}>
-                Manage payment options
-              </Text>
-            </View>
-            <Ionicons name="chevron-forward" size={20} color={theme.mutedText} />
-          </Pressable>
         </View>
 
         {/* Account Information */}

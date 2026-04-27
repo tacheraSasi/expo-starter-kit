@@ -1,5 +1,4 @@
 import { Stack } from "expo-router";
-import MiniPlayer from "@/components/player/MiniPlayer";
 import { View, StyleSheet } from "react-native";
 
 export default function AppLayout() {

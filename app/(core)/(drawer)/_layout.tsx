@@ -33,28 +33,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
   const menuItems = [
     {
-      id: 'history',
-      label: 'Ride History',
-      icon: 'time-outline',
-      route: '/(core)/ride/history',
-    },
-    {
-      id: 'payment',
-      label: 'Payment Methods',
-      icon: 'wallet-outline',
-      route: '/(core)/ride/payment',
-    },
-    {
-      id: 'promotions',
-      label: 'Promotions',
-      icon: 'pricetag-outline',
-      route: '/(core)/ride/promotions',
-    },
-    {
       id: 'notifications',
       label: 'Notifications',
       icon: 'notifications-outline',
-      route: '/(core)/ride/notifications',
+      route: '/(core)/settings',
     },
   ];
 
@@ -75,10 +57,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             </View>
             <View style={styles.userInfo}>
               <Text style={[styles.userName, { color: theme.isDark ? '#1A1A1A' : '#fff' }]} numberOfLines={1}>
-                {(userInfo as any)?.fullName || (userInfo as any)?.name || 'Rider'}
+                {(userInfo as any)?.fullName || (userInfo as any)?.name || 'User'}
               </Text>
               <Text style={[styles.userEmail, { color: theme.isDark ? 'rgba(26,26,26,0.8)' : 'rgba(255,255,255,0.8)' }]} numberOfLines={1}>
-                {(userInfo as any)?.email || 'rider@expo.com'}
+                {(userInfo as any)?.email || 'user@app.com'}
               </Text>
             </View>
           </View>
