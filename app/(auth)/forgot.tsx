@@ -1,4 +1,6 @@
 import ScreenLayout from "@/components/ScreenLayout";
+import { Colors, ColorScheme } from "@/constants/Colors";
+import { useCurrentTheme } from "@/context/CentralTheme";
 import { Entypo } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -13,15 +15,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StatusBar,
 } from "react-native";
 import { toast } from "yooo-native";
 import { useAuth } from "../../context/ctx";
-import { Colors } from "@/constants/Colors";
 
 export default function ForgotPassword() {
   const router = useRouter();
   const { resetPassword, isLoading } = useAuth();
+  const theme = useCurrentTheme();
+  const colors = Colors[theme.colorScheme];
+  const styles = getStyles(theme.colorScheme);
 
   const [email, setEmail] = useState("");
 
@@ -58,8 +61,6 @@ export default function ForgotPassword() {
 
   return (
     <ScreenLayout>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
       {/* Background Pattern */}
       <View style={styles.backgroundPattern}>
         <View style={styles.patternCircle1} />
@@ -107,7 +108,7 @@ export default function ForgotPassword() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your email address"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -135,7 +136,7 @@ export default function ForgotPassword() {
                 activeOpacity={0.8}
               >
                 <LinearGradient
-                  colors={[Colors.light.primary, Colors.light.buttonBackground]}
+                  colors={[colors.primary, colors.buttonBackground]}
                   style={styles.buttonGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -145,7 +146,7 @@ export default function ForgotPassword() {
                   </Text>
                   {!isLoading && (
                     <View style={styles.buttonArrow}>
-                      <Entypo name="chevron-right" size={20} color="#000" />
+                      <Entypo name="chevron-right" size={20} color={colors.buttonText} />
                     </View>
                   )}
                 </LinearGradient>
@@ -170,178 +171,192 @@ export default function ForgotPassword() {
   );
 }
 
-const styles = StyleSheet.create({
-  backgroundPattern: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  },
-  patternCircle1: {
-    position: "absolute",
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "#f5f5f5",
-    top: -100,
-    right: -50,
-  },
-  patternCircle2: {
-    position: "absolute",
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: "#f5f5f5",
-    bottom: 100,
-    left: -75,
-  },
-  patternCircle3: {
-    position: "absolute",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#fafafa",
-    top: "40%",
-    right: 30,
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    paddingVertical: 40,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "center",
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 48,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  logoCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  iconImage: {
-    position: "absolute",
-    width: 64,
-    borderRadius: 32,
-    height: 64,
-  },
-  logoText: {
-    fontSize: 24,
-    fontWeight: "200",
-    letterSpacing: 6,
-    color: "#1a1a1a",
-    textTransform: "uppercase",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#1a1a1a",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666666",
-    textAlign: "center",
-    fontWeight: "400",
-  },
-  form: {
-    marginBottom: 32,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1a1a1a",
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  input: {
-    backgroundColor: "#f9f9f9",
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    fontSize: 16,
-    color: "#1a1a1a",
-  },
-  infoContainer: {
-    marginTop: 16,
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: "rgba(245, 199, 36, 0.08)",
-    borderWidth: 1,
-    borderColor: "rgba(245, 199, 36, 0.2)",
-  },
-  infoText: {
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: "center",
-    color: "#666666",
-  },
-  actions: {
-    gap: 20,
-  },
-  primaryButton: {
-    width: "100%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  buttonGradient: {
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-    letterSpacing: 1,
-    marginRight: 12,
-  },
-  buttonArrow: {
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  secondaryButton: {
-    paddingVertical: 12,
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    fontSize: 14,
-    color: "#666666",
-  },
-  linkText: {
-    color: "#1a1a1a",
-    fontWeight: "600",
-    textDecorationLine: "underline",
-  },
-});
+const getStyles = (colorScheme: ColorScheme) => {
+  const colors = Colors[colorScheme];
+  const isDark = colorScheme === 'dark';
+
+  return StyleSheet.create({
+    backgroundPattern: {
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+    },
+    patternCircle1: {
+      position: "absolute",
+      width: 200,
+      height: 200,
+      borderRadius: 100,
+      backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
+      top: -100,
+      right: -50,
+    },
+    patternCircle2: {
+      position: "absolute",
+      width: 150,
+      height: 150,
+      borderRadius: 75,
+      backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
+      bottom: 100,
+      left: -75,
+    },
+    patternCircle3: {
+      position: "absolute",
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: isDark ? '#151515' : '#fafafa',
+      top: "40%",
+      right: 30,
+    },
+    container: {
+      flex: 1,
+    },
+    scrollContainer: {
+      flexGrow: 1,
+      paddingVertical: 40,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: 32,
+      justifyContent: "center",
+    },
+    header: {
+      alignItems: "center",
+      marginBottom: 48,
+    },
+    logoContainer: {
+      alignItems: "center",
+      marginBottom: 24,
+    },
+    logoCircle: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      marginBottom: 20,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    iconImage: {
+      position: "absolute",
+      width: 64,
+      borderRadius: 32,
+      height: 64,
+    },
+    logoText: {
+      fontSize: 24,
+      fontWeight: "200",
+      fontFamily: 'Inter_400Regular',
+      letterSpacing: 6,
+      color: colors.text,
+      textTransform: "uppercase",
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: "700",
+      fontFamily: 'Inter_700Bold',
+      color: colors.text,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.secondary,
+      textAlign: "center",
+      fontWeight: "400",
+      fontFamily: 'Inter_400Regular',
+    },
+    form: {
+      marginBottom: 32,
+    },
+    inputContainer: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: "600",
+      fontFamily: 'Inter_600SemiBold',
+      color: colors.text,
+      marginBottom: 8,
+      letterSpacing: 0.5,
+    },
+    input: {
+      backgroundColor: colors.inputBackground,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      fontSize: 16,
+      fontFamily: 'Inter_400Regular',
+      color: colors.text,
+    },
+    infoContainer: {
+      marginTop: 16,
+      padding: 16,
+      borderRadius: 12,
+      backgroundColor: isDark ? 'rgba(245, 199, 36, 0.12)' : 'rgba(245, 199, 36, 0.08)',
+      borderWidth: 1,
+      borderColor: isDark ? 'rgba(245, 199, 36, 0.3)' : 'rgba(245, 199, 36, 0.2)',
+    },
+    infoText: {
+      fontSize: 14,
+      fontFamily: 'Inter_400Regular',
+      lineHeight: 20,
+      textAlign: "center",
+      color: colors.secondary,
+    },
+    actions: {
+      gap: 20,
+    },
+    primaryButton: {
+      width: "100%",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.15,
+      shadowRadius: 16,
+      elevation: 8,
+    },
+    buttonGradient: {
+      paddingVertical: 18,
+      paddingHorizontal: 32,
+      borderRadius: 12,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    primaryButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+      fontFamily: 'Inter_600SemiBold',
+      color: colors.buttonText,
+      letterSpacing: 1,
+      marginRight: 12,
+    },
+    buttonArrow: {
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    secondaryButton: {
+      paddingVertical: 12,
+      alignItems: "center",
+    },
+    secondaryButtonText: {
+      fontSize: 14,
+      fontFamily: 'Inter_400Regular',
+      color: colors.secondary,
+    },
+    linkText: {
+      color: colors.text,
+      fontWeight: "600",
+      fontFamily: 'Inter_600SemiBold',
+      textDecorationLine: "underline",
+    },
+  });
+};
