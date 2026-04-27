@@ -52,12 +52,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    fontFamily: 'Inter_700Bold',
     marginTop: 16,
     marginBottom: 8,
     textAlign: "center",
   },
   message: {
     fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     textAlign: "center",
     lineHeight: 20,
     marginBottom: 24,
@@ -74,5 +76,6 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: 'Inter_600SemiBold',
   },
 });
