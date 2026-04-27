@@ -84,7 +84,7 @@ const InfoRow: React.FC<InfoRowProps> = ({
         <MaterialIcons
           name={icon as any}
           size={20}
-          color={iconColor || "black"}
+          color={iconColor || theme.text}
         />
         <Text style={[styles.infoLabel, { color: theme.subtleText }]}>
           {label}
@@ -235,7 +235,7 @@ export default function Profile() {
               style={({ pressed }) => [
                 styles.retryButton,
                 {
-                  backgroundColor: "black",
+                  backgroundColor: theme.text,
                   opacity: pressed ? 0.8 : 1,
                 },
               ]}
@@ -258,8 +258,8 @@ export default function Profile() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={"black"}
-            colors={["black"]}
+            tintColor={theme.text}
+            colors={[theme.text]}
           />
         }
         showsVerticalScrollIndicator={false}
@@ -273,8 +273,8 @@ export default function Profile() {
               style={({ pressed }) => [
                 styles.avatarContainer,
                 {
-                  backgroundColor: "black",
-                  shadowColor: "black",
+                  backgroundColor: theme.text,
+                  shadowColor: theme.text,
                   opacity: pressed ? 0.9 : 1,
                   transform: [{ scale: pressed ? 0.98 : 1 }],
                 },
@@ -304,7 +304,7 @@ export default function Profile() {
               style={({ pressed }) => [
                 styles.iconButton,
                 {
-                  backgroundColor: `${"black"}15`,
+                  backgroundColor: `${theme.text}15`,
                   opacity: pressed ? 0.7 : 1,
                 },
               ]}
@@ -313,27 +313,27 @@ export default function Profile() {
                 router.push("/(core)/settings");
               }}
             >
-              <Ionicons name="settings-outline" size={22} color={"black"} />
+              <Ionicons name="settings-outline" size={22} color={theme.text} />
             </Pressable>
             {/* Logout Button - Opens Bottom Sheet */}
             <Pressable
               style={({ pressed }) => [
                 styles.iconButton,
                 {
-                  backgroundColor: `${"black"}15`,
+                  backgroundColor: `${theme.text}15`,
                   opacity: pressed ? 0.7 : 1,
                 },
               ]}
               onPress={handleOpenBottomSheet}
             >
-              <Ionicons name="log-out-outline" size={22} color={"black"} />
+              <Ionicons name="log-out-outline" size={22} color={theme.text} />
             </Pressable>
           </View>
         </View>
 
         {/* Account Information */}
         <View
-          style={[styles.section, { backgroundColor: theme.cardBackground }]}
+          style={[styles.section, { backgroundColor: theme.cardBackground, borderColor: theme.border }]}
         >
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>
@@ -424,13 +424,14 @@ export default function Profile() {
               styles.bottomSheetButton,
               {
                 backgroundColor: theme.cardBackground,
+                borderColor: theme.border,
                 opacity: pressed ? 0.8 : 1,
               },
             ]}
             onPress={handleSwitchAccount}
           >
             <View style={styles.bottomSheetButtonContent}>
-              <Ionicons name="swap-horizontal" size={24} color={"black"} />
+              <Ionicons name="swap-horizontal" size={24} color={theme.text} />
               <View style={styles.bottomSheetButtonText}>
                 <Text
                   style={[styles.bottomSheetButtonTitle, { color: theme.text }]}
@@ -460,6 +461,7 @@ export default function Profile() {
               styles.bottomSheetButton,
               {
                 backgroundColor: theme.cardBackground,
+                borderColor: theme.border,
                 opacity: pressed ? 0.8 : 1,
               },
             ]}
@@ -619,6 +621,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 2,
+    fontFamily: "Inter_700Bold",
   },
   userHandle: {
     fontSize: 15,
@@ -675,6 +678,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
+    fontFamily: "Inter_600SemiBold",
   },
   statsGrid: {
     flexDirection: "row",
@@ -700,12 +704,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginLeft: 12,
     flex: 1,
+    fontFamily: "Inter_400Regular",
   },
   infoValue: {
     fontSize: 14,
     fontWeight: "500",
     flexShrink: 1,
     marginLeft: 8,
+    fontFamily: "Inter_400Regular",
   },
   separator: {
     height: 1,
