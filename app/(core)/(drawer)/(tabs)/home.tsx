@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: "700",
+    fontFamily: 'Inter_700Bold',
   },
   welcomeCard: {
     marginHorizontal: 16,
@@ -170,10 +171,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "700",
     marginBottom: 8,
+    fontFamily: 'Inter_700Bold',
   },
   welcomeSubtitle: {
     fontSize: 15,
     lineHeight: 22,
+    fontFamily: 'Inter_400Regular',
   },
   quickActionsContainer: {
     paddingHorizontal: 16,
@@ -183,6 +186,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 16,
+    fontFamily: 'Inter_600SemiBold',
   },
   quickActionsGrid: {
     flexDirection: "row",
@@ -206,6 +210,7 @@ const styles = StyleSheet.create({
   quickActionLabel: {
     fontSize: 14,
     fontWeight: "600",
+    fontFamily: 'Inter_600SemiBold',
   },
   placeholderCard: {
     marginHorizontal: 16,
@@ -217,10 +222,12 @@ const styles = StyleSheet.create({
   placeholderTitle: {
     fontSize: 20,
     fontWeight: "700",
+    fontFamily: 'Inter_700Bold',
   },
   placeholderText: {
     fontSize: 14,
     lineHeight: 20,
     textAlign: "center",
+    fontFamily: 'Inter_400Regular',
   },
 });
