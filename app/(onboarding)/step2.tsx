@@ -73,8 +73,8 @@ export default function Step2() {
               <View style={styles.featureIcon}>
                 <View style={styles.iconWave} />
               </View>
-              <Text style={styles.featureLabel}>Instant Booking</Text>
-              <Text style={styles.featureDesc}>Get a ride in seconds</Text>
+              <Text style={styles.featureLabel}>Quick Setup</Text>
+              <Text style={styles.featureDesc}>Get started in seconds</Text>
             </View>
 
             <View style={styles.featureCard}>
@@ -82,8 +82,8 @@ export default function Step2() {
                 <View style={styles.iconCircle} />
                 <View style={styles.iconCircleSmall} />
               </View>
-              <Text style={styles.featureLabel}>Safe & Reliable</Text>
-              <Text style={styles.featureDesc}>Verified drivers, secure rides</Text>
+              <Text style={styles.featureLabel}>Secure & Reliable</Text>
+              <Text style={styles.featureDesc}>Built with best practices</Text>
             </View>
 
             <View style={styles.featureCard}>
@@ -91,9 +91,9 @@ export default function Step2() {
                 <View style={styles.iconSpark} />
                 <View style={styles.iconSparkSmall} />
               </View>
-              <Text style={styles.featureLabel}>Real-time Tracking</Text>
+              <Text style={styles.featureLabel}>Beautiful UI</Text>
               <Text style={styles.featureDesc}>
-                Know exactly where your ride is
+                Pre-built themed components
               </Text>
             </View>
 
@@ -101,8 +101,8 @@ export default function Step2() {
               <View style={styles.featureIcon}>
                 <View style={styles.iconHeart} />
               </View>
-              <Text style={styles.featureLabel}>Easy Payment</Text>
-              <Text style={styles.featureDesc}>Secure, cashless payments</Text>
+              <Text style={styles.featureLabel}>Customizable</Text>
+              <Text style={styles.featureDesc}>Make it yours easily</Text>
             </View>
           </View>
         </View>

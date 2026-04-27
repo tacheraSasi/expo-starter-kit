@@ -102,9 +102,7 @@ export default function HomeScreen() {
                     color={action.color}
                   />
                 </View>
-                <Text
-                  style={[styles.quickActionLabel, { color: theme.text }]}
-                >
+                <Text style={[styles.quickActionLabel, { color: theme.text }]}>
                   {action.label}
                 </Text>
               </Pressable>
@@ -119,13 +117,15 @@ export default function HomeScreen() {
             { backgroundColor: theme.cardBackground },
           ]}
         >
-          <Ionicons name="construct-outline" size={48} color={theme.mutedText} />
+          <Ionicons
+            name="construct-outline"
+            size={48}
+            color={theme.mutedText}
+          />
           <Text style={[styles.placeholderTitle, { color: theme.text }]}>
             Start Building
           </Text>
-          <Text
-            style={[styles.placeholderText, { color: theme.subtleText }]}
-          >
+          <Text style={[styles.placeholderText, { color: theme.subtleText }]}>
             Replace this content with your app's features. This starter kit
             includes authentication, navigation, theming, and more.
           </Text>

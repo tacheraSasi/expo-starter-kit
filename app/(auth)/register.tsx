@@ -19,7 +19,6 @@ import {
 import { toast } from "yooo-native";
 import { useAuth } from "../../context/ctx";
 import Colors from "@/constants/Colors";
-import { RoleEnum } from "@/lib/api/types";
 
 export default function Register() {
   const router = useRouter();
@@ -94,12 +93,11 @@ export default function Register() {
         email: email.trim(),
         password,
         phoneNumber: phoneNumber.trim(),
-        role: RoleEnum.Rider,
       });
 
       // Show success message and navigate to verification
       toast.success(
-        "Welcome to expo! Please check your email for verification instructions"
+        "Welcome! Please check your email for verification instructions"
       );
 
       // Navigate to login after a brief delay
@@ -155,7 +153,7 @@ export default function Register() {
 
               <Text style={styles.title}>Create Account</Text>
               <Text style={styles.subtitle}>
-                Start booking rides in minutes
+                Get started in minutes
               </Text>
             </View>
 

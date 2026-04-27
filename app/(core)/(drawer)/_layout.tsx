@@ -1,15 +1,24 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Drawer } from 'expo-router/drawer';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import { useState, useMemo, useCallback } from 'react';
-import { Ionicons } from '@expo/vector-icons';
-import { DrawerContentScrollView, DrawerContentComponentProps } from '@react-navigation/drawer';
-import { useAuth } from '@/context/ctx';
-import { useCurrentTheme } from '@/context/CentralTheme';
-import { router } from 'expo-router';
-import { brandColor } from '@/constants/Colors';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Drawer } from "expo-router/drawer";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
+import { useState, useMemo, useCallback } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import {
+  DrawerContentScrollView,
+  DrawerContentComponentProps,
+} from "@react-navigation/drawer";
+import { useAuth } from "@/context/ctx";
+import { useCurrentTheme } from "@/context/CentralTheme";
+import { router } from "expo-router";
+import { brandColor } from "@/constants/Colors";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { user, signOut } = useAuth();
@@ -22,45 +31,75 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     setIsLoading(true);
     try {
       await signOut();
-      router.replace('/(auth)/login');
+      router.replace("/(auth)/login");
     } catch (error) {
     } finally {
       setIsLoading(false);
     }
   }, [signOut]);
 
-  const brandColor = '#98a75e';
+  const brandColor = "#98a75e";
 
   const menuItems = [
     {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: 'notifications-outline',
-      route: '/(core)/settings',
+      id: "notifications",
+      label: "Notifications",
+      icon: "notifications-outline",
+      route: "/(core)/settings",
     },
   ];
 
   return (
-    <View style={[styles.drawerContainer, { backgroundColor: theme.background }]}>
+    <View
+      style={[styles.drawerContainer, { backgroundColor: theme.background }]}
+    >
       {/* Header Section with User Info */}
       <View style={styles.headerContainer}>
         <View style={[styles.headerGradient, { backgroundColor: brandColor }]}>
           <View style={styles.header}>
-            <View style={[styles.avatarContainer, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.2)' }]}>
-              <View style={[styles.avatarCircle, { backgroundColor: theme.isDark ? '#2A2A2A' : '#FFFFFF' }]}>
-                <Ionicons
-                  name="person"
-                  size={24}
-                  color={brandColor}
-                />
+            <View
+              style={[
+                styles.avatarContainer,
+                {
+                  backgroundColor: theme.isDark
+                    ? "rgba(255,255,255,0.15)"
+                    : "rgba(255,255,255,0.2)",
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.avatarCircle,
+                  { backgroundColor: theme.isDark ? "#2A2A2A" : "#FFFFFF" },
+                ]}
+              >
+                <Ionicons name="person" size={24} color={brandColor} />
               </View>
             </View>
             <View style={styles.userInfo}>
-              <Text style={[styles.userName, { color: theme.isDark ? '#1A1A1A' : '#fff' }]} numberOfLines={1}>
-                {(userInfo as any)?.fullName || (userInfo as any)?.name || 'User'}
+              <Text
+                style={[
+                  styles.userName,
+                  { color: theme.isDark ? "#1A1A1A" : "#fff" },
+                ]}
+                numberOfLines={1}
+              >
+                {(userInfo as any)?.fullName ||
+                  (userInfo as any)?.name ||
+                  "User"}
               </Text>
-              <Text style={[styles.userEmail, { color: theme.isDark ? 'rgba(26,26,26,0.8)' : 'rgba(255,255,255,0.8)' }]} numberOfLines={1}>
-                {(userInfo as any)?.email || 'user@app.com'}
+              <Text
+                style={[
+                  styles.userEmail,
+                  {
+                    color: theme.isDark
+                      ? "rgba(26,26,26,0.8)"
+                      : "rgba(255,255,255,0.8)",
+                  },
+                ]}
+                numberOfLines={1}
+              >
+                {(userInfo as any)?.email || "user@app.com"}
               </Text>
             </View>
           </View>
@@ -82,8 +121,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
                 styles.menuItem,
                 {
                   backgroundColor: theme.surface,
-                  borderColor: theme.border
-                }
+                  borderColor: theme.border,
+                },
               ]}
               onPress={() => {
                 props.navigation.closeDrawer();
@@ -91,11 +130,26 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
               }}
               activeOpacity={0.7}
             >
-              <View style={[styles.iconContainer, { backgroundColor: theme.isDark ? '#2A2A2A' : '#F5F5F5' }]}>
-                <Ionicons name={item.icon as any} size={22} color={brandColor} />
+              <View
+                style={[
+                  styles.iconContainer,
+                  { backgroundColor: theme.isDark ? "#2A2A2A" : "#F5F5F5" },
+                ]}
+              >
+                <Ionicons
+                  name={item.icon as any}
+                  size={22}
+                  color={brandColor}
+                />
               </View>
-              <Text style={[styles.menuItemText, { color: theme.text }]}>{item.label}</Text>
-              <Ionicons name="chevron-forward" size={16} color={theme.subtleText} />
+              <Text style={[styles.menuItemText, { color: theme.text }]}>
+                {item.label}
+              </Text>
+              <Ionicons
+                name="chevron-forward"
+                size={16}
+                color={theme.subtleText}
+              />
             </TouchableOpacity>
           ))}
         </View>
@@ -104,17 +158,27 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       {/* Footer Section */}
       <View style={[styles.footer, { backgroundColor: theme.background }]}>
         <TouchableOpacity
-          style={[styles.footerItem, { backgroundColor: theme.surface, borderColor: theme.border }]}
+          style={[
+            styles.footerItem,
+            { backgroundColor: theme.surface, borderColor: theme.border },
+          ]}
           onPress={() => {
             props.navigation.closeDrawer();
             router.push("/settings");
           }}
           activeOpacity={0.7}
         >
-          <View style={[styles.iconContainer, { backgroundColor: theme.isDark ? '#2A2A2A' : '#F5F5F5' }]}>
+          <View
+            style={[
+              styles.iconContainer,
+              { backgroundColor: theme.isDark ? "#2A2A2A" : "#F5F5F5" },
+            ]}
+          >
             <Ionicons name="settings-outline" size={20} color={brandColor} />
           </View>
-          <Text style={[styles.footerText, { color: theme.text }]}>Settings</Text>
+          <Text style={[styles.footerText, { color: theme.text }]}>
+            Settings
+          </Text>
           <Ionicons name="chevron-forward" size={16} color={theme.subtleText} />
         </TouchableOpacity>
 
@@ -124,8 +188,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             styles.signOutButton,
             {
               opacity: isLoading ? 0.5 : 1,
-              backgroundColor: '#ff3b30'
-            }
+              backgroundColor: "#ff3b30",
+            },
           ]}
           onPress={handleSignOut}
           disabled={isLoading}
@@ -136,7 +200,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
               <Ionicons name="log-out-outline" size={20} color="#fff" />
             </View>
             <Text style={styles.signOutText}>
-              {isLoading ? 'Signing Out...' : 'Sign Out'}
+              {isLoading ? "Signing Out..." : "Sign Out"}
             </Text>
           </View>
         </TouchableOpacity>
@@ -158,15 +222,17 @@ export default function Layout() {
             {
               backgroundColor: theme.background,
               borderRightWidth: StyleSheet.hairlineWidth,
-              borderRightColor: theme.border
-            }
+              borderRightColor: theme.border,
+            },
           ],
-          drawerActiveBackgroundColor: theme.isDark ? 'rgba(152, 167, 94, 0.1)' : 'rgba(152, 167, 94, 0.1)',
+          drawerActiveBackgroundColor: theme.isDark
+            ? "rgba(152, 167, 94, 0.1)"
+            : "rgba(152, 167, 94, 0.1)",
           drawerActiveTintColor: brandColor,
           drawerInactiveTintColor: theme.subtleText,
           drawerLabelStyle: [styles.drawerLabelStyle, { color: theme.text }],
           headerShown: false,
-          drawerType: 'slide',
+          drawerType: "slide",
         }}
       />
     </GestureHandlerRootView>
@@ -178,7 +244,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   headerGradient: {
     paddingHorizontal: 20,
@@ -186,8 +252,8 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   avatarContainer: {
     borderRadius: 25,
@@ -197,8 +263,8 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 23,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   userInfo: {
     marginLeft: 15,
@@ -206,12 +272,12 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   drawerLinks: {
     flex: 1,
@@ -225,8 +291,8 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginVertical: 6,
@@ -237,13 +303,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
   menuItemText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     flex: 1,
   },
   footer: {
@@ -252,8 +318,8 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   footerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginBottom: 12,
@@ -262,20 +328,20 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
     flex: 1,
     marginLeft: 0,
   },
   signOutButton: {
     borderRadius: 14,
-    overflow: 'hidden',
+    overflow: "hidden",
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#ff3b30',
+    borderColor: "#ff3b30",
   },
   signOutGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 16,
     paddingHorizontal: 20,
   },
@@ -283,15 +349,15 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   signOutText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   drawerStyle: {
     width: width * 0.82,
   },
   drawerLabelStyle: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 15,
     marginLeft: -20,
   },

@@ -1,8 +1,6 @@
 import ScreenLayout from "@/components/ScreenLayout";
 import { useCurrentTheme } from "@/context/CentralTheme";
-import {
-  useSettingsStore,
-} from "@/stores/settings";
+import { useSettingsStore } from "@/stores/settings";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
@@ -131,7 +129,9 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title, subtitle }) => {
   return (
     <View style={styles.sectionHeader}>
       <View style={styles.sectionTitleRow}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>{title}</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>
+          {title}
+        </Text>
       </View>
       {subtitle && (
         <Text style={[styles.sectionSubtitle, { color: theme.subtleText }]}>
@@ -180,13 +180,13 @@ export default function Settings() {
             resetToDefaults();
             if (hapticsEnabled) {
               Haptics.notificationAsync(
-                Haptics.NotificationFeedbackType.Warning
+                Haptics.NotificationFeedbackType.Warning,
               );
             }
             toast.success("Settings reset to defaults");
           },
         },
-      ]
+      ],
     );
   };
 
@@ -220,8 +220,12 @@ export default function Settings() {
                 <Ionicons name="settings" size={28} color="#6C5CE7" />
               </View>
               <View>
-                <Text style={[styles.headerTitle, { color: theme.text }]}>Settings</Text>
-                <Text style={[styles.headerSubtitle, { color: theme.subtleText }]}>
+                <Text style={[styles.headerTitle, { color: theme.text }]}>
+                  Settings
+                </Text>
+                <Text
+                  style={[styles.headerSubtitle, { color: theme.subtleText }]}
+                >
                   Customize your experience
                 </Text>
               </View>
@@ -383,7 +387,6 @@ export default function Settings() {
             title="Accessibility"
             subtitle="Make the app work better for you"
           />
-
 
           <SettingItem
             title="Reduce Motion"

@@ -7,11 +7,14 @@ import Api from "@/lib/api";
 import { User } from "@/lib/api/types";
 import { HapticFeedback } from "@/lib/haptics";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigation } from '@react-navigation/native';
-import { DrawerActions } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { DrawerActions } from "@react-navigation/native";
 
 // Backend API User structure (camelCase)
 interface BackendUser {
@@ -60,7 +63,6 @@ interface SocialLinkProps {
   color: string;
 }
 
-
 interface InfoRowProps {
   icon: string;
   label: string;
@@ -68,7 +70,12 @@ interface InfoRowProps {
   iconColor?: string;
 }
 
-const InfoRow: React.FC<InfoRowProps> = ({ icon, label, value, iconColor }: InfoRowProps) => {
+const InfoRow: React.FC<InfoRowProps> = ({
+  icon,
+  label,
+  value,
+  iconColor,
+}: InfoRowProps) => {
   const theme = useCurrentTheme();
 
   return (
@@ -108,8 +115,6 @@ export default function Profile() {
       const userData = await Api.getCurrentUser();
 
       setUser(userData as BackendUser);
-
-
     } catch (error) {
     } finally {
       setLoading(false);
@@ -150,8 +155,7 @@ export default function Profile() {
             await Api.logout();
             signOut();
             router.replace("/(auth)/login");
-          } catch (error) {
-          }
+          } catch (error) {}
         },
       },
     ]);
@@ -173,7 +177,7 @@ export default function Profile() {
             router.replace("/(auth)/login");
           },
         },
-      ]
+      ],
     );
   };
 
@@ -280,7 +284,9 @@ export default function Profile() {
                 setAvatarModalVisible(true);
               }}
             >
-              <Text style={styles.avatarText}>{getInitials(user.fullName || user.name)}</Text>
+              <Text style={styles.avatarText}>
+                {getInitials(user.fullName || user.name)}
+              </Text>
               <View
                 style={[styles.statusIndicator, { backgroundColor: "#4CAF50" }]}
               />
@@ -307,11 +313,7 @@ export default function Profile() {
                 router.push("/(core)/settings");
               }}
             >
-              <Ionicons
-                name="settings-outline"
-                size={22}
-                color={"black"}
-              />
+              <Ionicons name="settings-outline" size={22} color={"black"} />
             </Pressable>
             {/* Logout Button - Opens Bottom Sheet */}
             <Pressable
@@ -324,11 +326,7 @@ export default function Profile() {
               ]}
               onPress={handleOpenBottomSheet}
             >
-              <Ionicons
-                name="log-out-outline"
-                size={22}
-                color={"black"}
-              />
+              <Ionicons name="log-out-outline" size={22} color={"black"} />
             </Pressable>
           </View>
         </View>
@@ -349,7 +347,11 @@ export default function Profile() {
           </View>
 
           <View style={styles.infoContainer}>
-            <InfoRow icon="person" label="Full Name" value={user.fullName || user.name || "N/A"} />
+            <InfoRow
+              icon="person"
+              label="Full Name"
+              value={user.fullName || user.name || "N/A"}
+            />
             <View
               style={[styles.separator, { backgroundColor: theme.border }]}
             />
@@ -359,7 +361,11 @@ export default function Profile() {
                 <View
                   style={[styles.separator, { backgroundColor: theme.border }]}
                 />
-                <InfoRow icon="phone" label="Phone Number" value={user.phoneNumber} />
+                <InfoRow
+                  icon="phone"
+                  label="Phone Number"
+                  value={user.phoneNumber}
+                />
               </>
             )}
             <View
@@ -368,7 +374,9 @@ export default function Profile() {
             <InfoRow
               icon="calendar-today"
               label="Member Since"
-              value={formatDate(user.createdAt || user.created_at || new Date().toISOString())}
+              value={formatDate(
+                user.createdAt || user.created_at || new Date().toISOString(),
+              )}
             />
             {(user.lastLogin || user.last_login) && (
               <>
@@ -422,11 +430,7 @@ export default function Profile() {
             onPress={handleSwitchAccount}
           >
             <View style={styles.bottomSheetButtonContent}>
-              <Ionicons
-                name="swap-horizontal"
-                size={24}
-                color={"black"}
-              />
+              <Ionicons name="swap-horizontal" size={24} color={"black"} />
               <View style={styles.bottomSheetButtonText}>
                 <Text
                   style={[styles.bottomSheetButtonTitle, { color: theme.text }]}
@@ -496,17 +500,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   menuButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 60,
     left: 20,
     width: 50,
     height: 50,
     borderRadius: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     zIndex: 10,
     elevation: 5,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
