@@ -36,6 +36,8 @@ export const Colors = {
     inputBorder: "#ddd",
     inputText: "#000",
     inputPlaceholder: "#999",
+    // Link colors
+    link: "#98a75e",
   },
   dark: {
     text: "#ffffff",

@@ -1,5 +1,4 @@
-import Colors from "@/constants/Colors";
-import { ThemeStatusBar } from "@/context/CentralTheme";
+import { ThemeStatusBar, useCurrentTheme } from "@/context/CentralTheme";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -30,6 +29,8 @@ export default function ScreenLayout({
   keyboardVerticalOffset = 0,
   insideTabs = false
 }: ScreenLayoutProps) {
+  const theme = useCurrentTheme();
+
   const content = (
     <>
       <ThemeStatusBar />
@@ -43,6 +44,7 @@ export default function ScreenLayout({
         style={[
           screenLayoutStyles.container,
           screenLayoutStyles.fullScreen,
+          { backgroundColor: theme.background },
           ...(styles ? [styles] : []),
         ]}
       >
@@ -67,7 +69,7 @@ export default function ScreenLayout({
       edges={safeAreaEdges}
       style={[
         screenLayoutStyles.container,
-        { backgroundColor: Colors.light.background },
+        { backgroundColor: theme.background },
         ...(styles ? [styles] : []),
       ]}
     >
