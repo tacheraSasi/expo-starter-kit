@@ -1,4 +1,6 @@
 import ScreenLayout from "@/components/ScreenLayout";
+import Colors, { ColorScheme } from "@/constants/Colors";
+import { useCurrentTheme } from "@/context/CentralTheme";
 import { Feather, Entypo } from "@expo/vector-icons";
 import * as Haptics from "expo-haptics";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,15 +16,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StatusBar,
 } from "react-native";
 import { toast } from "yooo-native";
 import { useAuth } from "../../context/ctx";
-import Colors from "@/constants/Colors";
 
 export default function Login() {
   const router = useRouter();
   const { signIn, isLoading, signInWithDummyUser } = useAuth();
+  const theme = useCurrentTheme();
+  const colors = Colors[theme.colorScheme];
+  const styles = getStyles(theme.colorScheme);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,8 +56,6 @@ export default function Login() {
 
   return (
     <ScreenLayout>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
       {/* Background Pattern */}
       <View style={styles.backgroundPattern}>
         <View style={styles.patternCircle1} />
@@ -100,7 +101,7 @@ export default function Login() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your email"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -117,7 +118,7 @@ export default function Login() {
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
                     placeholder="Enter your password"
-                    placeholderTextColor="#999999"
+                    placeholderTextColor={theme.inputPlaceholder}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -131,7 +132,7 @@ export default function Login() {
                     <Feather
                       name={showPassword ? "eye-off" : "eye"}
                       size={20}
-                      color="#666666"
+                      color={theme.secondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -159,7 +160,7 @@ export default function Login() {
                 activeOpacity={0.8}
               >
                 <LinearGradient
-                  colors={[Colors.light.primary, Colors.light.buttonBackground]}
+                  colors={[colors.primary, colors.buttonBackground]}
                   style={styles.buttonGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -169,7 +170,7 @@ export default function Login() {
                   </Text>
                   {!isLoading && (
                     <View style={styles.buttonArrow}>
-                      <Entypo name="chevron-right" size={20} color="#000" />
+                      <Entypo name="chevron-right" size={20} color={colors.buttonText} />
                     </View>
                   )}
                 </LinearGradient>
@@ -217,212 +218,221 @@ export default function Login() {
   );
 }
 
-const styles = StyleSheet.create({
-  backgroundPattern: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  },
-  patternCircle1: {
-    position: "absolute",
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "#f5f5f5",
-    top: -100,
-    right: -50,
-  },
-  patternCircle2: {
-    position: "absolute",
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: "#f5f5f5",
-    bottom: 100,
-    left: -75,
-  },
-  patternCircle3: {
-    position: "absolute",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#fafafa",
-    top: "40%",
-    right: 30,
-  },
-  container: {
-    flex: 1,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-    paddingVertical: 40,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "center",
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 48,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 24,
-  },
-  logoCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  iconImage: {
-    position: "absolute",
-    width: 64,
-    borderRadius: 32,
-    height: 64,
-  },
-  logoText: {
-    fontSize: 24,
-    fontWeight: "200",
-    letterSpacing: 6,
-    color: "#1a1a1a",
-    textTransform: "uppercase",
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#1a1a1a",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666666",
-    textAlign: "center",
-    fontWeight: "400",
-  },
-  form: {
-    marginBottom: 32,
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1a1a1a",
-    marginBottom: 8,
-    letterSpacing: 0.5,
-  },
-  input: {
-    backgroundColor: "#f9f9f9",
-    borderWidth: 1,
-    borderColor: "#e0e0e0",
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    fontSize: 16,
-    color: "#1a1a1a",
-  },
-  passwordContainer: {
-    position: "relative",
-  },
-  passwordInput: {
-    paddingRight: 50,
-  },
-  eyeButton: {
-    position: "absolute",
-    right: 16,
-    top: 16,
-    padding: 4,
-  },
-  forgotPasswordContainer: {
-    alignItems: "flex-end",
-    marginTop: 12,
-  },
-  forgotPasswordText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1a1a1a",
-    textDecorationLine: "underline",
-  },
-  actions: {
-    gap: 20,
-  },
-  primaryButton: {
-    width: "100%",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  buttonGradient: {
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-    letterSpacing: 1,
-    marginRight: 12,
-  },
-  buttonArrow: {
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 8,
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#e0e0e0",
-  },
-  dividerText: {
-    marginHorizontal: 16,
-    fontSize: 14,
-    color: "#666666",
-  },
-  secondaryButton: {
-    paddingVertical: 12,
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    fontSize: 14,
-    color: "#666666",
-  },
-  linkText: {
-    color: "#1a1a1a",
-    fontWeight: "600",
-    textDecorationLine: "underline",
-  },
-  dummyUserButton: {
-    paddingVertical: 12,
-    alignItems: "center",
-    marginTop: 8,
-  },
-  dummyUserText: {
-    fontSize: 13,
-    color: "#999999",
-    fontStyle: "italic",
-    textDecorationLine: "underline",
-  },
-});
+const getStyles = (colorScheme: ColorScheme) => {
+  const colors = Colors[colorScheme];
+  const isDark = colorScheme === "dark";
+
+  return StyleSheet.create({
+    backgroundPattern: {
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+    },
+    patternCircle1: {
+      position: "absolute",
+      width: 200,
+      height: 200,
+      borderRadius: 100,
+      backgroundColor: isDark ? "#1a1a1a" : "#f5f5f5",
+      top: -100,
+      right: -50,
+    },
+    patternCircle2: {
+      position: "absolute",
+      width: 150,
+      height: 150,
+      borderRadius: 75,
+      backgroundColor: isDark ? "#1a1a1a" : "#f5f5f5",
+      bottom: 100,
+      left: -75,
+    },
+    patternCircle3: {
+      position: "absolute",
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: isDark ? "#151515" : "#fafafa",
+      top: "40%",
+      right: 30,
+    },
+    container: {
+      flex: 1,
+    },
+    scrollContainer: {
+      flexGrow: 1,
+      paddingVertical: 40,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: 32,
+      justifyContent: "center",
+    },
+    header: {
+      alignItems: "center",
+      marginBottom: 48,
+    },
+    logoContainer: {
+      alignItems: "center",
+      marginBottom: 24,
+    },
+    logoCircle: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      marginBottom: 20,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    iconImage: {
+      position: "absolute",
+      width: 64,
+      borderRadius: 32,
+      height: 64,
+    },
+    logoText: {
+      fontSize: 24,
+      fontWeight: "200",
+      letterSpacing: 6,
+      color: colors.text,
+      textTransform: "uppercase",
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: "700",
+      fontFamily: "Inter_700Bold",
+      color: colors.text,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.secondary,
+      textAlign: "center",
+      fontWeight: "400",
+    },
+    form: {
+      marginBottom: 32,
+    },
+    inputContainer: {
+      marginBottom: 20,
+    },
+    label: {
+      fontSize: 14,
+      fontWeight: "600",
+      fontFamily: "Inter_600SemiBold",
+      color: colors.text,
+      marginBottom: 8,
+      letterSpacing: 0.5,
+    },
+    input: {
+      backgroundColor: colors.inputBackground,
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 12,
+      paddingHorizontal: 16,
+      paddingVertical: 16,
+      fontSize: 16,
+      fontFamily: "Inter_400Regular",
+      color: colors.text,
+    },
+    passwordContainer: {
+      position: "relative",
+    },
+    passwordInput: {
+      paddingRight: 50,
+    },
+    eyeButton: {
+      position: "absolute",
+      right: 16,
+      top: 16,
+      padding: 4,
+    },
+    forgotPasswordContainer: {
+      alignItems: "flex-end",
+      marginTop: 12,
+    },
+    forgotPasswordText: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: colors.text,
+      textDecorationLine: "underline",
+    },
+    actions: {
+      gap: 20,
+    },
+    primaryButton: {
+      width: "100%",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.15,
+      shadowRadius: 16,
+      elevation: 8,
+    },
+    buttonGradient: {
+      paddingVertical: 18,
+      paddingHorizontal: 32,
+      borderRadius: 12,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    primaryButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+      fontFamily: "Inter_600SemiBold",
+      color: colors.buttonText,
+      letterSpacing: 1,
+      marginRight: 12,
+    },
+    buttonArrow: {
+      backgroundColor: "rgba(255, 255, 255, 0.3)",
+      width: 32,
+      height: 32,
+      borderRadius: 16,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    dividerContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: 8,
+    },
+    divider: {
+      flex: 1,
+      height: 1,
+      backgroundColor: colors.border,
+    },
+    dividerText: {
+      marginHorizontal: 16,
+      fontSize: 14,
+      color: colors.secondary,
+    },
+    secondaryButton: {
+      paddingVertical: 12,
+      alignItems: "center",
+    },
+    secondaryButtonText: {
+      fontSize: 14,
+      color: colors.secondary,
+    },
+    linkText: {
+      color: colors.text,
+      fontWeight: "600",
+      textDecorationLine: "underline",
+    },
+    dummyUserButton: {
+      paddingVertical: 12,
+      alignItems: "center",
+      marginTop: 8,
+    },
+    dummyUserText: {
+      fontSize: 13,
+      color: colors.inputPlaceholder,
+      fontStyle: "italic",
+      textDecorationLine: "underline",
+    },
+  });
+};
