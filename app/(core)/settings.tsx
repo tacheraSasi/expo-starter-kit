@@ -510,10 +510,12 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
+    fontFamily: 'Inter_700Bold',
   },
   headerSubtitle: {
     fontSize: 13,
     marginTop: 2,
+    fontFamily: 'Inter_400Regular',
   },
   section: {
     marginHorizontal: 16,
@@ -532,10 +534,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
+    fontFamily: 'Inter_600SemiBold',
   },
   sectionSubtitle: {
     fontSize: 13,
     lineHeight: 18,
+    fontFamily: 'Inter_400Regular',
   },
   advancedToggle: {
     flexDirection: "row",
@@ -572,10 +576,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     marginBottom: 2,
+    fontFamily: 'Inter_600SemiBold',
   },
   settingSubtitle: {
     fontSize: 12,
     lineHeight: 16,
+    fontFamily: 'Inter_400Regular',
   },
   settingRight: {
     flexDirection: "row",
@@ -599,5 +605,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     textAlign: "center",
     opacity: 0.6,
+    fontFamily: 'Inter_400Regular',
   },
 });

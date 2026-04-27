@@ -409,6 +409,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
+    fontFamily: 'Inter_700Bold',
     marginBottom: 16,
   },
   inputContainer: {
@@ -417,6 +418,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: 'Inter_500Medium',
     marginBottom: 8,
   },
   textInput: {
@@ -425,6 +427,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
+    fontFamily: 'Inter_400Regular',
     minHeight: 50,
   },
   socialInputContainer: {
@@ -450,6 +453,7 @@ const styles = StyleSheet.create({
   },
   helperText: {
     fontSize: 14,
+    fontFamily: 'Inter_400Regular',
     lineHeight: 20,
     marginBottom: 4,
   },

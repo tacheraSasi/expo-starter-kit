@@ -22,7 +22,7 @@ function TabBarIcon(props: {
       size={26}
       style={{ marginBottom: -3 }}
       name={props.name}
-      color={props.focused ? "black" : theme.subtleText}
+      color={props.focused ? theme.text : theme.subtleText}
     />
   );
 }
@@ -39,18 +39,19 @@ export default function TabsLayout() {
           tabBarStyle: {
             backgroundColor: theme.isDark ? "#000" : "#fff",
             borderTopWidth: 0.5,
-            borderTopColor: "rgba(0, 0, 0, 0.16)",
+            borderTopColor: theme.border,
             paddingVertical: 18,
             height: 82,
           },
           // tabBarActiveTintColor:
           //   Colors.tabColors[route.name as keyof typeof Colors.tabColors] ??
           //   theme.primary,
-          tabBarActiveTintColor: "black",
+          tabBarActiveTintColor: theme.text,
           tabBarInactiveTintColor: theme.subtleText,
           tabBarLabelStyle: {
             fontSize: 12,
             fontWeight: "600",
+            fontFamily: 'Inter_600SemiBold',
           },
         })}
       >

@@ -273,11 +273,13 @@ const styles = StyleSheet.create({
   userName: {
     fontSize: 20,
     fontWeight: "700",
+    fontFamily: 'Inter_700Bold',
     marginBottom: 4,
   },
   userEmail: {
     fontSize: 14,
     fontWeight: "400",
+    fontFamily: 'Inter_400Regular',
   },
   drawerLinks: {
     flex: 1,
@@ -310,6 +312,7 @@ const styles = StyleSheet.create({
   menuItemText: {
     fontSize: 16,
     fontWeight: "500",
+    fontFamily: 'Inter_500Medium',
     flex: 1,
   },
   footer: {
@@ -329,6 +332,7 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 16,
     fontWeight: "500",
+    fontFamily: 'Inter_500Medium',
     flex: 1,
     marginLeft: 0,
   },
@@ -352,12 +356,14 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+    fontFamily: 'Inter_600SemiBold',
   },
   drawerStyle: {
     width: width * 0.82,
   },
   drawerLabelStyle: {
     fontWeight: "500",
+    fontFamily: 'Inter_500Medium',
     fontSize: 15,
     marginLeft: -20,
   },

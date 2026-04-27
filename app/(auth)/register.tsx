@@ -1,4 +1,6 @@
 import ScreenLayout from "@/components/ScreenLayout";
+import Colors, { ColorScheme } from "@/constants/Colors";
+import { useCurrentTheme } from "@/context/CentralTheme";
 import { Feather, Entypo } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -14,15 +16,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StatusBar,
 } from "react-native";
 import { toast } from "yooo-native";
 import { useAuth } from "../../context/ctx";
-import Colors from "@/constants/Colors";
 
 export default function Register() {
   const router = useRouter();
   const { signUp, isLoading } = useAuth();
+  const theme = useCurrentTheme();
+  const colors = Colors[theme.colorScheme];
+  const styles = getStyles(theme.colorScheme);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -117,8 +120,6 @@ export default function Register() {
 
   return (
     <ScreenLayout>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
       {/* Background Pattern */}
       <View style={styles.backgroundPattern}>
         <View style={styles.patternCircle1} />
@@ -164,7 +165,7 @@ export default function Register() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your full name"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={name}
                   onChangeText={setName}
                   autoCapitalize="words"
@@ -178,7 +179,7 @@ export default function Register() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your email address"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -194,7 +195,7 @@ export default function Register() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your phone number"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={phoneNumber}
                   onChangeText={setPhoneNumber}
                   keyboardType="phone-pad"
@@ -210,7 +211,7 @@ export default function Register() {
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
                     placeholder="Create a password (min. 6 characters)"
-                    placeholderTextColor="#999999"
+                    placeholderTextColor={theme.inputPlaceholder}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={!showPassword}
@@ -224,7 +225,7 @@ export default function Register() {
                     <Feather
                       name={showPassword ? "eye-off" : "eye"}
                       size={20}
-                      color="#666666"
+                      color={theme.secondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -237,7 +238,7 @@ export default function Register() {
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
                     placeholder="Confirm your password"
-                    placeholderTextColor="#999999"
+                    placeholderTextColor={theme.inputPlaceholder}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry={!showConfirmPassword}
@@ -251,7 +252,7 @@ export default function Register() {
                     <Feather
                       name={showConfirmPassword ? "eye-off" : "eye"}
                       size={20}
-                      color="#666666"
+                      color={theme.secondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -268,8 +269,8 @@ export default function Register() {
                   style={[
                     styles.checkbox,
                     {
-                      borderColor: "#e0e0e0",
-                      backgroundColor: agreeToTerms ? "#98a75e" : "transparent",
+                      borderColor: theme.border,
+                      backgroundColor: agreeToTerms ? theme.primary : "transparent",
                     },
                   ]}
                 >
@@ -304,7 +305,7 @@ export default function Register() {
                 activeOpacity={0.8}
               >
                 <LinearGradient
-                  colors={[Colors.light.primary, Colors.light.buttonBackground]}
+                  colors={[colors.primary, colors.buttonBackground]}
                   style={styles.buttonGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -314,7 +315,7 @@ export default function Register() {
                   </Text>
                   {!isLoading && (
                     <View style={styles.buttonArrow}>
-                      <Entypo name="chevron-right" size={20} color="#000" />
+                      <Entypo name="chevron-right" size={20} color={theme.buttonText} />
                     </View>
                   )}
                 </LinearGradient>
@@ -347,7 +348,10 @@ export default function Register() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colorScheme: ColorScheme) => {
+  const colors = Colors[colorScheme];
+  const isDark = colorScheme === 'dark';
+  return StyleSheet.create({
   backgroundPattern: {
     position: "absolute",
     width: "100%",
@@ -358,7 +362,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
     top: -100,
     right: -50,
   },
@@ -367,7 +371,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
     bottom: 100,
     left: -75,
   },
@@ -376,7 +380,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#fafafa",
+    backgroundColor: isDark ? '#151515' : '#fafafa',
     top: "35%",
     right: 30,
   },
@@ -421,21 +425,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "200",
     letterSpacing: 6,
-    color: "#1a1a1a",
+    color: colors.text,
     textTransform: "uppercase",
+    fontFamily: 'Inter_400Regular',
   },
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#1a1a1a",
+    color: colors.text,
     marginBottom: 8,
     textAlign: "center",
+    fontFamily: 'Inter_700Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: "#666666",
+    color: colors.secondary,
     textAlign: "center",
     fontWeight: "400",
+    fontFamily: 'Inter_400Regular',
   },
   form: {
     marginBottom: 28,
@@ -446,19 +453,21 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: colors.text,
     marginBottom: 8,
     letterSpacing: 0.5,
+    fontFamily: 'Inter_600SemiBold',
   },
   input: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: colors.inputBackground,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    color: "#1a1a1a",
+    color: colors.text,
+    fontFamily: 'Inter_400Regular',
   },
   passwordContainer: {
     position: "relative",
@@ -490,7 +499,8 @@ const styles = StyleSheet.create({
   checkmark: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#000",
+    color: colors.buttonText,
+    fontFamily: 'Inter_400Regular',
   },
   checkboxTextContainer: {
     flex: 1,
@@ -501,7 +511,8 @@ const styles = StyleSheet.create({
   checkboxText: {
     fontSize: 14,
     lineHeight: 20,
-    color: "#666666",
+    color: colors.secondary,
+    fontFamily: 'Inter_400Regular',
   },
   linkPressable: {
     marginHorizontal: 2,
@@ -528,9 +539,10 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#000",
+    color: colors.buttonText,
     letterSpacing: 1,
     marginRight: 12,
+    fontFamily: 'Inter_600SemiBold',
   },
   buttonArrow: {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -548,12 +560,13 @@ const styles = StyleSheet.create({
   divider: {
     flex: 1,
     height: 1,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: colors.border,
   },
   dividerText: {
     marginHorizontal: 16,
     fontSize: 14,
-    color: "#666666",
+    color: colors.secondary,
+    fontFamily: 'Inter_400Regular',
   },
   secondaryButton: {
     paddingVertical: 12,
@@ -561,11 +574,14 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     fontSize: 14,
-    color: "#666666",
+    color: colors.secondary,
+    fontFamily: 'Inter_400Regular',
   },
   linkText: {
-    color: "#1a1a1a",
+    color: colors.text,
     fontWeight: "600",
     textDecorationLine: "underline",
+    fontFamily: 'Inter_600SemiBold',
   },
 });
+};

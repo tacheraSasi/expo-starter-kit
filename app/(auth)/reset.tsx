@@ -1,4 +1,6 @@
 import ScreenLayout from "@/components/ScreenLayout";
+import { Colors, ColorScheme } from "@/constants/Colors";
+import { useCurrentTheme } from "@/context/CentralTheme";
 import { Feather, Entypo } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -13,16 +15,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StatusBar,
 } from "react-native";
 import { toast } from "yooo-native";
 import { useAuth } from "../../context/ctx";
-import { Colors } from "@/constants/Colors";
 
 export default function ResetPassword() {
   const router = useRouter();
   const { isLoading } = useAuth();
   const { email } = useLocalSearchParams<{ email: string }>();
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme.colorScheme);
 
   const [code, setCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -78,7 +80,6 @@ export default function ResetPassword() {
 
   return (
     <ScreenLayout>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
 
       {/* Background Pattern */}
       <View style={styles.backgroundPattern}>
@@ -127,7 +128,7 @@ export default function ResetPassword() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter the 6-digit code"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={code}
                   onChangeText={setCode}
                   keyboardType="number-pad"
@@ -144,7 +145,7 @@ export default function ResetPassword() {
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
                     placeholder="Enter new password (min. 6 characters)"
-                    placeholderTextColor="#999999"
+                    placeholderTextColor={theme.inputPlaceholder}
                     value={newPassword}
                     onChangeText={setNewPassword}
                     secureTextEntry={!showNewPassword}
@@ -158,7 +159,7 @@ export default function ResetPassword() {
                     <Feather
                       name={showNewPassword ? "eye-off" : "eye"}
                       size={20}
-                      color="#666666"
+                      color={theme.secondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -171,7 +172,7 @@ export default function ResetPassword() {
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
                     placeholder="Confirm your new password"
-                    placeholderTextColor="#999999"
+                    placeholderTextColor={theme.inputPlaceholder}
                     value={confirmPassword}
                     onChangeText={setConfirmPassword}
                     secureTextEntry={!showConfirmPassword}
@@ -185,7 +186,7 @@ export default function ResetPassword() {
                     <Feather
                       name={showConfirmPassword ? "eye-off" : "eye"}
                       size={20}
-                      color="#666666"
+                      color={theme.secondary}
                     />
                   </TouchableOpacity>
                 </View>
@@ -210,7 +211,7 @@ export default function ResetPassword() {
                 activeOpacity={0.8}
               >
                 <LinearGradient
-                  colors={[Colors.light.primary, Colors.light.buttonBackground]}
+                  colors={[Colors[theme.colorScheme].primary, Colors[theme.colorScheme].buttonBackground]}
                   style={styles.buttonGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -220,7 +221,7 @@ export default function ResetPassword() {
                   </Text>
                   {!isLoading && (
                     <View style={styles.buttonArrow}>
-                      <Entypo name="chevron-right" size={20} color="#000" />
+                      <Entypo name="chevron-right" size={20} color={Colors[theme.colorScheme].buttonText} />
                     </View>
                   )}
                 </LinearGradient>
@@ -245,7 +246,11 @@ export default function ResetPassword() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colorScheme: ColorScheme) => {
+  const colors = Colors[colorScheme];
+  const isDark = colorScheme === 'dark';
+
+  return StyleSheet.create({
   backgroundPattern: {
     position: "absolute",
     width: "100%",
@@ -256,7 +261,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
     top: -100,
     right: -50,
   },
@@ -265,7 +270,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
     bottom: 100,
     left: -75,
   },
@@ -274,7 +279,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#fafafa",
+    backgroundColor: isDark ? '#151515' : '#fafafa',
     top: "35%",
     right: 30,
   },
@@ -319,21 +324,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "200",
     letterSpacing: 6,
-    color: "#1a1a1a",
+    color: colors.text,
     textTransform: "uppercase",
+    fontFamily: 'Inter_400Regular',
   },
   title: {
     fontSize: 32,
     fontWeight: "700",
-    color: "#1a1a1a",
+    color: colors.text,
     marginBottom: 8,
     textAlign: "center",
+    fontFamily: 'Inter_700Bold',
   },
   subtitle: {
     fontSize: 16,
-    color: "#666666",
+    color: colors.secondary,
     textAlign: "center",
     fontWeight: "400",
+    fontFamily: 'Inter_400Regular',
   },
   form: {
     marginBottom: 28,
@@ -344,19 +352,21 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1a1a1a",
+    color: colors.text,
     marginBottom: 8,
     letterSpacing: 0.5,
+    fontFamily: 'Inter_600SemiBold',
   },
   input: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: colors.inputBackground,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    color: "#1a1a1a",
+    color: colors.text,
+    fontFamily: 'Inter_400Regular',
   },
   passwordContainer: {
     position: "relative",
@@ -374,15 +384,16 @@ const styles = StyleSheet.create({
     marginTop: 16,
     padding: 16,
     borderRadius: 12,
-    backgroundColor: "rgba(245, 199, 36, 0.08)",
+    backgroundColor: isDark ? 'rgba(245, 199, 36, 0.12)' : 'rgba(245, 199, 36, 0.08)',
     borderWidth: 1,
-    borderColor: "rgba(245, 199, 36, 0.2)",
+    borderColor: isDark ? 'rgba(245, 199, 36, 0.3)' : 'rgba(245, 199, 36, 0.2)',
   },
   infoText: {
     fontSize: 14,
     lineHeight: 20,
     textAlign: "center",
-    color: "#666666",
+    color: colors.secondary,
+    fontFamily: 'Inter_400Regular',
   },
   actions: {
     gap: 20,
@@ -406,9 +417,10 @@ const styles = StyleSheet.create({
   primaryButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#000",
+    color: colors.buttonText,
     letterSpacing: 1,
     marginRight: 12,
+    fontFamily: 'Inter_600SemiBold',
   },
   buttonArrow: {
     backgroundColor: "rgba(255, 255, 255, 0.3)",
@@ -424,11 +436,14 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     fontSize: 14,
-    color: "#666666",
+    color: colors.secondary,
+    fontFamily: 'Inter_400Regular',
   },
   linkText: {
-    color: "#1a1a1a",
+    color: colors.text,
     fontWeight: "600",
     textDecorationLine: "underline",
+    fontFamily: 'Inter_600SemiBold',
   },
 });
+};

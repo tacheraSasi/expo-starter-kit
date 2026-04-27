@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 import React from "react";
 import {
   Dimensions,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,7 +11,8 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/ctx";
 import { useHaptics } from "@/hooks/useHaptics";
-import Colors from "@/constants/Colors";
+import Colors, { ColorScheme } from "@/constants/Colors";
+import { useCurrentTheme } from "@/context/CentralTheme";
 
 const { width, height } = Dimensions.get("window");
 
@@ -20,6 +20,9 @@ export default function Step2() {
   const router = useRouter();
   const { completeOnboarding } = useAuth();
   const { trigger: haptics } = useHaptics();
+  const theme = useCurrentTheme();
+  const colors = Colors[theme.colorScheme];
+  const styles = getStyles(theme.colorScheme);
 
   const handleGetStarted = () => {
     completeOnboarding();
@@ -34,8 +37,6 @@ export default function Step2() {
 
   return (
     <ScreenLayout>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
       {/* Geometric Background */}
       <View style={styles.backgroundGeometry}>
         <View style={styles.geometricShape1} />
@@ -115,7 +116,7 @@ export default function Step2() {
             activeOpacity={0.8}
           >
             <LinearGradient
-              colors={[Colors.light.primary, Colors.light.buttonBackground]}
+              colors={[colors.primary, colors.buttonBackground]}
               style={styles.primaryGradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
@@ -140,241 +141,254 @@ export default function Step2() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  backgroundGeometry: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-  },
-  geometricShape1: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    backgroundColor: "#e4e4e4ff",
-    transform: [{ rotate: "45deg" }],
-    top: 80,
-    left: -60,
-  },
-  geometricShape2: {
-    position: "absolute",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#e4e4e4ff",
-    bottom: 200,
-    right: -40,
-  },
-  geometricTriangle: {
-    position: "absolute",
-    width: 0,
-    height: 0,
-    borderLeftWidth: 30,
-    borderRightWidth: 30,
-    borderBottomWidth: 50,
-    borderStyle: "solid",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#f8f8f8",
-    top: "45%",
-    right: 60,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 32,
-    justifyContent: "space-between",
-  },
-  headerSection: {
-    alignItems: "center",
-  },
-  waveformContainer: {
-    marginBottom: 12,
-    alignItems: "center",
-  },
-  waveformBars: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    gap: 4,
-    paddingVertical: 20,
-  },
-  waveBar: {
-    width: 3,
-    backgroundColor: "#1a1a1a",
-    borderRadius: 1.5,
-  },
-  headerTitle: {
-    fontSize: 38,
-    fontWeight: "300",
-    textAlign: "center",
-    color: "#1a1a1a",
-    lineHeight: 46,
-    letterSpacing: -0.5,
-  },
-  titleBold: {
-    fontWeight: "700",
-  },
-  featuresSection: {
-    paddingVertical: 20,
-  },
-  featuresTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333333",
-    textAlign: "center",
-    marginBottom: 32,
-    letterSpacing: 0.5,
-  },
-  featuresGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    gap: 16,
-  },
-  featureCard: {
-    width: (width - 80) / 2,
-    backgroundColor: "#ffffff",
-    borderRadius: 16,
-    padding: 20,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#f0f0f0",
-  },
-  featureIcon: {
-    width: 40,
-    height: 40,
-    marginBottom: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  iconWave: {
-    width: 24,
-    height: 3,
-    backgroundColor: "#000000",
-    borderRadius: 1.5,
-  },
-  iconCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "#000000",
-  },
-  iconCircleSmall: {
-    position: "absolute",
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#666666",
-    top: 2,
-    right: 2,
-  },
-  iconSpark: {
-    width: 16,
-    height: 16,
-    backgroundColor: "#000000",
-    transform: [{ rotate: "45deg" }],
-  },
-  iconSparkSmall: {
-    position: "absolute",
-    width: 8,
-    height: 8,
-    backgroundColor: "#666666",
-    borderRadius: 4,
-    top: -2,
-    right: -2,
-  },
-  iconHeart: {
-    width: 18,
-    height: 16,
-    backgroundColor: "#000000",
-    borderTopLeftRadius: 9,
-    borderTopRightRadius: 9,
-    transform: [{ rotate: "45deg" }],
-  },
-  featureLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#1a1a1a",
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  featureDesc: {
-    fontSize: 12,
-    color: "#666666",
-    textAlign: "center",
-    fontWeight: "400",
-  },
-  ctaSection: {
-    alignItems: "center",
-    paddingBottom: 50,
-  },
-  primaryButton: {
-    width: "90%",
-    marginBottom: 24,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  primaryGradient: {
-    paddingVertical: 18,
-    paddingHorizontal: 32,
-    borderRadius: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  primaryButtonText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-    letterSpacing: 0.8,
-    marginRight: 12,
-  },
-  buttonSparkle: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sparkleText: {
-    fontSize: 14,
-  },
-  secondaryButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    marginBottom: 32,
-  },
-  secondaryButtonText: {
-    fontSize: 14,
-    color: "#666666",
-    textAlign: "center",
-    fontWeight: "400",
-  },
-  loginLink: {
-    color: "#1a1a1a",
-    fontWeight: "600",
-    textDecorationLine: "underline",
-  },
-  pagination: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "#e0e0e0",
-  },
-  paginationActive: {
-    width: 32,
-    backgroundColor: "#000000",
-  },
-});
+const getStyles = (colorScheme: ColorScheme) => {
+  const colors = Colors[colorScheme];
+  const isDark = colorScheme === "dark";
+
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    backgroundGeometry: {
+      position: "absolute",
+      width: "100%",
+      height: "100%",
+    },
+    geometricShape1: {
+      position: "absolute",
+      width: 120,
+      height: 120,
+      backgroundColor: isDark ? "#2a2a2a" : "#e4e4e4",
+      transform: [{ rotate: "45deg" }],
+      top: 80,
+      left: -60,
+    },
+    geometricShape2: {
+      position: "absolute",
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      backgroundColor: isDark ? "#2a2a2a" : "#e4e4e4",
+      bottom: 200,
+      right: -40,
+    },
+    geometricTriangle: {
+      position: "absolute",
+      width: 0,
+      height: 0,
+      borderLeftWidth: 30,
+      borderRightWidth: 30,
+      borderBottomWidth: 50,
+      borderStyle: "solid",
+      borderLeftColor: "transparent",
+      borderRightColor: "transparent",
+      borderBottomColor: isDark ? "#1a1a1a" : "#f8f8f8",
+      top: "45%",
+      right: 60,
+    },
+    content: {
+      flex: 1,
+      paddingHorizontal: 32,
+      justifyContent: "space-between",
+    },
+    headerSection: {
+      alignItems: "center",
+    },
+    waveformContainer: {
+      marginBottom: 12,
+      alignItems: "center",
+    },
+    waveformBars: {
+      flexDirection: "row",
+      alignItems: "flex-end",
+      gap: 4,
+      paddingVertical: 20,
+    },
+    waveBar: {
+      width: 3,
+      backgroundColor: colors.text,
+      borderRadius: 1.5,
+    },
+    headerTitle: {
+      fontSize: 38,
+      fontWeight: "300",
+      fontFamily: "Inter_400Regular",
+      textAlign: "center",
+      color: colors.text,
+      lineHeight: 46,
+      letterSpacing: -0.5,
+    },
+    titleBold: {
+      fontWeight: "700",
+      fontFamily: "Inter_700Bold",
+    },
+    featuresSection: {
+      paddingVertical: 20,
+    },
+    featuresTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      fontFamily: "Inter_600SemiBold",
+      color: isDark ? "#cccccc" : "#333333",
+      textAlign: "center",
+      marginBottom: 32,
+      letterSpacing: 0.5,
+    },
+    featuresGrid: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      gap: 16,
+    },
+    featureCard: {
+      width: (width - 80) / 2,
+      backgroundColor: colors.background,
+      borderRadius: 16,
+      padding: 20,
+      alignItems: "center",
+      borderWidth: 1,
+      borderColor: isDark ? "#333333" : "#f0f0f0",
+    },
+    featureIcon: {
+      width: 40,
+      height: 40,
+      marginBottom: 16,
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+    },
+    iconWave: {
+      width: 24,
+      height: 3,
+      backgroundColor: isDark ? "#ffffff" : "#000000",
+      borderRadius: 1.5,
+    },
+    iconCircle: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      backgroundColor: isDark ? "#ffffff" : "#000000",
+    },
+    iconCircleSmall: {
+      position: "absolute",
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: colors.secondary,
+      top: 2,
+      right: 2,
+    },
+    iconSpark: {
+      width: 16,
+      height: 16,
+      backgroundColor: isDark ? "#ffffff" : "#000000",
+      transform: [{ rotate: "45deg" }],
+    },
+    iconSparkSmall: {
+      position: "absolute",
+      width: 8,
+      height: 8,
+      backgroundColor: colors.secondary,
+      borderRadius: 4,
+      top: -2,
+      right: -2,
+    },
+    iconHeart: {
+      width: 18,
+      height: 16,
+      backgroundColor: isDark ? "#ffffff" : "#000000",
+      borderTopLeftRadius: 9,
+      borderTopRightRadius: 9,
+      transform: [{ rotate: "45deg" }],
+    },
+    featureLabel: {
+      fontSize: 14,
+      fontWeight: "600",
+      fontFamily: "Inter_600SemiBold",
+      color: colors.text,
+      marginBottom: 4,
+      textAlign: "center",
+    },
+    featureDesc: {
+      fontSize: 12,
+      fontFamily: "Inter_400Regular",
+      color: colors.secondary,
+      textAlign: "center",
+      fontWeight: "400",
+    },
+    ctaSection: {
+      alignItems: "center",
+      paddingBottom: 50,
+    },
+    primaryButton: {
+      width: "90%",
+      marginBottom: 24,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.2,
+      shadowRadius: 16,
+      elevation: 8,
+    },
+    primaryGradient: {
+      paddingVertical: 18,
+      paddingHorizontal: 32,
+      borderRadius: 14,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    primaryButtonText: {
+      fontSize: 16,
+      fontWeight: "600",
+      fontFamily: "Inter_600SemiBold",
+      color: colors.buttonText,
+      letterSpacing: 0.8,
+      marginRight: 12,
+    },
+    buttonSparkle: {
+      backgroundColor: "rgba(255,255,255,0.2)",
+      width: 26,
+      height: 26,
+      borderRadius: 13,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    sparkleText: {
+      fontSize: 14,
+    },
+    secondaryButton: {
+      paddingVertical: 16,
+      paddingHorizontal: 20,
+      marginBottom: 32,
+    },
+    secondaryButtonText: {
+      fontSize: 14,
+      fontFamily: "Inter_400Regular",
+      color: colors.secondary,
+      textAlign: "center",
+      fontWeight: "400",
+    },
+    loginLink: {
+      color: colors.text,
+      fontWeight: "600",
+      fontFamily: "Inter_600SemiBold",
+      textDecorationLine: "underline",
+    },
+    pagination: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+    },
+    paginationDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.border,
+    },
+    paginationActive: {
+      width: 32,
+      backgroundColor: isDark ? "#ffffff" : "#000000",
+    },
+  });
+};

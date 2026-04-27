@@ -5,8 +5,26 @@ import { ThemeStatusBar } from "../context/CentralTheme";
 import { SessionProvider, useSession } from "../context/ctx";
 import { ThemeProvider } from "../context/ThemeProvider";
 import { SplashScreenController } from "../components/splash";
+import { useFonts } from "expo-font";
+import {
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
 
 export default function Root() {
+  const [fontsLoaded] = useFonts({
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>

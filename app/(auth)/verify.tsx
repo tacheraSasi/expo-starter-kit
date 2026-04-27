@@ -13,13 +13,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  StatusBar,
 } from "react-native";
 import { useAuth } from "../../context/ctx";
 import { alert } from "yooo-native";
-import Colors from "@/constants/Colors";
+import { Colors, ColorScheme } from "@/constants/Colors";
+import { useCurrentTheme } from "@/context/CentralTheme";
 
 export default function Verify() {
+  const theme = useCurrentTheme();
+  const colors = Colors[theme.colorScheme];
+  const styles = getStyles(theme.colorScheme);
   const router = useRouter();
   const params = useLocalSearchParams();
   const { verifyAccount, sendVerificationEmail, isLoading } = useAuth();
@@ -62,8 +65,6 @@ export default function Verify() {
 
   return (
     <ScreenLayout>
-      <StatusBar barStyle="dark-content" backgroundColor="#ffffff" />
-
       {/* Background Pattern */}
       <View style={styles.backgroundPattern}>
         <View style={styles.patternCircle1} />
@@ -111,7 +112,7 @@ export default function Verify() {
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your email address"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -127,7 +128,7 @@ export default function Verify() {
                 <TextInput
                   style={[styles.input, styles.otpInput]}
                   placeholder="Enter 6-digit code"
-                  placeholderTextColor="#999999"
+                  placeholderTextColor={theme.inputPlaceholder}
                   value={otp}
                   onChangeText={setOtp}
                   keyboardType="number-pad"
@@ -159,7 +160,7 @@ export default function Verify() {
                 activeOpacity={0.8}
               >
                 <LinearGradient
-                  colors={[Colors.light.primary, Colors.light.buttonBackground]}
+                  colors={[colors.primary, colors.buttonBackground]}
                   style={styles.buttonGradient}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
@@ -169,7 +170,7 @@ export default function Verify() {
                   </Text>
                   {!isLoading && (
                     <View style={styles.buttonArrow}>
-                      <Entypo name="chevron-right" size={20} color="#000" />
+                      <Entypo name="chevron-right" size={20} color={colors.buttonText} />
                     </View>
                   )}
                 </LinearGradient>
@@ -192,7 +193,10 @@ export default function Verify() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (colorScheme: ColorScheme) => {
+  const colors = Colors[colorScheme];
+  const isDark = colorScheme === 'dark';
+  return StyleSheet.create({
   backgroundPattern: {
     position: "absolute",
     width: "100%",
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
     top: -100,
     right: -50,
   },
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 75,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: isDark ? '#1a1a1a' : '#f5f5f5',
     bottom: 100,
     left: -75,
   },
@@ -221,7 +225,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: "#fafafa",
+    backgroundColor: isDark ? '#151515' : '#fafafa',
     top: "40%",
     right: 30,
   },
@@ -266,21 +270,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "200",
     letterSpacing: 6,
-    color: "#1a1a1a",
+    color: colors.text,
     textTransform: "uppercase",
   },
   title: {
     fontSize: 32,
-    fontWeight: "700",
-    color: "#1a1a1a",
+    fontFamily: "Inter_700Bold",
+    color: colors.text,
     marginBottom: 8,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    color: "#666666",
+    color: colors.secondary,
     textAlign: "center",
-    fontWeight: "400",
+    fontFamily: "Inter_400Regular",
     lineHeight: 22,
   },
   form: {
@@ -291,24 +295,25 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#1a1a1a",
+    fontFamily: "Inter_600SemiBold",
+    color: colors.text,
     marginBottom: 8,
     letterSpacing: 0.5,
   },
   input: {
-    backgroundColor: "#f9f9f9",
+    backgroundColor: colors.inputBackground,
     borderWidth: 1,
-    borderColor: "#e0e0e0",
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 16,
     fontSize: 16,
-    color: "#1a1a1a",
+    fontFamily: "Inter_400Regular",
+    color: colors.text,
   },
   otpInput: {
     fontSize: 24,
-    fontWeight: "600",
+    fontFamily: "Inter_600SemiBold",
     letterSpacing: 8,
   },
   resendContainer: {
@@ -317,8 +322,8 @@ const styles = StyleSheet.create({
   },
   resendText: {
     fontSize: 14,
-    fontWeight: "600",
-    color: "#1a1a1a",
+    fontFamily: "Inter_600SemiBold",
+    color: colors.text,
     textDecorationLine: "underline",
   },
   actions: {
@@ -342,8 +347,8 @@ const styles = StyleSheet.create({
   },
   primaryButtonText: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
+    fontFamily: "Inter_600SemiBold",
+    color: colors.buttonText,
     letterSpacing: 1,
     marginRight: 12,
   },
@@ -361,7 +366,9 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     fontSize: 14,
-    color: "#666666",
+    fontFamily: "Inter_400Regular",
+    color: colors.secondary,
     textDecorationLine: "underline",
   },
 });
+};
