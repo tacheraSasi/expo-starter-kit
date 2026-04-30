@@ -52,11 +52,12 @@ function RootNavigator() {
         <Stack.Screen name="(core)" />
       </Stack.Protected>
 
+      <Stack.Protected guard={!session && !isOnboarded}>
+        <Stack.Screen name="(onboarding)" />
+      </Stack.Protected>
+
       <Stack.Protected guard={!session}>
-        <Stack.Protected guard={!isOnboarded}>
-          <Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-        </Stack.Protected>
-        <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        <Stack.Screen name="(auth)" />
       </Stack.Protected>
     </Stack>
   );

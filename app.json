@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "expo",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/icon.png",
       "resizeMode": "contain",
@@ -30,8 +29,6 @@
         "monochromeImage": "./assets/images/android/res/mipmap-xxxhdpi/ic_launcher_monochrome.png"
       },
       "icon": "./assets/images/android/res/mipmap-xxxhdpi/ic_launcher.png",
-      "playStoreIcon": "./assets/images/android/play_store_512.png",
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.tach.expo",
       "permissions": [
@@ -64,7 +61,10 @@
           "requestLocationPermission": true,
           "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-image",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
