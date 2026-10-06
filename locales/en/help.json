@@ -26,7 +26,7 @@
     "q4": "How do I change the theme?"
   },
   "answers": {
-    "a1": "Install dependencies and run the development server. No backend is needed — the mock API simulates auth and data locally.",
+    "a1": "Install dependencies and run the development server. No backend is needed - the mock API simulates auth and data locally.",
     "a2": "Any email and password works, and 123456 for all OTP screens.",
     "a3": "Open lib/api/config.ts for the axios client and replace the method bodies in lib/api/index.ts with real network calls. Method names stay the same.",
     "a4": "Open Settings and choose Light, Dark, or System. The choice persists across restarts."

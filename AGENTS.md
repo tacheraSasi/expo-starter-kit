@@ -1,4 +1,4 @@
-# Starter Kit — Agent Guide
+# Starter Kit - Agent Guide
 
 ## Quick start
 
@@ -27,21 +27,21 @@ screens/hooks keep working.
 
 ## Architecture
 
-**Expo SDK 56** — file-based routing via **expo-router**.
+**Expo SDK 56** - file-based routing via **expo-router**.
 
 Three route groups:
-- `app/(auth)/` — login, register, forgot/reset, verify, terms
-- `app/(onboarding)/` — step1, step2 (shown once per fresh install or after logout)
-- `app/(core)/` — authenticated screens behind `Stack.Protected guard={!!session}`
+- `app/(auth)/` - login, register, forgot/reset, verify, terms
+- `app/(onboarding)/` - step1, step2 (shown once per fresh install or after logout)
+- `app/(core)/` - authenticated screens behind `Stack.Protected guard={!!session}`
 
 Core sub-routes:
-- `(drawer)/(tabs)/` — home, profile (main screens)
-- `(modals)/` — `presentation: "modal"` (full-screen overlays)
-- `(formsheets)/` — `presentation: "formSheet"` (iOS native sheet)
+- `(drawer)/(tabs)/` - home, profile (main screens)
+- `(modals)/` - `presentation: "modal"` (full-screen overlays)
+- `(formsheets)/` - `presentation: "formSheet"` (iOS native sheet)
 
 **Prefer screens over bottom sheets.** `NativeAppBottomSheet` (from
 `@expo/ui/community/bottom-sheet`) is the canonical sheet component, for
-secondary actions only — never primary create/edit flows.
+secondary actions only - never primary create/edit flows.
 
 ## API layer (`lib/api/`)
 
@@ -74,7 +74,7 @@ are set.
 `SessionProvider` (`context/ctx.tsx`) with three split contexts
 (`useAuthUser` / `useAuthSession` / `useAuthActions`; `useAuth` combined).
 
-- **`signOut()` already calls `router.replace("/(auth)/login")`** — do not add a second navigation after calling it.
+- **`signOut()` already calls `router.replace("/(auth)/login")`** - do not add a second navigation after calling it.
 - The axios request interceptor (`lib/api/config.ts`) calls
   `router.replace("/(auth)/login")` on 401 / refresh failure. **Guard
   background API calls with `authToken("access")` checks.**
@@ -95,7 +95,7 @@ function MyScreen() {
 }
 ```
 
-`useCurrentTheme()` returns all semantic tokens — never use raw hex values
+`useCurrentTheme()` returns all semantic tokens - never use raw hex values
 (defined in `constants/Colors.ts`).
 
 **Never use box shadows.** No `shadowColor`/`shadowOffset`/`shadowOpacity`/
@@ -143,5 +143,5 @@ import { useAuth } from "@/context/ctx";
 - **Expo Go fallback:** MMKV is unavailable in Expo Go, so storage falls
   back to an in-memory shim (data lasts for the session only). Remote push
   also needs a dev build. Everything else works in Expo Go.
-- `logger.log/warn/error` only outputs in `__DEV__` — no-op in production.
+- `logger.log/warn/error` only outputs in `__DEV__` - no-op in production.
 - The `@expo/vector-icons` `Ionicons` and `Feather` families are used throughout.

@@ -1,4 +1,4 @@
-# Apple App Store Submission Guide — Starter Kit
+# Apple App Store Submission Guide - Starter Kit
 
 This guide walks through every step required to submit Starter Kit to the Apple App Store using **Expo Application Services (EAS)**.
 
@@ -27,7 +27,7 @@ This guide walks through every step required to submit Starter Kit to the Apple 
 
 Before you begin, ensure you have:
 
-- [ ] **Apple Developer Account** ($99/year) — [developer.apple.com](https://developer.apple.com)
+- [ ] **Apple Developer Account** ($99/year) - [developer.apple.com](https://developer.apple.com)
 - [ ] **Expo account** linked to the project (`owner: template-app2024`)
 - [ ] **EAS CLI** installed: `npm install -g eas-cli`
 - [ ] **Xcode** installed (for local testing on simulator, optional if using EAS Build)
@@ -119,7 +119,7 @@ To find your **Apple Team ID**:
 
 ## 4. EAS Configuration for iOS
 
-### 4.1 app.json — iOS Configuration
+### 4.1 app.json - iOS Configuration
 
 The app is already configured with these critical iOS settings in `app.json`:
 
@@ -171,12 +171,12 @@ The app is already configured with these critical iOS settings in `app.json`:
 | `bundleIdentifier` | Must match App Store Connect exactly |
 | `buildNumber` | Auto-incremented by EAS on each build |
 | `icon` | 1024×1024 marketing icon (no alpha channel) |
-| `privacyManifests` | Required since iOS 17 — declares API usage reasons |
+| `privacyManifests` | Required since iOS 17 - declares API usage reasons |
 | `infoPlist.UIBackgroundModes` | Enables background push notification processing |
 | `infoPlist.NSFaceIDUsageDescription` | Required since the app uses `expo-secure-store` (Face ID/Touch ID) |
 | `infoPlist.NSUserTrackingUsageDescription` | Required if using any tracking-related APIs |
 
-### 4.2 eas.json — Build & Submit Profiles
+### 4.2 eas.json - Build & Submit Profiles
 
 ```json
 {
@@ -216,7 +216,7 @@ Starter Kit uses **Expo Push Notifications** which route through Apple Push Noti
 3. Enter a name: `Starter Kit Push Key`
 4. Check **"Apple Push Notifications service (APNs)"**
 5. Click **Continue** → **Register**
-6. **Download the `.p8` file** — you can only download it once!
+6. **Download the `.p8` file** - you can only download it once!
 7. Note the **Key ID** shown on the confirmation page
 
 ### 5.2 Configure APNs in Expo
@@ -261,7 +261,7 @@ After building and installing on a physical iOS device:
    - Enter the push token
    - Send a test notification
 
-> **Note:** Push notifications do NOT work on the iOS Simulator — use a physical device.
+> **Note:** Push notifications do NOT work on the iOS Simulator - use a physical device.
 
 ---
 
@@ -336,10 +336,10 @@ In App Store Connect, declare what data your app collects:
 1. Go to **App Store Connect → Your App → App Privacy**
 2. Click **"Get Started"**
 3. For each data type, declare:
-   - **Contact Info** (name, email) — Used for account functionality
-   - **Identifiers** (user ID) — Used for app functionality
-   - **Usage Data** — Used for analytics (if applicable)
-   - **Diagnostics** (crash data) — Used for app functionality
+   - **Contact Info** (name, email) - Used for account functionality
+   - **Identifiers** (user ID) - Used for app functionality
+   - **Usage Data** - Used for analytics (if applicable)
+   - **Diagnostics** (crash data) - Used for app functionality
 
 ### 7.4 Permission Usage Descriptions
 
@@ -557,7 +557,7 @@ Required sizes (provide at least one set):
 ```
 Starter Kit is a batteries-included Expo starter with auth, theming (light/dark/system), offline-ready caching, push
 notifications, OTA updates, biometric app lock, and multi-language support
-(English + Swahili) — all running against a built-in mock API so you can
+(English + Swahili) - all running against a built-in mock API so you can
 evaluate it with no backend.
 ```
 
@@ -611,7 +611,7 @@ Once the app is live, you can push over-the-air updates for JS changes using Exp
 eas update --branch production --message "Bug fix for..."
 ```
 
-OTA updates do **not** require a new App Store review. However, you **cannot** change native code (plugins, permissions, native modules) via OTA — those require a new binary submission.
+OTA updates do **not** require a new App Store review. However, you **cannot** change native code (plugins, permissions, native modules) via OTA - those require a new binary submission.
 
 ### 12.4 Version Updates
 
@@ -627,43 +627,43 @@ For new version submissions:
 
 ## 13. Common Rejection Reasons & Fixes
 
-### 13.1 Guideline 5.1.1 — Data Collection and Storage (Privacy)
+### 13.1 Guideline 5.1.1 - Data Collection and Storage (Privacy)
 
 **Problem:** Missing privacy manifest or incomplete privacy declarations.
 
 **Fix:** Privacy manifests are configured in `app.json → ios.privacyManifests`. Ensure all third-party SDKs also include their privacy manifests. Complete the App Privacy questionnaire in App Store Connect.
 
-### 13.2 Guideline 5.1.2 — Data Use and Sharing
+### 13.2 Guideline 5.1.2 - Data Use and Sharing
 
 **Problem:** Not clearly describing how user data is used.
 
 **Fix:** Ensure your Privacy Policy URL is valid and comprehensive. Complete all App Privacy declarations in App Store Connect.
 
-### 13.3 Guideline 2.1 — App Completeness
+### 13.3 Guideline 2.1 - App Completeness
 
 **Problem:** App crashes, has broken links, or includes placeholder content.
 
 **Fix:** Test all flows thoroughly. Ensure all WebView URLs (`https://template-apperp.com/terms`, account deletion page) are accessible. Test on both iPhone and iPad.
 
-### 13.4 Guideline 4.0 — Design (Login Requirements)
+### 13.4 Guideline 4.0 - Design (Login Requirements)
 
 **Problem:** App requires login but doesn't offer account creation or demo mode.
 
 **Fix:** The app includes both login and registration. Provide demo credentials to the App Store review team.
 
-### 13.5 Guideline 5.1.1 (v2) — Account Deletion
+### 13.5 Guideline 5.1.1 (v2) - Account Deletion
 
 **Problem:** Apple requires that apps offering account creation must also offer account deletion.
 
 **Fix:** The app has an account deletion flow at `(core)/account-deletion.tsx` accessible from Settings. Ensure the web page at `https://template-apperp.com/dashboard/company-settings?tab=account-deletion` works correctly.
 
-### 13.6 Guideline 2.5.4 — Background Modes
+### 13.6 Guideline 2.5.4 - Background Modes
 
 **Problem:** App declares `UIBackgroundModes` but doesn't actually use them.
 
 **Fix:** The app uses `remote-notification` background mode for push notifications, which is legitimate. Do not declare any unused background modes.
 
-### 13.7 Guideline 5.1.2 — Permission Requests
+### 13.7 Guideline 5.1.2 - Permission Requests
 
 **Problem:** Permission descriptions are too vague or not relevant to the app's functionality.
 
@@ -728,7 +728,7 @@ This tells Apple the app only uses standard encryption and automates compliance.
 
 ---
 
-## Quick Reference — Command Cheat Sheet
+## Quick Reference - Command Cheat Sheet
 
 ```bash
 # Build for iOS

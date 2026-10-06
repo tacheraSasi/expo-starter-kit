@@ -2,8 +2,8 @@
  * Dummy / mock API for the starter kit.
  *
  * No backend required: every method simulates network latency and persists
- * to the on-device MMKV store (via ./authToken) so the full auth flow —
- * register, login, verify, forgot/reset, logout — can be exercised offline.
+ * to the on-device MMKV store (via ./authToken) so the full auth flow -
+ * register, login, verify, forgot/reset, logout - can be exercised offline.
  *
  * Test accounts:
  * - Any email + any password signs in successfully.

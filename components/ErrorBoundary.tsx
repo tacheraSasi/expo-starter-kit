@@ -89,7 +89,7 @@ export function ErrorBoundary({
           </View>
         )}
 
-        {/* Optional: "What were you doing?" — gentle expand/collapse */}
+        {/* Optional: "What were you doing?" - gentle expand/collapse */}
         {!notesOpen ? (
           <HapticTouchableOpacity
             style={s.addNotesLink}

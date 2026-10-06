@@ -22,7 +22,7 @@ interface NotificationState {
  *  - User marks all as read              → `reset()`   from notifications screen
  *  - App foregrounds / home focuses      → refetch via `Api.getUnreadNotificationCount`
  *
- * The store is intentionally NOT persisted — the server is the source of truth,
+ * The store is intentionally NOT persisted - the server is the source of truth,
  * and stale local counts are reconciled on the next foreground transition.
  */
 export const useNotificationStore = create<NotificationState>((set) => ({

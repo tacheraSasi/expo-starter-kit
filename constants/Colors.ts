@@ -5,7 +5,7 @@
  * Brand fills (brandColor, gradients) keep the original #00A670 identity.
  * Dark mode is designed to complement it with proper contrast ratios.
  *
- * Every screen should use these tokens via useCurrentTheme() — never raw hex values.
+ * Every screen should use these tokens via useCurrentTheme() - never raw hex values.
  */
 
 const tintColorLight = "#00845c";
