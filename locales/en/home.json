@@ -1,0 +1,35 @@
+{
+  "title": "Home",
+  "welcome": "Welcome back",
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "demoList": {
+      "title": "Demo List",
+      "description": "Paginated mock data"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "View account"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Configure"
+    }
+  },
+  "stats": {
+    "todayPerformance": "Today at a glance",
+    "demoItems": "Demo Items",
+    "notifications": "Notifications",
+    "appVersion": "App Version"
+  },
+  "loading": "Loading...",
+  "errors": {
+    "failedToLoad": "Failed to load content",
+    "retry": "Retry"
+  }
+}

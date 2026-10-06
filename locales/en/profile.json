@@ -1,0 +1,35 @@
+{
+  "title": "Account",
+  "sections": {
+    "personal": "Personal Information",
+    "security": "Security",
+    "preferences": "Preferences",
+    "about": "About"
+  },
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "language": "Language",
+    "theme": "Theme"
+  },
+  "actions": {
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "logout": "Logout"
+  },
+  "password": {
+    "title": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Update Password",
+    "success": "Password updated successfully",
+    "error": "Failed to update password"
+  },
+  "myAccount": "My Account",
+  "fullName": "Full Name",
+  "loggingOut": "Logging out...",
+  "deleteAccount": "Delete Account"
+}

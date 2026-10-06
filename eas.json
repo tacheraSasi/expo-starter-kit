@@ -3,19 +3,50 @@
     "preview": {
       "android": {
         "buildType": "apk"
-      }
+      },
+      "autoIncrement": true,
+      "channel": "preview"
     },
     "preview2": {
       "android": {
         "gradleCommand": ":app:assembleRelease"
-      }
+      },
+      "channel": "preview"
     },
     "preview3": {
-      "developmentClient": true
+      "developmentClient": true,
+      "channel": "development"
     },
     "preview4": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview"
     },
-    "production": {}
+    "dev": {
+      "developmentClient": true,
+      "autoIncrement": true,
+      "channel": "development"
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "production"
+    },
+    "ios-simulator": {
+      "ios": {
+        "simulator": true
+      },
+      "channel": "development"
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account-key.json",
+        "track": "internal"
+      },
+      "ios": {}
+    }
+  },
+  "cli": {
+    "appVersionSource": "remote"
   }
 }

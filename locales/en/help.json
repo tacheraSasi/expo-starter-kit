@@ -1,0 +1,34 @@
+{
+  "headerTitle": "Help & Support",
+  "searchPlaceholder": "Search for help...",
+  "contactUs": "Contact Us",
+  "faqTitle": "Frequently Asked Questions",
+  "quickLinks": "Quick Links",
+  "userGuide": "User Guide",
+  "about": "About this starter kit",
+  "privacy": "Privacy Policy",
+  "copyright": "© {{year}} Starter Kit. All rights reserved.",
+  "noResults": "No results found",
+  "noResultsHint": "Try different keywords or contact support",
+  "faqCategories": {
+    "gettingStarted": "Getting Started",
+    "account": "Account & Sign In",
+    "customization": "Customization"
+  },
+  "contactOptions": {
+    "emailSupport": "Email Support",
+    "helpCenter": "Help Center"
+  },
+  "questions": {
+    "q1": "How do I run this starter kit?",
+    "q2": "How does the demo login work?",
+    "q3": "How do I connect a real backend?",
+    "q4": "How do I change the theme?"
+  },
+  "answers": {
+    "a1": "Install dependencies and run the development server. No backend is needed — the mock API simulates auth and data locally.",
+    "a2": "Any email and password works, and 123456 for all OTP screens.",
+    "a3": "Open lib/api/config.ts for the axios client and replace the method bodies in lib/api/index.ts with real network calls. Method names stay the same.",
+    "a4": "Open Settings and choose Light, Dark, or System. The choice persists across restarts."
+  }
+}

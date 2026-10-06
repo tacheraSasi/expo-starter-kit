@@ -20,6 +20,10 @@ interface ScreenLayoutProps {
  * - If `fullScreen` is true, it renders content without SafeAreaView for edge-to-edge layouts.
  * - If `keyboardAware` is true, it wraps content in a KeyboardAwareView to adjust for the keyboard.
  * - The `insideTabs` prop adjusts safe area edges when used within a tab navigator to prevent double spacing with the tab bar.
+ *
+ * IMPORTANT: For screens with TextInputs inside a `keyboardAware` layout, we wrap the form in a
+ * `ScrollView` with `keyboardShouldPersistTaps="handled"` to ensure proper keyboard dismissal and
+ * form field accessibility (especially on Android).
  */
 export default function ScreenLayout({
   children,
@@ -27,7 +31,7 @@ export default function ScreenLayout({
   fullScreen = false,
   keyboardAware = false,
   keyboardVerticalOffset = 0,
-  insideTabs = false
+  insideTabs = false,
 }: ScreenLayoutProps) {
   const theme = useCurrentTheme();
 
@@ -62,7 +66,9 @@ export default function ScreenLayout({
   }
 
   // When inside tabs, exclude bottom edge to avoid double spacing with tab bar
-  const safeAreaEdges = insideTabs ? ['top', 'left', 'right'] as const : undefined;
+  const safeAreaEdges = insideTabs
+    ? (["top", "left", "right"] as const)
+    : undefined;
 
   const safeAreaContent = (
     <SafeAreaView

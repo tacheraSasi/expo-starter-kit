@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    fontFamily: 'Inter_700Bold',
     flex: 1,
     textAlign: "center",
   },
@@ -94,6 +93,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: 'Inter_600SemiBold',
   },
 });

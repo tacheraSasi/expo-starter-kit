@@ -6,13 +6,10 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { useState, useMemo, useCallback } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  DrawerContentScrollView,
-  DrawerContentComponentProps,
-} from "@react-navigation/drawer";
 import { useAuth } from "@/context/ctx";
 import { useCurrentTheme } from "@/context/CentralTheme";
 import { router } from "expo-router";
@@ -20,7 +17,9 @@ import { brandColor } from "@/constants/Colors";
 
 const { width } = Dimensions.get("window");
 
-const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+// Props come from expo-router's Drawer; kept loose to avoid coupling
+// to a specific navigation library version.
+const CustomDrawerContent = (props: any) => {
   const { user, signOut } = useAuth();
   const theme = useCurrentTheme();
   const [isLoading, setIsLoading] = useState(false);
@@ -107,8 +106,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       </View>
 
       {/* Drawer Menu Items */}
-      <DrawerContentScrollView
-        {...props}
+      <ScrollView
         style={[styles.drawerLinks, { backgroundColor: theme.background }]}
         contentContainerStyle={styles.drawerLinksContent}
         showsVerticalScrollIndicator={false}
@@ -153,7 +151,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
             </TouchableOpacity>
           ))}
         </View>
-      </DrawerContentScrollView>
+      </ScrollView>
 
       {/* Footer Section */}
       <View style={[styles.footer, { backgroundColor: theme.background }]}>

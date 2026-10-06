@@ -1,104 +1,174 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
-import { Platform } from "react-native";
+import { useMemo, useRef } from "react";
+import {
+  StyleSheet,
+  type ViewStyle,
+  type TextStyle,
+  type ImageStyle,
+} from "react-native";
 import { useTheme } from "./ThemeProvider";
+import type { ThemeColors, ColorScheme } from "../constants/Colors";
 
 /**
- * Central hook for all theme-related needs
- * This replaces useAdaptiveColors, useContextualAdaptiveColors, etc.
+ * The canonical theme hook for every screen and component.
  *
- * Usage:
- * const theme = useCurrentTheme() ;
- * const textColor = theme.text;
- * const isDark = theme.isDark;
+ * Returns all semantic tokens from Colors.ts plus convenience flags.
+ * Usage:  const theme = useCurrentTheme();
  */
 export function useCurrentTheme() {
   const { colors, colorScheme, isDark, isLight } = useTheme();
 
   return {
-    // Theme state
+    // ── Theme state ───────────────────────────
     colorScheme,
     isDark,
     isLight,
 
-    // Basic colors - direct from theme
+    // ── Core ──────────────────────────────────
     text: colors.text,
     background: colors.background,
     primary: colors.primary,
     secondary: colors.secondary,
     tint: colors.tint,
 
-    // Semantic colors
+    // ── Surfaces ──────────────────────────────
     surface: colors.surface,
-    border: colors.border,
+    elevatedSurface: colors.elevatedSurface,
     card: colors.card,
+    cardAlt: colors.cardAlt,
 
-    // Status colors
+    // ── Borders & dividers ────────────────────
+    border: colors.border,
+    borderLight: colors.borderLight,
+    divider: colors.divider,
+
+    // ── Text hierarchy ────────────────────────
+    textPrimary: colors.textPrimary,
+    textSecondary: colors.textSecondary,
+    textTertiary: colors.textTertiary,
+    textMuted: colors.textMuted,
+    textDisabled: colors.textDisabled,
+    textInverse: colors.textInverse,
+
+    // ── Status ────────────────────────────────
     success: colors.success,
+    successBg: colors.successBg,
     warning: colors.warning,
+    warningBg: colors.warningBg,
     error: colors.error,
+    errorBg: colors.errorBg,
+    info: colors.info,
+    infoBg: colors.infoBg,
     notification: colors.notification,
 
-    // Interactive colors
+    // ── Interactive ───────────────────────────
     buttonBackground: colors.buttonBackground,
     buttonText: colors.buttonText,
+    buttonSecondaryBg: colors.buttonSecondaryBg,
+    buttonSecondaryText: colors.buttonSecondaryText,
+    buttonDestructiveBg: colors.buttonDestructiveBg,
+    buttonDestructiveText: colors.buttonDestructiveText,
 
-    // Input colors
+    // ── Input ─────────────────────────────────
     inputBackground: colors.inputBackground,
     inputBorder: colors.inputBorder,
     inputText: colors.inputText,
     inputPlaceholder: colors.inputPlaceholder,
 
-    // Extended colors for better UX
-    subtleText: isDark ? "#cccccc" : "#666666",
-    mutedText: isDark ? "#999999" : "#888888",
-    accent: isDark ? "#4dabf7" : "#1c7ed6",
+    // ── Brand accents ─────────────────────────
+    primarySoft: colors.primarySoft,
+    primaryMuted: colors.primaryMuted,
 
-    // Layout colors
-    cardBackground: isDark ? "#1a1a1a" : "#ffffff",
-    divider: isDark ? "#333333" : "#e0e0e0",
-    highlight: isDark ? "#2d2d2d" : "#f0f0f0",
+    // ── Tab bar ───────────────────────────────
+    tabIconDefault: colors.tabIconDefault,
+    tabIconSelected: colors.tabIconSelected,
+    tabBackground: colors.tabBackground,
+    tabBorder: colors.tabBorder,
 
-    // Shadow and overlay
-    shadowColor: isDark ? "#000000" : "#000000",
-    shadowOpacity: isDark ? 0.3 : 0.1,
-    overlayBackground: isDark ? "rgba(0,0,0,0.8)" : "rgba(0,0,0,0.5)",
+    // ── Header ────────────────────────────────
+    headerBackground: colors.headerBackground,
+    headerText: colors.headerText,
+    headerBorder: colors.headerBorder,
 
-    // Status bar style
+    // ── Bottom sheet ──────────────────────────
+    sheetBackground: colors.sheetBackground,
+    sheetHandle: colors.sheetHandle,
+
+    // ── Skeleton ──────────────────────────────
+    skeletonBase: colors.skeletonBase,
+    skeletonHighlight: colors.skeletonHighlight,
+
+    // ── Misc ──────────────────────────────────
+    chevron: colors.chevron,
+    overlay: colors.overlay,
+    shadowColor: colors.shadowColor,
+    shadowOpacity: colors.shadowOpacity,
+    highlight: colors.highlight,
+    link: colors.link,
+
+    // ── Backward-compat aliases ───────────────
+    // Screens that already used these names keep working.
+    subtleText: colors.textSecondary,
+    mutedText: colors.textMuted,
+    cardBackground: colors.card,
+
+    // ── Status bar ────────────────────────────
     statusBarStyle: isDark ? ("light" as const) : ("dark" as const),
   };
 }
 
+/** Return type so screens can type their style-creator parameter. */
+export type AppTheme = ReturnType<typeof useCurrentTheme>;
+
+// ─── useThemedStyles ──────────────────────────────────────────────
+//
+// Creates a memoized StyleSheet that re-computes only when the
+// color scheme changes.
+//
+//   const useStyles = createStyles((theme) => ({
+//     container: { flex: 1, backgroundColor: theme.background },
+//     title:     { color: theme.text, fontSize: 18 },
+//   }));
+//
+//   function MyScreen() {
+//     const styles = useStyles();
+//     ...
+//   }
+//
+
+type NamedStyles<T> = {
+  [P in keyof T]: ViewStyle | TextStyle | ImageStyle | string;
+};
+
 /**
- * Hook that automatically manages status bar based on theme
- * Use this in your root component or screens that need status bar control
+ * Factory that returns a hook.  Call the hook inside your component
+ * to get a theme-aware StyleSheet that updates reactively.
  */
-export function useThemeStatusBar() {
-  const theme = useCurrentTheme();
+export function createStyles<T extends NamedStyles<T>>(
+  factory: (theme: AppTheme) => T,
+) {
+  return function useStyles(): T {
+    const theme = useCurrentTheme();
+    // Cache the StyleSheet by colorScheme so it's only rebuilt on actual theme change
+    const cacheRef = useRef<{ scheme: string; styles: T } | null>(null);
 
-  useEffect(() => {
-    // Auto-configure status bar based on theme
-    if (Platform.OS === "ios") {
-      // iOS uses the StatusBar component from expo-status-bar
-      // The component will handle this automatically
-    }
-  }, [theme.isDark]);
-
-  return theme;
+    return useMemo(() => {
+      if (cacheRef.current?.scheme === theme.colorScheme) {
+        return cacheRef.current.styles;
+      }
+      const raw = factory(theme);
+      const styles = StyleSheet.create(raw as any) as unknown as T;
+      cacheRef.current = { scheme: theme.colorScheme, styles };
+      return styles;
+    }, [theme.colorScheme]);
+  };
 }
 
 /**
- * Status Bar Component that automatically adapts to theme
- * Use this instead of manual StatusBar configuration
+ * Status Bar Component that automatically adapts to theme.
  */
 export function ThemeStatusBar() {
   const theme = useCurrentTheme();
 
-  return (
-    <StatusBar
-      style={theme.statusBarStyle}
-      backgroundColor={theme.background}
-      translucent={false}
-    />
-  );
+  return <StatusBar style={theme.statusBarStyle} />;
 }

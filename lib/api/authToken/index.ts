@@ -1,39 +1,43 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import logger from "../../logger";
+import { mmkv } from "../../storage/mmkv";
+import { isJwtExpired } from "../../utils";
 
+/**
+ * Generic current-user shape for the starter kit.
+ * Backends differ (id as number|string, name vs fullName, single role
+ * vs roles array); this interface accepts the common superset and the
+ * `currentUser()` migration below normalizes legacy caches.
+ */
 export interface CurrentUser {
   id: string;
-  name: string;
+  name?: string;
+  fullName?: string;
   email: string;
-  role: string;
+  role?: string | null;
+  avatar_url?: string | null;
+  [key: string]: any;
 }
 
+export const LAST_REFRESH_KEY = "template-app:last-refresh-timestamp";
+
 const storage = {
-  getItem: async (key: string): Promise<string | null> => {
-    if (typeof window !== "undefined") {
-      return AsyncStorage.getItem(key);
-    }
-    return null;
+  getItem: (key: string): string | null => {
+    return mmkv.getString(key) ?? null;
   },
-  setItem: async (key: string, value: string): Promise<void> => {
-    if (typeof window !== "undefined") {
-      AsyncStorage.setItem(key, value);
-    }
+  setItem: (key: string, value: string): void => {
+    mmkv.set(key, value);
   },
-  removeItem: async (key: string): Promise<void> => {
-    if (typeof window !== "undefined") {
-      AsyncStorage.removeItem(key);
-    }
+  removeItem: (key: string): void => {
+    mmkv.remove(key);
   },
-  clear: async (): Promise<void> => {
-    if (typeof window !== "undefined") {
-      AsyncStorage.clear();
-    }
+  clear: (): void => {
+    mmkv.clearAll();
   },
 };
 
 export const authToken = async (tokenType: string) => {
-  const _key = `ekili-expo:${tokenType}-token`;
-  return (await storage.getItem(_key)) || null;
+  const _key = `template-app:${tokenType}-token`;
+  return storage.getItem(_key) || null;
 };
 
 export const setAuthToken = async (tokens: {
@@ -42,112 +46,100 @@ export const setAuthToken = async (tokens: {
   try {
     for (const [key, value] of Object.entries(tokens)) {
       if (value !== null) {
-        await storage.setItem(`ekili-expo:${key}-token`, value);
+        storage.setItem(`template-app:${key}-token`, value);
       } else {
         // Remove token if value is null
-        await storage.removeItem(`ekili-expo:${key}-token`);
+        storage.removeItem(`template-app:${key}-token`);
       }
     }
   } catch (error) {
+    logger.error("Error saving auth tokens:", error);
     throw error;
   }
 };
 
 export const saveUser = async (user: CurrentUser) => {
-  await storage.setItem("ekili-expo:user", JSON.stringify(user));
+  storage.setItem("template-app:user", JSON.stringify(user));
 };
 
 export const saveUserData = async (user: any) => {
-  await storage.setItem("ekili-expo:user-data", JSON.stringify(user));
+  storage.setItem("template-app:user-data", JSON.stringify(user));
 };
 
 export const currentUser = async (): Promise<CurrentUser | null> => {
-  const user = await storage.getItem("ekili-expo:user");
-  return user ? JSON.parse(user) : null;
+  const raw = storage.getItem("template-app:user");
+  if (!raw) return null;
+  const parsed = JSON.parse(raw);
+  let migrated = false;
+  // Normalize id to string
+  if (parsed.id !== undefined && typeof parsed.id !== "string") {
+    parsed.id = String(parsed.id);
+    migrated = true;
+  }
+  // Accept either name or fullName; keep both populated
+  if (!parsed.fullName && parsed.name) {
+    parsed.fullName = parsed.name;
+    migrated = true;
+  }
+  if (!parsed.name && parsed.fullName) {
+    parsed.name = parsed.fullName;
+    migrated = true;
+  }
+  // Fold legacy roles[] into single role
+  if (parsed.role === undefined && Array.isArray(parsed.roles)) {
+    parsed.role = parsed.roles[0] ?? null;
+    delete parsed.roles;
+    migrated = true;
+  }
+  if (migrated) {
+    storage.setItem("template-app:user", JSON.stringify(parsed));
+  }
+  return parsed;
 };
 
 export const userData = async () => {
-  const user = await storage.getItem("ekili-expo:user-data");
+  const user = storage.getItem("template-app:user-data");
   return user ? JSON.parse(user) : null;
 };
 
 export const userLocation = async () => {
-  const user = await storage.getItem("ekili-expo:user-data");
-  return user ? JSON.parse(user).userInfo.location : null;
+  const user = storage.getItem("template-app:user-data");
+  return user ? JSON.parse(user).userInfo?.location ?? null : null;
 };
 
 export const isLoggedIn = async () => {
   const user = await currentUser();
-  return user !== null && user.name !== null;
+  return user !== null && (user.fullName ?? user.name) != null;
 };
+
+export interface TokenExpirationInfo {
+  hasAccessToken: boolean;
+  hasRefreshToken: boolean;
+  accessTokenExpired: boolean | null;
+  refreshTokenExpired: boolean | null;
+}
+
+/** True when an access token exists and is not expired. */
+export const hasValidTokens = async (): Promise<boolean> => {
+  const access = await authToken("access");
+  if (!access) return false;
+  return !isJwtExpired(access);
+};
+
+export const getTokenExpirationInfo =
+  async (): Promise<TokenExpirationInfo> => {
+    const [access, refresh] = await Promise.all([
+      authToken("access"),
+      authToken("refresh"),
+    ]);
+    return {
+      hasAccessToken: access !== null,
+      hasRefreshToken: refresh !== null,
+      accessTokenExpired: access ? isJwtExpired(access) : null,
+      refreshTokenExpired: refresh ? isJwtExpired(refresh) : null,
+    };
+  };
 
 export const clearCache = async () => {
-  await storage.clear();
-};
-
-/**
- * Check if user has valid authentication tokens
- * @returns Promise<boolean> - true if user has valid access or refresh token
- */
-export const hasValidTokens = async (): Promise<boolean> => {
-  try {
-    const accessToken = await authToken("access");
-    const refreshToken = await authToken("refresh");
-
-    // Import isJwtExpired locally to avoid circular dependencies
-    const { isJwtExpired } = await import("@/lib/utils");
-
-    // Check if we have at least one valid token
-    const hasValidAccess = !!(accessToken && !isJwtExpired(accessToken));
-    const hasValidRefresh = !!(refreshToken && !isJwtExpired(refreshToken));
-
-    return hasValidAccess || hasValidRefresh;
-  } catch (error) {
-    return false;
-  }
-};
-
-/**
- * Get token expiration info for debugging/monitoring
- * @returns Promise<object> - token expiration details
- */
-export const getTokenExpirationInfo = async () => {
-  try {
-    const accessToken = await authToken("access");
-    const refreshToken = await authToken("refresh");
-
-    const { isJwtExpired } = await import("@/lib/utils");
-
-    return {
-      hasAccessToken: !!accessToken,
-      hasRefreshToken: !!refreshToken,
-      accessTokenExpired: accessToken ? isJwtExpired(accessToken) : null,
-      refreshTokenExpired: refreshToken ? isJwtExpired(refreshToken) : null,
-    };
-  } catch (error) {
-    return null;
-  }
-};
-
-export const storeNotificationPayload = async (
-  callUUID: string,
-  payload: any
-) => {
-  try {
-    await storage.setItem(`notification_${callUUID}`, JSON.stringify(payload));
-  } catch (error) {
-  }
-};
-
-export const retrieveStoredNotificationPayload = async (callUUID: string) => {
-  try {
-    const storedPayload = await storage.getItem(`notification_${callUUID}`);
-    if (storedPayload) {
-      await storage.removeItem(`notification_${callUUID}`);
-      return JSON.parse(storedPayload);
-    }
-    return null;
-  } catch (error) {
-    return null;
-  }
+  storage.clear();
 };

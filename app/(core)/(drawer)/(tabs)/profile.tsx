@@ -1,4 +1,3 @@
-import AvatarModal from "@/components/AvatarModal";
 import ScreenLayout from "@/components/ScreenLayout";
 import MePageSkeleton from "@/components/skeletons/MePageSkeleton";
 import { useCurrentTheme } from "@/context/CentralTheme";
@@ -13,8 +12,6 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerActions } from "@react-navigation/native";
 
 // Backend API User structure (camelCase)
 interface BackendUser {
@@ -99,11 +96,9 @@ const InfoRow: React.FC<InfoRowProps> = ({
 
 export default function Profile() {
   const theme = useCurrentTheme();
-  const navigation = useNavigation();
   const [user, setUser] = useState<BackendUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [avatarModalVisible, setAvatarModalVisible] = useState(false);
 
   const { signOut } = useSession();
 
@@ -281,7 +276,6 @@ export default function Profile() {
               ]}
               onPress={() => {
                 HapticFeedback("light");
-                setAvatarModalVisible(true);
               }}
             >
               <Text style={styles.avatarText}>
@@ -395,13 +389,6 @@ export default function Profile() {
       </ScrollView>
 
       {/* Avatar Modal */}
-      {user && (
-        <AvatarModal
-          visible={avatarModalVisible}
-          onClose={() => setAvatarModalVisible(false)}
-          user={user as any}
-        />
-      )}
 
       {/* Account Actions Bottom Sheet */}
       <BottomSheet

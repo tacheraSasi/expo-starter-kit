@@ -1,0 +1,34 @@
+{
+  "headerTitle": "Msaada",
+  "searchPlaceholder": "Tafuta msaada...",
+  "contactUs": "Wasiliana Nasi",
+  "faqTitle": "Maswali Yanayoulizwa Mara kwa Mara",
+  "quickLinks": "Viungo vya Haraka",
+  "userGuide": "Mwongozo wa Mtumiaji",
+  "about": "Kuhusu starter kit hii",
+  "privacy": "Sera ya Faragha",
+  "copyright": "© {{year}} Starter Kit. Haki zote zimehifadhiwa.",
+  "noResults": "Hakuna matokeo",
+  "noResultsHint": "Jaribu maneno mengine au wasiliana na msaada",
+  "faqCategories": {
+    "gettingStarted": "Kuanza",
+    "account": "Akaunti",
+    "customization": "Ubinafsishaji"
+  },
+  "contactOptions": {
+    "emailSupport": "Msaada kwa Barua Pepe",
+    "helpCenter": "Kituo cha Msaada"
+  },
+  "questions": {
+    "q1": "Ninaendeshaje starter kit hii?",
+    "q2": "Kuingia kwa majaribio kunafanyaje kazi?",
+    "q3": "Ninaunganishaje backend halisi?",
+    "q4": "Ninabadilishaje mandhari?"
+  },
+  "answers": {
+    "a1": "Sakinisha vitegemezi na uendeshe seva ya maendeleo. Hakuna backend inayohitajika.",
+    "a2": "Barua pepe yoyote na nywila hufanya kazi, na 123456 kwa nambari zote.",
+    "a3": "Fungua lib/api/config.ts na ubadilishe miili ya metodi katika lib/api/index.ts na miito halisi ya mtandao.",
+    "a4": "Fungua Mipangilio na uchague Mwanga, Giza, au Mfumo."
+  }
+}

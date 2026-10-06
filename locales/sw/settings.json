@@ -1,0 +1,58 @@
+{
+  "title": "Mipangilio",
+  "subtitle": "Binafsisha matumizi yako",
+  "sections": {
+    "general": "Kawaida",
+    "appearance": "Muonekano",
+    "notifications": "Arifa",
+    "security": "Usalama",
+    "language": "Lugha",
+    "about": "Kuhusu",
+    "dangerZone": "Eneo Hatari"
+  },
+  "general": {
+    "name": "Jina la Kuonyesha",
+    "email": "Barua Pepe"
+  },
+  "appearance": {
+    "theme": "Mandhari",
+    "themeLight": "Mwanga",
+    "themeDark": "Giza",
+    "themeSystem": "Kulingana na Mfumo",
+    "haptics": "Mtetemo",
+    "soundEffects": "Sauti"
+  },
+  "notifications": {
+    "push": "Arifa za Moja kwa Moja"
+  },
+  "security": {
+    "changePassword": "Badilisha Nywila",
+    "biometric": "Uthibitisho wa Kibiometriki",
+    "appLock": "Kufunga Programu",
+    "appLockDesc": "Tumia {{biometricType}} kufungua"
+  },
+  "language": {
+    "title": "Lugha",
+    "current": "Lugha ya Sasa",
+    "select": "Chagua Lugha",
+    "english": "Kiingereza",
+    "second": "Lugha ya pili",
+    "changed": "Lugha imebadilishwa"
+  },
+  "about": {
+    "version": "Toleo",
+    "updated": "Ilisasishwa {{timeAgo}}",
+    "terms": "Sheria na Masharti",
+    "privacy": "Sera ya Faragha",
+    "support": "Msaada"
+  },
+  "actions": {
+    "save": "Hifadhi Mabadiliko",
+    "cancel": "Ghairi",
+    "reset": "Weka Upya",
+    "resetConfirm": "Hii itaweka upya mipangilio yote. Una uhakika?",
+    "deleteAccount": "Futa Akaunti",
+    "deleteAccountConfirm": "Una uhakika unataka kufuta akaunti yako kabisa?",
+    "deleteAccountSuccess": "Akaunti imefutwa"
+  }
+}

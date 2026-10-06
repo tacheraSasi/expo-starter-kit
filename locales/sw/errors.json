@@ -1,0 +1,23 @@
+{
+  "network": {
+    "offline": "Uko nje ya mtandao. Tafadhali angalia muunganisho wako wa mtandao.",
+    "timeout": "Ombi limekosa muda. Tafadhali jaribu tena.",
+    "serverError": "Kosa la seva. Tafadhali jaribu tena baadaye."
+  },
+  "auth": {
+    "unauthorized": "Hauna ruhusa. Tafadhali ingia tena.",
+    "sessionExpired": "Kipindi chako kimeisha. Tafadhali ingia tena.",
+    "invalidCredentials": "Taarifa za kuingia si sahihi. Tafadhali jaribu tena."
+  },
+  "generic": {
+    "unknown": "Kosa lisilojulikana limetokea",
+    "tryAgain": "Kuna tatizo. Tafadhali jaribu tena.",
+    "contactSupport": "Ikiwa tatizo linaendelea, tafadhali wasiliana na msaada."
+  },
+  "data": {
+    "notFound": "Takwimu hazijapatikana",
+    "loadFailed": "Imeshindwa kupakia takwimu",
+    "saveFailed": "Imeshindwa kuhifadhi takwimu",
+    "deleteFailed": "Imeshindwa kufuta takwimu"
+  }
+}

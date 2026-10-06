@@ -1,0 +1,30 @@
+{
+  "step1": {
+    "title1": "Karibu kwenye",
+    "title2": "Starter Kit",
+    "title3": "Jenga haraka",
+    "description": "Uthibitisho, mandhari, arifa na masasisho — viko tayari kubinafsishwa kwa programu yako.",
+    "button": "Anza"
+  },
+  "step2": {
+    "title": "Unda Akaunti Yako",
+    "subtitle": "Jiunge kwa sekunde chache",
+    "emailPlaceholder": "Barua Pepe",
+    "namePlaceholder": "Jina Kamili",
+    "button": "Endelea",
+    "hasAccount": "Una akaunti tayari?",
+    "signIn": "Ingia",
+    "headerTitle": "Imetengenezwa kwa",
+    "headerAccent": "kasi",
+    "featureAuth": "Uthibitisho",
+    "featureAuthDesc": "Mfano rahisi wa kuingia",
+    "featureTheme": "Mandhari",
+    "featureThemeDesc": "Mwanga / giza",
+    "featureOffline": "Nje ya mtandao",
+    "featureOfflineDesc": "Hifadhi + foleni",
+    "featureI18n": "Lugha",
+    "featureI18nDesc": "EN + lugha ya pili",
+    "privacyPolicy": "Sera ya Faragha",
+    "termsOfService": "Sheria za Matumizi"
+  }
+}

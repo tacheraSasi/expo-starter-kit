@@ -1,6 +1,9 @@
+import logger from "@/lib/logger";
 import { router } from "expo-router";
 import {
   createContext,
+  useCallback,
+  useMemo,
   type PropsWithChildren,
   use,
   useEffect,
@@ -11,8 +14,11 @@ import { useOnboardingState } from "../hooks/useOnboardingState";
 import { useStorageState } from "../hooks/useStorageState";
 
 import Api from "../lib/api";
-import { currentUser, isLoggedIn } from "../lib/api/authToken";
+import { currentUser } from "../lib/api/authToken";
+import { registerForPushNotificationsAsync } from "../hooks/usePushNotifications";
+import { appAlert } from "../lib/ui/appAlert";
 import {
+  AuthResponse,
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
@@ -22,48 +28,59 @@ import {
   VerifyResetCodeDto,
 } from "../lib/api/types";
 
-interface AuthContextType {
-  // Auth state
+// ============================
+// Contexts (split by change frequency)
+// ============================
+// Three narrow contexts so a change in one slice only re-renders the
+// consumers that actually read that slice:
+//  - UserContext: user + derived flags (changes on user refresh)
+//  - SessionContext: session/auth loading/onboarding (changes on login/logout)
+//  - ActionsContext: action callbacks (stable, never re-renders consumers)
+
+interface AuthUserContextType {
   user: User | null;
+  isAdmin: boolean;
+}
+
+interface AuthSessionContextType {
   session: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-
-  // Onboarding state
   isOnboarded: boolean;
   isOnboardingLoading: boolean;
   completeOnboarding: () => void;
+}
 
-  // Auth actions
-  signIn: (credentials: LoginDto) => Promise<void>;
+interface AuthActionsContextType {
+  signIn: (credentials: LoginDto) => Promise<AuthResponse | undefined>;
   signUp: (credentials: RegisterDto) => Promise<void>;
   signOut: () => Promise<void>;
-
-  // Account verification
   sendVerificationEmail: (email: string) => Promise<void>;
   verifyAccount: (payload: VerifyOtpDto) => Promise<void>;
-
-  // Password reset
   forgotPassword: (payload: ForgotPasswordDto) => Promise<void>;
   verifyResetCode: (payload: VerifyResetCodeDto) => Promise<void>;
   resetPassword: (payload: ResetPasswordDto) => Promise<void>;
-
-  // Utility
   refreshUserData: () => Promise<void>;
-
-  // Development helper
+  deleteAccount: () => Promise<void>;
   signInWithDummyUser: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({
+const AuthUserContext = createContext<AuthUserContextType>({
   user: null,
+  isAdmin: false,
+});
+
+const AuthSessionContext = createContext<AuthSessionContextType>({
   session: null,
   isLoading: false,
   isAuthenticated: false,
   isOnboarded: false,
   isOnboardingLoading: false,
   completeOnboarding: () => {},
-  signIn: async () => {},
+});
+
+const AuthActionsContext = createContext<AuthActionsContextType>({
+  signIn: async () => undefined,
   signUp: async () => {},
   signOut: async () => {},
   sendVerificationEmail: async () => {},
@@ -72,17 +89,30 @@ const AuthContext = createContext<AuthContextType>({
   verifyResetCode: async () => {},
   resetPassword: async () => {},
   refreshUserData: async () => {},
+  deleteAccount: async () => {},
   signInWithDummyUser: () => {},
 });
 
-// Use this hook to access the user info.
-export function useAuth() {
-  const value = use(AuthContext);
-  if (!value) {
-    throw new Error("useAuth must be wrapped in a <SessionProvider />");
-  }
+// Narrow hooks: subscribe to one slice only. Prefer these over `useAuth`.
+export function useAuthUser() {
+  return use(AuthUserContext);
+}
 
-  return value;
+export function useAuthSession() {
+  return use(AuthSessionContext);
+}
+
+export function useAuthActions() {
+  return use(AuthActionsContext);
+}
+
+// Combined hook: re-renders on any auth slice change.
+export function useAuth() {
+  return {
+    ...useAuthUser(),
+    ...useAuthSession(),
+    ...useAuthActions(),
+  };
 }
 
 // For backward compatibility
@@ -95,11 +125,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Helper to clear all auth state
-  const clearAuthState = () => {
+  const clearAuthState = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
     setSession(null);
-  };
+  }, [setSession]);
 
   // Onboarding state
   const {
@@ -112,15 +142,16 @@ export function SessionProvider({ children }: PropsWithChildren) {
   // Initialize auth state
   useEffect(() => {
     initializeAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeAuth = async () => {
     try {
       setIsLoading(true);
-      const loggedIn = await isLoggedIn();
+      // currentUser() is the single source of truth.
       const userData = await currentUser();
 
-      if (loggedIn && userData) {
+      if (userData && (userData.fullName ?? (userData as any).name) != null) {
         setUser(userData as any);
         setIsAuthenticated(true);
         setSession("authenticated");
@@ -130,6 +161,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         setSession(null);
       }
     } catch (error) {
+      logger.error("Auth initialization error:", error);
       setUser(null);
       setIsAuthenticated(false);
       setSession(null);
@@ -138,55 +170,94 @@ export function SessionProvider({ children }: PropsWithChildren) {
     }
   };
 
-  const signIn = async (credentials: LoginDto) => {
-    try {
-      setIsLoading(true);
-      const response = await Api.login(credentials);
+  // Shared "login completed" routine. Stores the user, marks the session as
+  // authenticated, fires push-token registration, and navigates to the app.
+  const completeLogin = useCallback(
+    (backendUser: User) => {
+      setUser(backendUser);
+      setIsAuthenticated(true);
+      setSession("authenticated");
 
-      if (response.user) {
-        setUser(response.user);
-        setIsAuthenticated(true);
-        setSession("authenticated");
+      // Complete onboarding on successful login
+      setOnboardingComplete();
 
-        // Complete onboarding on successful login
-        setOnboardingComplete();
+      // Register push notification token after successful login
+      registerForPushNotificationsAsync()
+        .then((token) => {
+          if (token) {
+            Api.registerPushToken(token).catch((err) =>
+              logger.warn("Failed to register push token:", err),
+            );
+          }
+        })
+        .catch((err) => logger.warn("Push token registration skipped:", err));
 
-        // Navigate to main app
-        router.replace("/");
+      // Navigate to main app
+      router.replace("/");
+    },
+    [setSession, setOnboardingComplete],
+  );
+
+  const signIn = useCallback(
+    async (credentials: LoginDto) => {
+      try {
+        setIsLoading(true);
+        const response = await Api.login(credentials);
+
+        if (response.user) {
+          completeLogin(response.user);
+          return response;
+        }
+      } catch (error) {
+        throw error;
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [completeLogin],
+  );
 
-  const signUp = async (credentials: RegisterDto) => {
-    try {
-      setIsLoading(true);
-      const response = await Api.register(credentials);
+  const signUp = useCallback(
+    async (credentials: RegisterDto) => {
+      try {
+        setIsLoading(true);
+        const response = await Api.register(credentials);
 
-      if (response.user) {
-        setUser(response.user);
-        // Don't set as authenticated until account is verified
-        setIsAuthenticated(false);
-        setSession(null);
-
-        // Complete onboarding on successful registration
-        setOnboardingComplete();
+        const newUser =
+          (response as any).data?.user ?? (response as any).user;
+        if (newUser) {
+          setUser(newUser);
+          // Don't mark as authenticated until the account is verified
+          setIsAuthenticated(false);
+          setSession(null);
+          setOnboardingComplete();
+        }
+      } catch (error) {
+        throw error;
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [setOnboardingComplete],
+  );
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     try {
       setIsLoading(true);
+
+      // Remove push token before logout so the user stops receiving notifications
+      try {
+        const token = await registerForPushNotificationsAsync();
+        if (token) {
+          await Api.removePushToken(token);
+        }
+      } catch (err) {
+        logger.warn("Failed to remove push token:", err);
+      }
+
       await Api.logout();
     } catch (error) {
+      logger.warn("Logout error:", error);
     } finally {
       // Clear all auth state and session
       clearAuthState();
@@ -196,79 +267,95 @@ export function SessionProvider({ children }: PropsWithChildren) {
       resetOnboarding();
 
       // Navigate to auth screen
-      router.replace("/login");
+      router.replace("/(auth)/login");
     }
-  };
+  }, [clearAuthState, resetOnboarding]);
 
-  const sendVerificationEmail = async (email: string) => {
+  const sendVerificationEmail = useCallback(async (email: string) => {
     await Api.sendVerificationEmail(email);
-  };
+  }, []);
 
-  const verifyAccount = async (payload: VerifyOtpDto) => {
+  const verifyAccount = useCallback(async (payload: VerifyOtpDto) => {
     try {
       setIsLoading(true);
       await Api.verifyAccount(payload);
-
-      // After verification, user might need to sign in again
-      // or i could automatically sign them in
       await refreshUserData();
     } catch (error) {
       throw error;
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const forgotPassword = async (payload: ForgotPasswordDto) => {
+  const forgotPassword = useCallback(async (payload: ForgotPasswordDto) => {
     await Api.forgotPassword(payload);
-  };
+  }, []);
 
-  const verifyResetCode = async (payload: VerifyResetCodeDto) => {
+  const verifyResetCode = useCallback(async (payload: VerifyResetCodeDto) => {
     await Api.verifyResetCode(payload);
-  };
+  }, []);
 
-  const resetPassword = async (payload: ResetPasswordDto) => {
+  const resetPassword = useCallback(async (payload: ResetPasswordDto) => {
     try {
       await Api.resetPassword(payload);
 
       // After successful password reset, navigate to sign in
-      router.replace("/login");
+      router.replace("/(auth)/login");
     } catch (error) {
       throw error;
     }
-  };
+  }, []);
 
-  const refreshUserData = async () => {
+  const refreshUserData = useCallback(async () => {
     try {
       const userData = await currentUser();
       if (userData) {
         setUser(userData as any);
       }
-    } catch (error) {}
-  };
+    } catch (error) {
+      logger.error("Error refreshing user data:", error);
+    }
+  }, []);
 
-  const signInWithDummyUser = () => {
-    // Create a dummy user object
+  const deleteAccount = useCallback(async () => {
+    appAlert.dialog(
+      "Delete account?",
+      "This will sign you out and clear local data. (Demo mode: no server deletion.)",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            void (async () => {
+              try {
+                await Api.logout();
+              } finally {
+                clearAuthState();
+                resetOnboarding();
+                router.replace("/(auth)/login");
+              }
+            })();
+          },
+        },
+      ],
+    );
+  }, [clearAuthState, resetOnboarding]);
+
+  const signInWithDummyUser = useCallback(() => {
     const now = new Date().toISOString();
-    const dummyUser: User = {
-      id: 1,
+    const dummyUser = {
+      id: "demo-user",
       name: "Demo User",
-      email: "demo@app.com",
+      fullName: "Demo User",
       display_name: "Demo User",
+      email: "demo@example.com",
       role: "user",
       is_active: true,
       created_at: now,
       updated_at: now,
-      metadata: {
-        id: 1,
-        created_at: now,
-        updated_at: now,
-        user_id: 1,
-        total_listens: 0,
-        total_likes: 0,
-        total_uploads: 0,
-      },
-    };
+      metadata: {},
+    } as unknown as User;
 
     setUser(dummyUser);
     setIsAuthenticated(true);
@@ -276,29 +363,76 @@ export function SessionProvider({ children }: PropsWithChildren) {
     setOnboardingComplete();
 
     router.replace("/(core)/(drawer)/(tabs)/home" as any);
-  };
+  }, [setOnboardingComplete, setSession]);
 
-  const contextValue: AuthContextType = {
-    user,
-    session,
-    isLoading: isLoading || isStorageLoading,
-    isAuthenticated,
-    isOnboarded,
-    isOnboardingLoading,
-    completeOnboarding: setOnboardingComplete,
-    signIn,
-    signUp,
-    signOut,
-    sendVerificationEmail,
-    verifyAccount,
-    forgotPassword,
-    verifyResetCode,
-    resetPassword,
-    refreshUserData,
-    signInWithDummyUser,
-  };
+  const normalizedRole = ((user as any)?.role ?? "")
+    .toLowerCase()
+    .replace(/-/g, "_");
+  const isAdmin = ["admin", "owner", "super_admin", "business_owner"].includes(
+    normalizedRole,
+  );
+
+  const userContextValue = useMemo(
+    () => ({ user, isAdmin }),
+    [user, isAdmin],
+  );
+
+  const sessionContextValue = useMemo(
+    () => ({
+      session,
+      isLoading: isLoading || isStorageLoading,
+      isAuthenticated,
+      isOnboarded,
+      isOnboardingLoading,
+      completeOnboarding: setOnboardingComplete,
+    }),
+    [
+      session,
+      isLoading,
+      isStorageLoading,
+      isAuthenticated,
+      isOnboarded,
+      isOnboardingLoading,
+      setOnboardingComplete,
+    ],
+  );
+
+  const actionsContextValue = useMemo<AuthActionsContextType>(
+    () => ({
+      signIn,
+      signUp,
+      signOut,
+      sendVerificationEmail,
+      verifyAccount,
+      forgotPassword,
+      verifyResetCode,
+      resetPassword,
+      refreshUserData,
+      deleteAccount,
+      signInWithDummyUser,
+    }),
+    [
+      signIn,
+      signUp,
+      signOut,
+      sendVerificationEmail,
+      verifyAccount,
+      forgotPassword,
+      verifyResetCode,
+      resetPassword,
+      refreshUserData,
+      deleteAccount,
+      signInWithDummyUser,
+    ],
+  );
 
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthUserContext.Provider value={userContextValue}>
+      <AuthSessionContext.Provider value={sessionContextValue}>
+        <AuthActionsContext.Provider value={actionsContextValue}>
+          {children}
+        </AuthActionsContext.Provider>
+      </AuthSessionContext.Provider>
+    </AuthUserContext.Provider>
   );
 }

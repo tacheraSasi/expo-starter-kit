@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": "Main",
+    "support": "Support"
+  },
+  "items": {
+    "dashboard": "Dashboard",
+    "demoList": "Demo List",
+    "help": "Help & Support"
+  },
+  "footer": {
+    "settings": "Settings",
+    "signOut": "Sign Out"
+  }
+}

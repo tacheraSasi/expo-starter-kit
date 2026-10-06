@@ -1,0 +1,35 @@
+{
+  "title": "Nyumbani",
+  "welcome": "Karibu tena",
+  "greeting": {
+    "morning": "Habari za asubuhi",
+    "afternoon": "Habari za mchana",
+    "evening": "Habari za jioni"
+  },
+  "quickActions": {
+    "title": "Vitendo vya Haraka",
+    "demoList": {
+      "title": "Orodha ya Mfano",
+      "description": "Data ya majaribio"
+    },
+    "profile": {
+      "title": "Profaili",
+      "description": "Tazama akaunti"
+    },
+    "settings": {
+      "title": "Mipangilio",
+      "description": "Sanidi"
+    }
+  },
+  "stats": {
+    "todayPerformance": "Muhtasari wa leo",
+    "demoItems": "Vipengee vya Mfano",
+    "notifications": "Arifa",
+    "appVersion": "Toleo la Programu"
+  },
+  "loading": "Inapakia...",
+  "errors": {
+    "failedToLoad": "Imeshindwa kupakia",
+    "retry": "Jaribu tena"
+  }
+}

@@ -1,19 +1,33 @@
-import { useAuth } from "@/context/ctx";
+import {
+  useAuthUser,
+  useAuthSession,
+  useAuthActions,
+} from "@/context/ctx";
 
 /**
- * Custom hook for authentication operations
- * Provides simplified auth methods with better error handling
+ * Simplified auth methods with { success, error } results for screens.
  */
 export function useAuthOperations() {
-  const auth = useAuth();
+  const { user } = useAuthUser();
+  const { isAuthenticated, isLoading } = useAuthSession();
+  const {
+    signIn,
+    signUp,
+    signOut,
+    verifyAccount,
+    sendVerificationEmail,
+    resetPassword,
+    forgotPassword,
+    verifyResetCode,
+  } = useAuthActions();
 
   const login = async (email: string, password: string) => {
     try {
-      await auth.signIn({ email, password });
-      return { success: true };
+      await signIn({ email, password });
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error: error instanceof Error ? error.message : "Login failed",
       };
     }
@@ -21,11 +35,11 @@ export function useAuthOperations() {
 
   const register = async (email: string, password: string, name: string) => {
     try {
-      await auth.signUp({ email, password, name });
-      return { success: true };
+      await signUp({ email, password, name, phoneNumber: "" } as any);
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error: error instanceof Error ? error.message : "Registration failed",
       };
     }
@@ -33,23 +47,23 @@ export function useAuthOperations() {
 
   const logout = async () => {
     try {
-      await auth.signOut();
-      return { success: true };
+      await signOut();
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error: error instanceof Error ? error.message : "Logout failed",
       };
     }
   };
 
-  const verifyAccount = async (email: string, otp: string) => {
+  const verifyAccountOp = async (email: string, otp: string) => {
     try {
-      await auth.verifyAccount({ email, otp });
-      return { success: true };
+      await verifyAccount({ email, otp });
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error: error instanceof Error ? error.message : "Verification failed",
       };
     }
@@ -57,11 +71,11 @@ export function useAuthOperations() {
 
   const sendVerificationCode = async (email: string) => {
     try {
-      await auth.sendVerificationEmail(email);
-      return { success: true };
+      await sendVerificationEmail(email);
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error:
           error instanceof Error
             ? error.message
@@ -70,17 +84,17 @@ export function useAuthOperations() {
     }
   };
 
-  const resetPassword = async (
+  const resetPasswordOp = async (
     email: string,
     otp: string,
-    newPassword: string
+    newPassword: string,
   ) => {
     try {
-      await auth.resetPassword({ email, otp, new_password: newPassword });
-      return { success: true };
+      await resetPassword({ email, otp, new_password: newPassword });
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error: error instanceof Error ? error.message : "Password reset failed",
       };
     }
@@ -88,11 +102,11 @@ export function useAuthOperations() {
 
   const requestPasswordReset = async (email: string) => {
     try {
-      await auth.forgotPassword({ email });
-      return { success: true };
+      await forgotPassword({ email });
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error:
           error instanceof Error
             ? error.message
@@ -101,13 +115,13 @@ export function useAuthOperations() {
     }
   };
 
-  const verifyResetCode = async (email: string, otp: string) => {
+  const verifyResetCodeOp = async (email: string, otp: string) => {
     try {
-      await auth.verifyResetCode({ email, otp });
-      return { success: true };
+      await verifyResetCode({ email, otp });
+      return { success: true as const };
     } catch (error) {
       return {
-        success: false,
+        success: false as const,
         error:
           error instanceof Error
             ? error.message
@@ -118,18 +132,18 @@ export function useAuthOperations() {
 
   return {
     // State
-    user: auth.user,
-    isAuthenticated: auth.isAuthenticated,
-    isLoading: auth.isLoading,
+    user,
+    isAuthenticated,
+    isLoading,
 
     // Operations
     login,
     register,
     logout,
-    verifyAccount,
+    verifyAccount: verifyAccountOp,
     sendVerificationCode,
-    resetPassword,
+    resetPassword: resetPasswordOp,
     requestPasswordReset,
-    verifyResetCode,
+    verifyResetCode: verifyResetCodeOp,
   };
 }

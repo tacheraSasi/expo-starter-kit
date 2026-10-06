@@ -1,0 +1,35 @@
+{
+  "required": "Sehemu hii inahitajika",
+  "email": {
+    "invalid": "Tafadhali ingiza barua pepe halali",
+    "required": "Barua pepe inahitajika"
+  },
+  "password": {
+    "required": "Nywila inahitajika",
+    "minLength": "Nywila lazima iwe angalau herufi {{min}}",
+    "mismatch": "Nywila hazilingani",
+    "weak": "Nywila ni dhaifu sana"
+  },
+  "phone": {
+    "invalid": "Tafadhali ingiza nambari ya simu halali",
+    "required": "Nambari ya simu inahitajika"
+  },
+  "amount": {
+    "invalid": "Tafadhali ingiza kiasi halali",
+    "positive": "Kiasi lazima kiwe zaidi ya sifuri",
+    "required": "Kiasi kinahitajika"
+  },
+  "name": {
+    "required": "Jina linahitajika",
+    "minLength": "Jina lazima liwe angalau herufi {{min}}"
+  },
+  "number": {
+    "invalid": "Tafadhali ingiza nambari halali",
+    "min": "Nambari lazima iwe angalau {{min}}",
+    "max": "Nambari haiwezi kuzidi {{max}}"
+  },
+  "general": {
+    "fillAllFields": "Tafadhali jaza sehemu zote",
+    "invalidInput": "Ingizo si halali"
+  }
+}
