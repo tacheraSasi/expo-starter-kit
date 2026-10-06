@@ -47,6 +47,12 @@ yarn-error.*
 .env.test.local
 .env.production.local
 
+# EAS submit credentials (never commit)
+google-service-account-key.json
+
+# Local build tools output
+pkg/ota-pusher/bin/
+
 # IDE and Editor files
 .vscode/
 .idea/
