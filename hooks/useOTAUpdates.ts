@@ -125,7 +125,7 @@ export function useOTAUpdates() {
         if (status !== "granted") return;
         if (cancelledLocal || cancelledRef.current) return;
 
-        // Replace any previously scheduled reminder — avoid piling up.
+        // Replace any previously scheduled reminder - avoid piling up.
         await Notifications.cancelScheduledNotificationAsync(
           OTA_UPDATE_NOTIFICATION_ID,
         ).catch(() => {});

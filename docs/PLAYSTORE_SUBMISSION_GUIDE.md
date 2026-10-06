@@ -1,4 +1,4 @@
-# Starter Kit — Complete Google Play Store Submission Guide
+# Starter Kit - Complete Google Play Store Submission Guide
 
 This guide walks you through every step of submitting the Starter Kit app to the Google Play Store using **Expo Application Services (EAS)**, from configuring environment variables to publishing your release.
 
@@ -260,7 +260,7 @@ make build-production
 
 After running the build command:
 
-1. EAS shows a build URL — open it to monitor progress
+1. EAS shows a build URL - open it to monitor progress
 2. Build typically takes **10–20 minutes**
 3. Once complete, you can download the `.aab` file
 
@@ -367,16 +367,16 @@ Navigate to **Grow** → **Store presence** → **Main store listing**.
 ```
 Starter Kit is a batteries-included Expo starter with auth, theming (light/dark/system), offline-ready caching, push
 notifications, OTA updates, biometric app lock, and multi-language support
-(English + Swahili) — all running against a built-in mock API so you can
+(English + Swahili) - all running against a built-in mock API so you can
 evaluate it with no backend.
 
 KEY FEATURES:
 
-🔐 Auth demo — sign in with any email
-🎨 Theming — light, dark, and system modes with semantic tokens
-📡 Offline-ready — persistent cache, offline banner, retry states
-🔔 Notifications — push registration + deep-link routing skeleton
-🌍 Multi-language — English + Swahili, lazy-loaded
+🔐 Auth demo - sign in with any email
+🎨 Theming - light, dark, and system modes with semantic tokens
+📡 Offline-ready - persistent cache, offline banner, retry states
+🔔 Notifications - push registration + deep-link routing skeleton
+🌍 Multi-language - English + Swahili, lazy-loaded
 ```
 
 ### 7.2 Graphics Assets
@@ -474,7 +474,7 @@ Click **Apply rating** to confirm.
 
 Navigate to **Policy** → **App content** → **Data safety**.
 
-This is a critical section where you declare what data your app collects and how it's used. Be accurate — Google reviews this.
+This is a critical section where you declare what data your app collects and how it's used. Be accurate - Google reviews this.
 
 ### 9.1 Data Collection Overview
 
@@ -769,7 +769,7 @@ make build-submit
 
 ### 16.3 If Your App Is Rejected
 
-1. Read the rejection email carefully — Google describes the specific violation
+1. Read the rejection email carefully - Google describes the specific violation
 2. Fix the issues mentioned
 3. Build a new version with the fixes
 4. Resubmit

@@ -1,6 +1,6 @@
 # Expo Starter Kit
 
-Batteries-included Expo (SDK 56) starter with **no backend required** — a
+Batteries-included Expo (SDK 56) starter with **no backend required** - a
 built-in mock API simulates auth, OTP, uploads, and paginated
 lists with realistic latency, persisting to on-device storage.
 
@@ -20,21 +20,21 @@ bun start -c
 
 ## What's included
 
-- **Auth shell** — login, register, verify, forgot/reset, split-context
+- **Auth shell** - login, register, verify, forgot/reset, split-context
   session provider, onboarding gate, dummy-user shortcut
-- **Theming** — light/dark/system, semantic tokens, memoized `createStyles`,
+- **Theming** - light/dark/system, semantic tokens, memoized `createStyles`,
   transition overlay, themed primitives
-- **Data layer** — axios client with JWT single-flight refresh + HMAC headers,
+- **Data layer** - axios client with JWT single-flight refresh + HMAC headers,
   bounded persistent cache (memory + disk LRU), `useApiList/useApiItem/useApiAction`
-- **i18n** — English bundled, Swahili lazy-loaded, typed keys, persisted choice
-- **Push** — deferred permission prompt, token registration, badge sync,
+- **i18n** - English bundled, Swahili lazy-loaded, typed keys, persisted choice
+- **Push** - deferred permission prompt, token registration, badge sync,
   type-registry deep-link routing
-- **OTA** — silent download, toast + haptic + reminder notification
-- **Resilience** — error boundary, crash reports, global error handler,
+- **OTA** - silent download, toast + haptic + reminder notification
+- **Resilience** - error boundary, crash reports, global error handler,
   offline banner, empty/error/loading states, skeletons
-- **UX** — haptics everywhere, native-styled alerts, toasts, biometric app
+- **UX** - haptics everywhere, native-styled alerts, toasts, biometric app
   lock, store-review prompts, unsaved-changes guard
-- **Release** — EAS profiles, OTA pusher + version bumper (Go), store
+- **Release** - EAS profiles, OTA pusher + version bumper (Go), store
   submission guides
 
 ## Docs

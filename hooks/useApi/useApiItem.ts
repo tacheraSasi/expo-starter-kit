@@ -20,7 +20,7 @@ export interface UseApiItemOptions<T> {
 
 export interface UseApiItemResult<T> {
   data: T | null;
-  /** Direct setter — use for optimistic updates after local mutations. */
+  /** Direct setter - use for optimistic updates after local mutations. */
   setData: React.Dispatch<React.SetStateAction<T | null>>;
   loading: boolean;
   refreshing: boolean;
@@ -101,7 +101,7 @@ export function useApiItem<T>(options: UseApiItemOptions<T>): UseApiItemResult<T
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled, load, ...deps]);
 
-  // Refresh when the screen regains focus. The first focus is skipped —
+  // Refresh when the screen regains focus. The first focus is skipped -
   // the deps effect above already loaded on mount.
   const isFirstFocusRef = useRef(true);
   useFocusEffect(

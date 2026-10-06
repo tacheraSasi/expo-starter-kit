@@ -221,7 +221,7 @@ async function performTokenRefresh(): Promise<string | null> {
       refresh: newRefreshToken ?? null,
     });
 
-    // Refresh may carry a fresh user payload — persist it when present
+    // Refresh may carry a fresh user payload - persist it when present
     // so permission gates stay in sync.
     const refreshedUser = (data as any)?.user;
     if (refreshedUser) {
@@ -260,7 +260,7 @@ async function performTokenRefresh(): Promise<string | null> {
       await clearCache();
       router.replace("/(auth)/login");
     } else {
-      // Network/timeout/5xx — keep cached tokens so the next request can retry.
+      // Network/timeout/5xx - keep cached tokens so the next request can retry.
       logger.warn("Transient refresh failure, keeping cached tokens");
     }
     return null;

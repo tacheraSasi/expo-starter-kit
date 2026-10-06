@@ -22,6 +22,6 @@ export function SplashScreenController() {
     }
   }, [isLoading]);
 
-  // Always return null — this component has NO visual output.
+  // Always return null - this component has NO visual output.
   return null;
 }

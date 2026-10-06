@@ -24,7 +24,7 @@ export default function OfflineBanner() {
     const unsubscribe = NetInfo.addEventListener((state) => {
       // On iOS, isInternetReachable can be null during network transitions.
       // Only treat as offline when isInternetReachable is explicitly false.
-      // null means "unknown" — assume connected.
+      // null means "unknown" - assume connected.
       const offline = !state.isConnected || state.isInternetReachable === false;
 
       if (debounceTimer.current) clearTimeout(debounceTimer.current);

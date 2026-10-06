@@ -44,7 +44,7 @@ export interface AppBottomSheetProps<T = unknown> {
   /**
    * When provided, the sheet renders a virtualized list instead of a plain
    * `ScrollView`. Use this for any sheet whose content is "a list of items"
-   * — the items scroll inside the sheet even when expanded to full screen
+   * - the items scroll inside the sheet even when expanded to full screen
    * and the sheet itself is at its largest snap point.
    */
   data?: readonly T[];
@@ -70,12 +70,12 @@ export interface AppBottomSheetProps<T = unknown> {
  * ```tsx
  * const sheetRef = useRef<BottomSheetRef>(null);
  *
- * // Form / static content — wrapped in a scrollable view by default.
+ * // Form / static content - wrapped in a scrollable view by default.
  * <NativeAppBottomSheet ref={sheetRef} title="Edit Item" snapPoints={["50%"]}>
  *   <Text>Sheet content</Text>
  * </NativeAppBottomSheet>
  *
- * // Long list — uses a virtualized FlatList under the hood so the
+ * // Long list - uses a virtualized FlatList under the hood so the
  * // items stay scrollable even when the sheet is fully expanded.
  * <NativeAppBottomSheet
  *   ref={sheetRef}
@@ -366,7 +366,7 @@ interface SheetButtonProps {
   onPress: () => void;
   /** Disables the button and shows a loading label. @default false */
   loading?: boolean;
-  /** Visual style — `"primary"` uses brand fill, `"outline"` uses a bordered look. @default "primary" */
+  /** Visual style - `"primary"` uses brand fill, `"outline"` uses a bordered look. @default "primary" */
   variant?: "primary" | "outline";
 }
 

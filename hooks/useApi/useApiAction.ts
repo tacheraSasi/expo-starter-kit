@@ -16,7 +16,7 @@ export interface UseApiActionResult<A extends any[], R> {
 /**
  * Mutation wrapper: tracks loading + error for a single async action
  * (create/update/delete/approve...). Errors are caught and surfaced via
- * the `error` state and the optional `onError` callback — `run` never
+ * the `error` state and the optional `onError` callback - `run` never
  * rejects, so callers don't need try/catch unless they want the result.
  */
 export function useApiAction<A extends any[], R>(

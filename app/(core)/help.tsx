@@ -25,7 +25,7 @@ export default function Help() {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.body}>
           <Text style={[styles.about, { color: theme.textSecondary }]}>
-            {t("help:about")} — {t("help:copyright", { year: new Date().getFullYear() })}
+            {t("help:about")} - {t("help:copyright", { year: new Date().getFullYear() })}
           </Text>
           <Text style={[styles.faqTitle, { color: theme.text }]}>
             {t("help:faqTitle")}

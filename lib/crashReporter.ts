@@ -69,7 +69,7 @@ export interface CrashReport {
 
 /**
  * Build a structured crash report object from an error.
- * Never throws — diagnostics are best-effort.
+ * Never throws - diagnostics are best-effort.
  */
 export async function buildCrashReport(
   error: Error,
@@ -179,26 +179,26 @@ export function formatCrashReport(report: CrashReport): string {
   lines.push(`__DEV__: ${report.app.isDev}`);
   lines.push("");
   lines.push("## Update");
-  lines.push(`Update ID: ${report.updates.updateId ?? "—"}`);
-  lines.push(`Created: ${report.updates.createdAt ?? "—"}`);
-  lines.push(`Embedded: ${report.updates.isEmbeddedLaunch ?? "—"}`);
+  lines.push(`Update ID: ${report.updates.updateId ?? "-"}`);
+  lines.push(`Created: ${report.updates.createdAt ?? "-"}`);
+  lines.push(`Embedded: ${report.updates.isEmbeddedLaunch ?? "-"}`);
   lines.push("");
   lines.push("## Device");
-  lines.push(`Model: ${report.device.modelName ?? "—"}`);
+  lines.push(`Model: ${report.device.modelName ?? "-"}`);
   lines.push(`OS: ${report.device.osName} ${report.device.osVersion ?? ""}`.trim());
-  lines.push(`Build: ${report.device.osBuildId ?? "—"}`);
-  lines.push(`Manufacturer: ${report.device.manufacturer ?? "—"}`);
-  lines.push(`Brand: ${report.device.brand ?? "—"}`);
-  lines.push(`Real Device: ${report.device.isDevice ?? "—"}`);
+  lines.push(`Build: ${report.device.osBuildId ?? "-"}`);
+  lines.push(`Manufacturer: ${report.device.manufacturer ?? "-"}`);
+  lines.push(`Brand: ${report.device.brand ?? "-"}`);
+  lines.push(`Real Device: ${report.device.isDevice ?? "-"}`);
   if (report.device.platformApiLevel) {
     lines.push(`API Level: ${report.device.platformApiLevel}`);
   }
   lines.push("");
   if (report.user) {
     lines.push("## User");
-    lines.push(`ID: ${report.user.id ?? "—"}`);
-    lines.push(`Email: ${report.user.email ?? "—"}`);
-    lines.push(`Role: ${report.user.role ?? "—"}`);
+    lines.push(`ID: ${report.user.id ?? "-"}`);
+    lines.push(`Email: ${report.user.email ?? "-"}`);
+    lines.push(`Role: ${report.user.role ?? "-"}`);
     lines.push("");
   }
   if (Object.keys(report.metadata ?? {}).length > 0) {
