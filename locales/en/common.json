@@ -1,0 +1,90 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "reset": "Reset",
+    "retry": "Try Again",
+    "getStarted": "Get Started",
+    "continue": "Continue",
+    "skip": "Skip",
+    "refresh": "Refresh",
+    "view": "View",
+    "select": "Select",
+    "update": "Update",
+    "create": "Create",
+    "remove": "Remove"
+  },
+  "status": {
+    "loading": "Loading...",
+    "saving": "Saving...",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "processing": "Processing...",
+    "complete": "Complete",
+    "pending": "Pending",
+    "failed": "Failed"
+  },
+  "empty": {
+    "title": "Nothing here yet",
+    "message": "Get started by creating your first item.",
+    "button": "Get Started"
+  },
+  "errorState": {
+    "title": "Something went wrong",
+    "message": "We couldn't load the content. Please try again.",
+    "button": "Try Again"
+  },
+  "time": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "lastMonth": "Last Month",
+    "custom": "Custom"
+  },
+  "placeholders": {
+    "search": "Search...",
+    "enterText": "Enter text...",
+    "selectOption": "Select an option"
+  },
+  "discardChanges": {
+    "title": "Discard changes?",
+    "message": "You have unsaved changes. Are you sure you want to leave?",
+    "keepEditing": "Keep editing",
+    "discard": "Discard"
+  },
+  "pushNotifications": {
+    "enableTitle": "Enable notifications",
+    "enableMessage": "Allow notifications to stay informed about important updates.",
+    "notNow": "Not now",
+    "allow": "Allow"
+  },
+  "ota": {
+    "downloadFailed": "Update download failed. It will retry later.",
+    "readyTitle": "Update ready",
+    "readyBody": "A new version has been downloaded and will apply on next restart.",
+    "pushTitle": "Hi {{name}}, an update is ready",
+    "pushTitleGeneric": "An update is ready",
+    "pushBody": "Reopen the app to apply the latest version."
+  },
+  "review": {
+    "title": "Enjoying the app?",
+    "description": "If you enjoy using this app, please take a moment to rate us.",
+    "rateNow": "Rate now",
+    "later": "Later"
+  },
+  "appName": "Starter Kit"
+}

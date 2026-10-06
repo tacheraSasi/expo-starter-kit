@@ -1,0 +1,90 @@
+{
+  "actions": {
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "delete": "Futa",
+    "edit": "Hariri",
+    "add": "Ongeza",
+    "submit": "Tuma",
+    "confirm": "Thibitisha",
+    "back": "Rudi",
+    "next": "Endelea",
+    "done": "Nimemaliza",
+    "close": "Funga",
+    "search": "Tafuta",
+    "filter": "Chuja",
+    "reset": "Weka upya",
+    "retry": "Jaribu tena",
+    "getStarted": "Anza",
+    "continue": "Endelea",
+    "skip": "Ruka",
+    "refresh": "Onyesha upya",
+    "view": "Tazama",
+    "select": "Chagua",
+    "update": "Sasisha",
+    "create": "Unda",
+    "remove": "Ondoa"
+  },
+  "status": {
+    "loading": "Inapakia...",
+    "saving": "Inahifadhi...",
+    "success": "Imefanikiwa",
+    "error": "Hitilafu",
+    "warning": "Onyo",
+    "info": "Taarifa",
+    "processing": "Inashughulikia...",
+    "complete": "Imekamilika",
+    "pending": "Inasubiri",
+    "failed": "Imeshindwa"
+  },
+  "empty": {
+    "title": "Hakuna chochote hapa",
+    "message": "Anza kwa kuunda kipengee chako cha kwanza.",
+    "button": "Anza"
+  },
+  "errorState": {
+    "title": "Kuna tatizo",
+    "message": "Imeshindwa kupakia. Tafadhali jaribu tena.",
+    "button": "Jaribu tena"
+  },
+  "time": {
+    "today": "Leo",
+    "yesterday": "Jana",
+    "thisWeek": "Wiki hii",
+    "thisMonth": "Mwezi huu",
+    "lastMonth": "Mwezi uliopita",
+    "custom": "Maalum"
+  },
+  "placeholders": {
+    "search": "Tafuta...",
+    "enterText": "Andika maandishi...",
+    "selectOption": "Chagua"
+  },
+  "discardChanges": {
+    "title": "Tupa mabadiliko?",
+    "message": "Una mabadiliko ambayo hayajahifadhiwa. Una uhakika unataka kuondoka?",
+    "keepEditing": "Endelea kuhariri",
+    "discard": "Tupa"
+  },
+  "pushNotifications": {
+    "enableTitle": "Washa arifa",
+    "enableMessage": "Ruhusu arifa ili kupata taarifa muhimu.",
+    "notNow": "Sio sasa",
+    "allow": "Ruhusu"
+  },
+  "ota": {
+    "downloadFailed": "Upakuaji wa sasisho umeshindwa. Utajaribu tena baadaye.",
+    "readyTitle": "Sasisho liko tayari",
+    "readyBody": "Toleo jipya limepakuliwa na litatumika ukifungua tena.",
+    "pushTitle": "Habari {{name}}, sasisho liko tayari",
+    "pushTitleGeneric": "Sasisho liko tayari",
+    "pushBody": "Fungua programu tena ili kutumia toleo jipya."
+  },
+  "review": {
+    "title": "Unaifurahia programu?",
+    "description": "Ikiwa unaifurahia programu hii, tafadhali itathmini.",
+    "rateNow": "Tathmini sasa",
+    "later": "Baadaye"
+  },
+  "appName": "Starter Kit"
+}

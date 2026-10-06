@@ -1,0 +1,23 @@
+{
+  "network": {
+    "offline": "You are offline. Please check your internet connection.",
+    "timeout": "Request timed out. Please try again.",
+    "serverError": "Server error. Please try again later."
+  },
+  "auth": {
+    "unauthorized": "Unauthorized. Please login again.",
+    "sessionExpired": "Your session has expired. Please login again.",
+    "invalidCredentials": "Invalid credentials. Please try again."
+  },
+  "generic": {
+    "unknown": "An unknown error occurred",
+    "tryAgain": "Something went wrong. Please try again.",
+    "contactSupport": "If the problem persists, please contact support."
+  },
+  "data": {
+    "notFound": "Data not found",
+    "loadFailed": "Failed to load data",
+    "saveFailed": "Failed to save data",
+    "deleteFailed": "Failed to delete data"
+  }
+}

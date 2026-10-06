@@ -1,0 +1,35 @@
+{
+  "required": "This field is required",
+  "email": {
+    "invalid": "Please enter a valid email address",
+    "required": "Email is required"
+  },
+  "password": {
+    "required": "Password is required",
+    "minLength": "Password must be at least {{min}} characters",
+    "mismatch": "Passwords do not match",
+    "weak": "Password is too weak"
+  },
+  "phone": {
+    "invalid": "Please enter a valid phone number",
+    "required": "Phone number is required"
+  },
+  "amount": {
+    "invalid": "Please enter a valid amount",
+    "positive": "Amount must be greater than zero",
+    "required": "Amount is required"
+  },
+  "name": {
+    "required": "Name is required",
+    "minLength": "Name must be at least {{min}} characters"
+  },
+  "number": {
+    "invalid": "Please enter a valid number",
+    "min": "Number must be at least {{min}}",
+    "max": "Number cannot exceed {{max}}"
+  },
+  "general": {
+    "fillAllFields": "Please fill in all fields",
+    "invalidInput": "Invalid input"
+  }
+}

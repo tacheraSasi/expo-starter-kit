@@ -1,0 +1,30 @@
+{
+  "step1": {
+    "title1": "Welcome to",
+    "title2": "the Starter Kit",
+    "title3": "Build faster",
+    "description": "Auth, theming, offline support, notifications and updates — wired up and ready to customize for your own app.",
+    "button": "Get Started"
+  },
+  "step2": {
+    "title": "Create Your Account",
+    "subtitle": "Join in seconds, no backend needed",
+    "emailPlaceholder": "Email Address",
+    "namePlaceholder": "Full Name",
+    "button": "Continue",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign In",
+    "headerTitle": "Built for",
+    "headerAccent": "speed",
+    "featureAuth": "Auth",
+    "featureAuthDesc": "Simple login demo",
+    "featureTheme": "Theming",
+    "featureThemeDesc": "Light / dark / system",
+    "featureOffline": "Offline-ready",
+    "featureOfflineDesc": "Cache + queue",
+    "featureI18n": "i18n",
+    "featureI18nDesc": "EN + second language",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
+}

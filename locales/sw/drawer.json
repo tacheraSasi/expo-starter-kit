@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "main": "Kuu",
+    "support": "Msaada"
+  },
+  "items": {
+    "dashboard": "Dashibodi",
+    "demoList": "Orodha ya Mfano",
+    "help": "Msaada"
+  },
+  "footer": {
+    "settings": "Mipangilio",
+    "signOut": "Toka"
+  }
+}

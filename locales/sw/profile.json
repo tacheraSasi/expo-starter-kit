@@ -1,0 +1,35 @@
+{
+  "title": "Akaunti",
+  "sections": {
+    "personal": "Taarifa Binafsi",
+    "security": "Usalama",
+    "preferences": "Mapendeleo",
+    "about": "Kuhusu"
+  },
+  "fields": {
+    "name": "Jina",
+    "email": "Barua Pepe",
+    "phone": "Simu",
+    "role": "Jukumu",
+    "language": "Lugha",
+    "theme": "Mandhari"
+  },
+  "actions": {
+    "editProfile": "Hariri Profaili",
+    "changePassword": "Badilisha Nywila",
+    "logout": "Toka"
+  },
+  "password": {
+    "title": "Badilisha Nywila",
+    "currentPassword": "Nywila ya Sasa",
+    "newPassword": "Nywila Mpya",
+    "confirmPassword": "Thibitisha Nywila",
+    "submit": "Sasisha Nywila",
+    "success": "Nywila imesasishwa",
+    "error": "Imeshindwa kusasisha nywila"
+  },
+  "myAccount": "Akaunti Yangu",
+  "fullName": "Jina Kamili",
+  "loggingOut": "Inatoka...",
+  "deleteAccount": "Futa Akaunti"
+}
