@@ -11,8 +11,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerActions } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -38,7 +37,7 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={styles.header}>
           <Pressable
-            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+            onPress={() => (navigation as any)?.openDrawer?.()}
             style={({ pressed }) => [
               styles.menuButton,
               {
