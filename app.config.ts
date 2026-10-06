@@ -1,17 +1,9 @@
-import type { ExpoConfig } from "expo/config";
+import type { ConfigContext, ExpoConfig } from "expo/config";
 import {
   type ConfigPlugin,
   withProjectBuildGradle,
   withAndroidManifest,
 } from "@expo/config-plugins";
-
-const appJson = require("./app.json");
-
-const baseConfig = appJson.expo as ExpoConfig;
-
-const config: ExpoConfig = {
-  ...baseConfig,
-};
 
 const WORK_MANAGER_ALIGNMENT_BLOCK = `
   configurations.all {
@@ -72,4 +64,8 @@ const withAdjustResize: ConfigPlugin = (expoConfig) =>
     return manifestConfig;
   });
 
-export default withAdjustResize(withWorkManagerAlignment(config));
+export default function ({ config }: ConfigContext): ExpoConfig {
+  // Build on the static app.json base passed in by the CLI so tools like
+  // expo-doctor can tell the static config is actually used.
+  return withAdjustResize(withWorkManagerAlignment({ ...config } as ExpoConfig));
+}

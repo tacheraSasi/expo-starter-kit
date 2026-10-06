@@ -15,11 +15,6 @@
       "fallbackToCacheTimeout": 3000,
       "checkAutomatically": "ON_LOAD"
     },
-    "splash": {
-      "image": "./assets/images/icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ekilie.expo",
@@ -68,7 +63,14 @@
         }
       ],
       "expo-updates",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
       "expo-status-bar"
     ],
     "experiments": {
