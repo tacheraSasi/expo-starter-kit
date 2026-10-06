@@ -117,3 +117,61 @@ export interface UploadResponse {
     upload_time: string;
   };
 }
+
+// ============================
+// Generic starter-kit additions (starter kit)
+// ============================
+
+export interface TokensResponse {
+  access_token: string;
+  refresh_token: string;
+  token_type?: string;
+  expires_in?: number;
+}
+
+export interface MobileAuthResponse {
+  success: boolean;
+  data: {
+    user: User;
+    tokens: TokensResponse;
+  };
+  message: string;
+}
+
+export interface PaginationMeta {
+  current_page: number;
+  from: number;
+  per_page: number;
+  to: number;
+  /** @deprecated Use total_items */
+  total: number;
+  /** @deprecated Use total_pages */
+  last_page: number;
+  total_items: number;
+  total_pages: number;
+  has_next_page: boolean;
+  has_previous_page: boolean;
+}
+
+export interface PaginationLinks {
+  first: string | null;
+  last: string | null;
+  prev: string | null;
+  next: string | null;
+}
+
+export interface PaginatedResponse<T, S = any> {
+  status?: string;
+  success?: boolean;
+  message?: string;
+  data: T[];
+  meta: PaginationMeta;
+  links?: PaginationLinks;
+  summary?: S;
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  message: string;
+  errors?: Record<string, string[]>;
+}

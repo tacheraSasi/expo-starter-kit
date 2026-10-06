@@ -1,456 +1,356 @@
-import { Alert } from "react-native";
-
+/**
+ * Dummy / mock API for the starter kit.
+ *
+ * No backend required: every method simulates network latency and persists
+ * to the on-device MMKV store (via ./authToken) so the full auth flow —
+ * register, login, verify, forgot/reset, logout — can be exercised offline.
+ *
+ * Test accounts:
+ * - Any email + any password signs in successfully.
+ * - OTP / reset codes are always `123456`.
+ *
+ * To wire a real backend later:
+ * 1. See `lib/api/config.ts` (axios instance with JWT refresh + HMAC headers).
+ * 2. Replace the bodies below with `api(true|false).get/post/...` calls.
+ * 3. Keep the method names/signatures so screens and hooks keep working.
+ */
 import {
   ApiResponse,
   AuthResponse,
   ForgotPasswordDto,
   LoginDto,
-  RefreshTokenResponse,
   RegisterDto,
   ResetPasswordDto,
   UpdateUserDto,
   UploadResponse,
-  User,
   VerifyOtpDto,
   VerifyResetCodeDto,
 } from "@/lib/api/types";
-import { clearCache, saveUser, setAuthToken } from "./authToken";
-import api from "./config";
+import {
+  authToken,
+  clearCache,
+  currentUser,
+  saveUser,
+} from "./authToken";
+import { appAlert } from "@/lib/ui/appAlert";
+import logger from "@/lib/logger";
+
+const MOCK_DELAY_MS = 700;
+export const MOCK_OTP = "123456";
+
+function delay(ms = MOCK_DELAY_MS): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function base64UrlEncode(obj: object): string {
+  const json = JSON.stringify(obj);
+  return btoa(json).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+/** Unsigned fake JWT with a real `exp` claim so `isJwtExpired()` works. */
+function makeDummyJwt(expiresInSeconds: number): string {
+  const now = Math.floor(Date.now() / 1000);
+  const header = base64UrlEncode({ alg: "none", typ: "JWT" });
+  const payload = base64UrlEncode({
+    sub: "demo-user",
+    iat: now,
+    exp: now + expiresInSeconds,
+  });
+  return `${header}.${payload}.dummy-signature`;
+}
+
+function displayNameFromEmail(email: string): string {
+  const prefix = email.split("@")[0] || "Demo User";
+  return prefix
+    .split(/[._-]+/)
+    .filter(Boolean)
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join(" ");
+}
+
+const SEVEN_DAYS_S = 7 * 24 * 60 * 60;
+const THIRTY_DAYS_S = 30 * 24 * 60 * 60;
 
 class Api {
   static async register(payload: RegisterDto): Promise<AuthResponse> {
-    try {
-      const res = await api(false).post("/register", payload);
-      const responseData = res.data;
+    await delay();
+    const name = payload.name?.trim() || displayNameFromEmail(payload.email);
+    const user = {
+      id: "user-1",
+      ID: "user-1",
+      name,
+      display_name: name,
+      fullName: name,
+      email: payload.email,
+      role: "user",
+      roles: ["user"],
+      metadata: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      is_active: true,
+      email_verified_at: null,
+    } as any;
 
-      // Handle actual backend response structure
-      if (responseData.user) {
-        await saveUser({
-          id:
-            responseData.user.id?.toString() ||
-            responseData.user.ID?.toString(),
-          name: responseData.user.name,
-          email: responseData.user.email,
-          role:
-            responseData.user.role ||
-            (responseData.user.roles?.length > 0
-              ? responseData.user.roles[0]
-              : "user"),
-        });
+    // Registration does not auto-authenticate: store the profile only,
+    // mirroring backends that require email verification first.
+    await saveUser({
+      id: user.id,
+      name: user.name,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    });
+    logger.log(`[mock] registered ${payload.email}`);
 
-        const normalizedResponse = {
-          user: {
-            id: responseData.user.id || responseData.user.ID,
-            ID: responseData.user.id || responseData.user.ID,
-            name: responseData.user.name,
-            email: responseData.user.email,
-            role:
-              responseData.user.role ||
-              (responseData.user.roles?.length > 0
-                ? responseData.user.roles[0]
-                : "user"),
-            roles: responseData.user.roles || [
-              responseData.user.role || "user",
-            ],
-            metadata: responseData.user.metadata || {},
-            created_at:
-              responseData.user.created_at || new Date().toISOString(),
-            updated_at:
-              responseData.user.updated_at || new Date().toISOString(),
-            is_active: responseData.user.is_active ?? true,
-            email_verified_at: responseData.user.email_verified_at || null,
-          },
-          message: responseData.message || "Registration successful",
-          // No token for registration - user needs to login separately
-        };
-
-        return normalizedResponse as AuthResponse;
-      } else {
-        throw new Error("Invalid response structure from server");
-      }
-    } catch (error: any) {
-      // Handle network errors specifically
-      if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
-        throw new Error(
-          "Cannot connect to server. Please check your internet connection and try again."
-        );
-      }
-
-      // Handle server response errors
-      if (error.response) {
-        const message =
-          error.response.data?.error ||
-          error.response.data?.message ||
-          `Server error: ${error.response.status}`;
-        throw new Error(message);
-      }
-
-      if (error.request) {
-        throw new Error("Cannot reach server. Please check your connection.");
-      }
-
-      throw new Error(error.message || "Registration failed");
-    }
+    return {
+      success: true,
+      message: "Registration successful. Please verify your email.",
+      data: {
+        user,
+        tokens: {
+          access_token: makeDummyJwt(SEVEN_DAYS_S),
+          refresh_token: makeDummyJwt(THIRTY_DAYS_S),
+          token_type: "Bearer",
+          expires_in: SEVEN_DAYS_S,
+        },
+      },
+      user,
+    } as unknown as AuthResponse;
   }
 
   static async login(payload: LoginDto): Promise<AuthResponse> {
-    try {
-      const res = await api(false).post("/login", payload);
-      const responseData = res.data;
+    await delay();
 
+    const name = displayNameFromEmail(payload.email);
+    const access = makeDummyJwt(SEVEN_DAYS_S);
+    const refresh = makeDummyJwt(THIRTY_DAYS_S);
+    await import("./authToken").then(({ setAuthToken }) =>
+      setAuthToken({ access, refresh }),
+    );
+    const user = {
+      id: "user-1",
+      ID: "user-1",
+      name,
+      display_name: name,
+      fullName: name,
+      email: payload.email,
+      role: "user",
+      roles: ["user"],
+      metadata: {},
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      is_active: true,
+      email_verified_at: new Date().toISOString(),
+    } as any;
+    await saveUser({
+      id: user.id,
+      name: user.name,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    });
+    logger.log(`[mock] login ${payload.email}`);
 
-      // Store tokens and user data
-      if (responseData.token && responseData.user) {
-        await setAuthToken({
-          access: responseData.token,
-          refresh: responseData.refresh_token || null,
-        });
-
-        await saveUser({
-          id:
-            responseData.user.id?.toString() ||
-            responseData.user.ID?.toString(),
-          name: responseData.user.name,
-          email: responseData.user.email,
-          role:
-            responseData.user.role ||
-            (responseData.user.roles?.length > 0
-              ? responseData.user.roles[0]
-              : "user"),
-        });
-
-        // Create a normalized response for the frontend
-        const normalizedResponse = {
-          user: {
-            id: responseData.user.id || responseData.user.ID,
-            ID: responseData.user.id || responseData.user.ID,
-            name: responseData.user.name,
-            email: responseData.user.email,
-            role:
-              responseData.user.role ||
-              (responseData.user.roles?.length > 0
-                ? responseData.user.roles[0]
-                : "user"),
-            roles: responseData.user.roles || [
-              responseData.user.role || "user",
-            ],
-            metadata: responseData.user.metadata || {},
-            created_at:
-              responseData.user.created_at || new Date().toISOString(),
-            updated_at:
-              responseData.user.updated_at || new Date().toISOString(),
-            is_active: responseData.user.is_active ?? true,
-            email_verified_at: responseData.user.email_verified_at || null,
-          },
-          token: responseData.token,
-          refresh_token: responseData.refresh_token,
-          message: responseData.message || "Login successful",
-        };
-
-        return normalizedResponse as AuthResponse;
-      } else {
-        throw new Error("Invalid response structure from server");
-      }
-    } catch (error: any) {
-
-      // Handle network errors specifically
-      if (error.code === "NETWORK_ERROR" || error.message === "Network Error") {
-        throw new Error(
-          "Cannot connect to server. Please check your internet connection and try again."
-        );
-      }
-
-      // Handle timeout errors
-      if (error.code === "ECONNABORTED") {
-        throw new Error("Request timeout. Please try again.");
-      }
-
-      // Handle server response errors
-      if (error.response) {
-        const message =
-          error.response.data?.error ||
-          error.response.data?.message ||
-          `Server error: ${error.response.status}`;
-        throw new Error(message);
-      }
-
-      // Handle request setup errors
-      if (error.request) {
-        throw new Error("Cannot reach server. Please check your connection.");
-      }
-
-      // Generic error fallback
-      throw new Error(error.message || "Login failed");
-    }
+    return {
+      success: true,
+      message: "Login successful",
+      data: {
+        user,
+        tokens: {
+          access_token: access,
+          refresh_token: refresh,
+          token_type: "Bearer",
+          expires_in: SEVEN_DAYS_S,
+        },
+      },
+      user,
+      token: access,
+      refresh_token: refresh,
+    } as unknown as AuthResponse;
   }
 
   static async logout(): Promise<void> {
+    await delay(300);
     try {
-      await api(true).post("/logout");
-    } catch (error) {
+      const token = await authToken("access").catch(() => null);
+      if (token) logger.log("[mock] push token detached");
     } finally {
       await clearCache();
     }
   }
 
   static async getCurrentUser(): Promise<any> {
-    try {
-      const res = await api(true).get("/users/me");
-      const responseData = res.data;
-      if (responseData.data && responseData.success) {
-        return responseData.data;
-      }
-
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Failed to fetch user data";
-      throw new Error(message);
-    }
+    await delay(300);
+    return currentUser();
   }
 
-  static async updateCurrentUser(payload: UpdateUserDto): Promise<User> {
-    try {
-      const res = await api(true).put("/users/me/edit", payload);
-      const responseData = res.data;
-
-      // Extract user data from wrapper if it exists
-      const userData =
-        responseData.data && responseData.success
-          ? responseData.data
-          : responseData;
-
-      // Update stored user data if successful
-      if (userData) {
-        await saveUser({
-          id: userData.id?.toString(),
-          name: userData.name,
-          email: userData.email,
-          role: userData.role,
-        });
-      }
-
-      return userData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Failed to update profile";
-      throw new Error(message);
-    }
+  static async updateCurrentUser(payload: UpdateUserDto): Promise<any> {
+    await delay();
+    const existing = (await currentUser()) ?? {
+      id: "user-1",
+      email: "",
+      role: "user",
+    };
+    const updated = {
+      ...existing,
+      ...payload,
+      name: payload.name ?? (existing as any).name ?? (existing as any).fullName,
+      fullName:
+        payload.name ?? (existing as any).fullName ?? (existing as any).name,
+      updated_at: new Date().toISOString(),
+    };
+    await saveUser(updated as any);
+    return updated;
   }
 
-  static async refreshToken(): Promise<RefreshTokenResponse> {
-    try {
-      const res = await api(true).post("/auth/refresh");
-      const responseData = res.data as RefreshTokenResponse;
-
-      // Update stored tokens
-      await setAuthToken({
-        access: responseData.token,
-        refresh: responseData.refresh_token,
-      });
-
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Token refresh failed";
-      throw new Error(message);
-    }
+  static async refreshToken(): Promise<{
+    token: string;
+    refresh_token: string;
+    refresh_token_expires_at: string;
+  }> {
+    await delay(300);
+    const access = makeDummyJwt(SEVEN_DAYS_S);
+    const refresh = makeDummyJwt(THIRTY_DAYS_S);
+    const { setAuthToken } = await import("./authToken");
+    await setAuthToken({ access, refresh });
+    return {
+      token: access,
+      refresh_token: refresh,
+      refresh_token_expires_at: new Date(
+        Date.now() + THIRTY_DAYS_S * 1000,
+      ).toISOString(),
+    };
   }
 
-  // Send Verification Email
   static async sendVerificationEmail(email: string): Promise<ApiResponse> {
-    try {
-      const res = await api(false).post("/auth/send-verification", { email });
-      const responseData = res.data;
-
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Failed to send verification email";
-      throw new Error(message);
-    }
+    await delay();
+    logger.log(`[mock] verification code ${MOCK_OTP} sent to ${email}`);
+    appAlert.dialog(
+      "Mock verification",
+      `Demo mode: use code ${MOCK_OTP} for ${email}.`,
+    );
+    return { success: true, message: "Verification code sent." };
   }
 
-  // Verify Account
   static async verifyAccount(payload: VerifyOtpDto): Promise<ApiResponse> {
-    try {
-      const res = await api(false).post("/auth/verify", payload);
-      const responseData = res.data;
-
-      Alert.alert(
-        "Success",
-        responseData.message || "Account verified successfully!"
-      );
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Account verification failed";
-      throw new Error(message);
-    }
+    await delay();
+    if (payload.otp !== MOCK_OTP) throw new Error("Invalid code. Hint: use 123456.");
+    appAlert.dialog("Success", "Account verified successfully!");
+    return { success: true, message: "Account verified successfully!" };
   }
 
-  // Forgot Password
   static async forgotPassword(
-    payload: ForgotPasswordDto
+    payload: ForgotPasswordDto,
   ): Promise<ApiResponse> {
-    try {
-      const res = await api(false).post("/auth/forgot-password", payload);
-      const responseData = res.data;
-
-      Alert.alert(
-        "Success",
-        responseData.message || "Password reset code sent to your email."
-      );
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Failed to send password reset code";
-      throw new Error(message);
-    }
+    await delay();
+    logger.log(`[mock] reset code ${MOCK_OTP} sent to ${payload.email}`);
+    appAlert.dialog(
+      "Mock reset code",
+      `Demo mode: use code ${MOCK_OTP} for ${payload.email}.`,
+    );
+    return { success: true, message: "Password reset code sent." };
   }
 
-  // Verify Reset Code
   static async verifyResetCode(
-    payload: VerifyResetCodeDto
+    payload: VerifyResetCodeDto,
   ): Promise<ApiResponse> {
-    try {
-      const res = await api(false).post("/auth/verify-reset-code", payload);
-      const responseData = res.data;
-
-      Alert.alert(
-        "Success",
-        responseData.message || "Reset code verified successfully!"
-      );
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Reset code verification failed";
-      throw new Error(message);
-    }
+    await delay();
+    if (payload.otp !== MOCK_OTP) throw new Error("Invalid code. Hint: use 123456.");
+    appAlert.dialog("Success", "Reset code verified successfully!");
+    return { success: true, message: "Reset code verified." };
   }
 
-  // Reset Password
   static async resetPassword(payload: ResetPasswordDto): Promise<ApiResponse> {
-    try {
-      const res = await api(false).post("/auth/reset-password", payload);
-      const responseData = res.data;
-
-      Alert.alert(
-        "Success",
-        responseData.message || "Password reset successful!"
-      );
-      return responseData;
-    } catch (error) {
-      const err = error as {
-        response?: { data?: { error?: string; message?: string } };
-      };
-      const message =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Password reset failed";
-      throw new Error(message);
+    await delay();
+    if (payload.otp !== MOCK_OTP) throw new Error("Invalid code. Hint: use 123456.");
+    if (!payload.new_password || payload.new_password.length < 6) {
+      throw new Error("Password must be at least 6 characters.");
     }
+    appAlert.dialog("Success", "Password reset successful!");
+    return { success: true, message: "Password reset successful!" };
   }
 
-  // Media Upload
+  // Media Upload (mock: echoes a fake remote URL, no network)
   static async uploadFile(
     fileUri: string,
     fileName: string,
-    mimeType: string
+    _mimeType: string,
   ): Promise<UploadResponse> {
-    try {
+    await delay();
+    if (!fileUri) throw new Error("File URI is required");
+    if (!fileName) throw new Error("File name is required");
+    logger.log(`[mock] upload ${fileName}`);
+    return {
+      status: "success",
+      url: `https://example.com/uploads/${encodeURIComponent(fileName)}`,
+      message: "File uploaded (mock).",
+    };
+  }
 
-      // Ensure we have valid file information
-      if (!fileUri) {
-        throw new Error("File URI is required");
-      }
-      if (!fileName) {
-        throw new Error("File name is required");
-      }
+  // ---- Push / notifications (mock) ----
 
-      const formData = new FormData();
+  static async registerPushToken(_token: string): Promise<void> {
+    logger.log("[mock] push token registered");
+  }
 
-      // here since its react - native we need to properly format the file object
-      const fileObject = {
-        uri: fileUri,
-        name: fileName,
-        type: mimeType || "application/octet-stream",
-      };
+  static async removePushToken(_token: string): Promise<void> {
+    logger.log("[mock] push token removed");
+  }
 
-      formData.append("file", fileObject as any);
+  static async getUnreadNotificationCount(): Promise<number> {
+    await delay(200);
+    return 3;
+  }
 
+  /** Mock feedback submission (logs locally, no network). */
+  static async submitFeedback(payload: {
+    type?: string;
+    message: string;
+    [key: string]: any;
+  }): Promise<{ uuid: string; type: string; status: string; created: string }> {
+    await delay(400);
+    logger.log(`[mock] feedback (${payload.type ?? "other"}): ${payload.message}`);
+    return {
+      uuid: `feedback-${Date.now()}`,
+      type: payload.type ?? "other",
+      status: "received",
+      created: new Date().toISOString(),
+    };
+  }
 
-      const res = await api(true).post("/media/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        timeout: 60000, // 60 second timeout for larger files
-      });
-
-
-      // Validate response structure
-      if (!res.data) {
-        throw new Error("Empty response from server");
-      }
-
-      return res.data;
-    } catch (error) {
-      const err = error as {
-        response?: {
-          data?: { error?: string; message?: string; status?: string };
-          status?: number;
-        };
-        message?: string;
-        code?: string;
-      };
-
-      // If we have a response, throw the error to be handled by the caller
-      if (err.response) {
-        throw error;
-      }
-
-      // Network or other error
-      return {
-        status: "error",
-        message:
-          err.message || err.code || "Failed to upload file - network error",
-      };
-    }
+  /** Demo paginated list for testing `useApiList` without a backend. */
+  static async listDemoItems(
+    params: { page?: number; per_page?: number; search?: string } = {},
+  ): Promise<{
+    data: { id: string; uuid: string; title: string }[];
+    meta: any;
+  }> {
+    await delay(400);
+    const per = params.per_page ?? 20;
+    const page = params.page ?? 1;
+    const total = 45;
+    const q = (params.search ?? "").toLowerCase();
+    const all = Array.from({ length: total }, (_, i) => ({
+      id: String(i + 1),
+      uuid: `demo-${i + 1}`,
+      title: `Demo item ${i + 1}`,
+    })).filter((r) => !q || r.title.toLowerCase().includes(q));
+    const start = (page - 1) * per;
+    return {
+      data: all.slice(start, start + per),
+      meta: {
+        current_page: page,
+        from: start + 1,
+        per_page: per,
+        to: Math.min(start + per, all.length),
+        total: all.length,
+        last_page: Math.max(1, Math.ceil(all.length / per)),
+        total_items: all.length,
+        total_pages: Math.max(1, Math.ceil(all.length / per)),
+        has_next_page: start + per < all.length,
+        has_previous_page: page > 1,
+      },
+    };
   }
 }
 
