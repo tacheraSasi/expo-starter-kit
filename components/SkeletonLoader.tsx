@@ -1,8 +1,7 @@
 import { useCurrentTheme } from "@/context/CentralTheme";
 import React, { useEffect, useRef } from "react";
-import { Animated, Dimensions, StyleSheet, View } from "react-native";
-
-const { width: screenWidth } = Dimensions.get("window");
+import { Animated, StyleSheet, View } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 interface SkeletonProps {
   width?: number | string;
@@ -18,45 +17,83 @@ export const SkeletonItem: React.FC<SkeletonProps> = ({
   style,
 }) => {
   const theme = useCurrentTheme();
-  const shimmerAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(shimmerAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shimmerAnim, {
-          toValue: 0,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, [shimmerAnim]);
-
-  const opacity = shimmerAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.3, 0.7],
-  });
 
   return (
-    <Animated.View
+    <View
       style={[
         {
           width,
           height,
           borderRadius,
           backgroundColor: theme.isDark ? "#333" : "#e1e1e1",
-          opacity,
+          overflow: "hidden",
         },
         style,
       ]}
-    />
+    >
+      <ShimmerOverlay theme={theme} />
+    </View>
   );
 };
+
+/**
+ * Shimmer sweep overlay using expo-linear-gradient.
+ * Creates a light sweep that moves left-to-right across the skeleton.
+ */
+function ShimmerOverlay({ theme }: { theme: any }) {
+  const translateX = useRef(new Animated.Value(-1)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(translateX, {
+          toValue: 2,
+          duration: 1200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateX, {
+          toValue: -1,
+          duration: 0,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [translateX]);
+
+  return (
+    <Animated.View
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          transform: [
+            {
+              translateX: translateX.interpolate({
+                inputRange: [-1, 2],
+                outputRange: ["-100%", "200%"],
+              }),
+            },
+          ],
+        },
+      ]}
+      pointerEvents="none"
+    >
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={[
+          "transparent",
+          theme.isDark ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.5)",
+          theme.isDark ? "rgba(255,255,255,0.12)" : "rgba(255,255,255,0.7)",
+          theme.isDark ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.5)",
+          "transparent",
+        ]}
+        style={StyleSheet.absoluteFill}
+      />
+    </Animated.View>
+  );
+}
 
 interface SkeletonCardProps {
   showImage?: boolean;

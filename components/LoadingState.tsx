@@ -1,6 +1,6 @@
 import { useCurrentTheme } from "@/context/CentralTheme";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -8,10 +8,9 @@ import {
   View,
   Animated,
   Easing,
-  Dimensions,
+  useWindowDimensions,
 } from "react-native";
-
-const { width } = Dimensions.get("window");
+import { useTranslation } from "react-i18next";
 
 interface LoadingStateProps {
   message?: string;
@@ -22,13 +21,26 @@ interface LoadingStateProps {
 }
 
 export default function LoadingState({
-  message = "Loading...",
+  message,
   size = "large",
   showIcon = false,
   iconName = "hourglass-outline",
   type = "modern",
 }: LoadingStateProps) {
   const theme = useCurrentTheme();
+  const { t } = useTranslation();
+  const { width } = useWindowDimensions();
+
+  // Background pattern dot positions, computed once per width so the dots
+  // keep their layout across re-renders instead of jumping around.
+  const patternDots = useMemo(
+    () =>
+      Array.from({ length: 20 }, () => ({
+        left: Math.random() * width,
+        top: Math.random() * 200,
+      })),
+    [width],
+  );
 
   // Animation values
   const pulseAnim = useRef(new Animated.Value(0)).current;
@@ -39,7 +51,7 @@ export default function LoadingState({
 
   useEffect(() => {
     // Pulse animation
-    Animated.loop(
+    const pulseLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
           toValue: 1,
@@ -53,31 +65,34 @@ export default function LoadingState({
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
-      ])
-    ).start();
+      ]),
+    );
+    pulseLoop.start();
 
     // Rotation animation
-    Animated.loop(
+    const rotateLoop = Animated.loop(
       Animated.timing(rotateAnim, {
         toValue: 1,
         duration: 2000,
         easing: Easing.linear,
         useNativeDriver: true,
-      })
-    ).start();
+      }),
+    );
+    rotateLoop.start();
 
     // Wave animation
-    Animated.loop(
+    const waveLoop = Animated.loop(
       Animated.timing(waveAnim, {
         toValue: 1,
         duration: 1500,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
-      })
-    ).start();
+      }),
+    );
+    waveLoop.start();
 
     // Scale animation
-    Animated.loop(
+    const scaleLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(scaleAnim, {
           toValue: 1.1,
@@ -91,16 +106,26 @@ export default function LoadingState({
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
         }),
-      ])
-    ).start();
+      ]),
+    );
+    scaleLoop.start();
 
     // Fade in animation
-    Animated.timing(fadeAnim, {
+    const fadeTiming = Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 600,
       easing: Easing.out(Easing.ease),
       useNativeDriver: true,
-    }).start();
+    });
+    fadeTiming.start();
+
+    return () => {
+      pulseLoop.stop();
+      rotateLoop.stop();
+      waveLoop.stop();
+      scaleLoop.stop();
+      fadeTiming.stop();
+    };
   }, []);
 
   const pulseOpacity = pulseAnim.interpolate({
@@ -168,14 +193,14 @@ export default function LoadingState({
           const dotScale = waveAnim.interpolate({
             inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1],
             outputRange: [1, 1.5, 1, 0.8, 1, 1].map((val, index) =>
-              index === dot ? 1.5 : val
+              index === dot ? 1.5 : val,
             ),
           });
 
           const dotOpacity = waveAnim.interpolate({
             inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1],
             outputRange: [0.3, 1, 0.8, 0.6, 0.4, 0.3].map((val, index) =>
-              index === dot ? 1 : val
+              index === dot ? 1 : val,
             ),
           });
 
@@ -203,58 +228,14 @@ export default function LoadingState({
 
     return (
       <View style={styles.particlesContainer}>
-        {particles.map((particle) => {
-          const particleAnim = new Animated.Value(0);
-
-          useEffect(() => {
-            Animated.loop(
-              Animated.sequence([
-                Animated.timing(particleAnim, {
-                  toValue: 1,
-                  duration: 1200 + particle * 200,
-                  easing: Easing.inOut(Easing.ease),
-                  useNativeDriver: true,
-                }),
-                Animated.timing(particleAnim, {
-                  toValue: 0,
-                  duration: 1200 + particle * 200,
-                  easing: Easing.inOut(Easing.ease),
-                  useNativeDriver: true,
-                }),
-              ])
-            ).start();
-          }, []);
-
-          const translateY = particleAnim.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -30],
-          });
-
-          const opacity = particleAnim.interpolate({
-            inputRange: [0, 0.5, 1],
-            outputRange: [0.3, 1, 0.3],
-          });
-
-          const scale = particleAnim.interpolate({
-            inputRange: [0, 0.5, 1],
-            outputRange: [0.8, 1.2, 0.8],
-          });
-
-          return (
-            <Animated.View
-              key={particle}
-              style={[
-                styles.particle,
-                {
-                  backgroundColor: theme.primary,
-                  transform: [{ translateY }, { scale }, { rotate: rotate }],
-                  opacity,
-                  left: 20 + particle * 15,
-                },
-              ]}
-            />
-          );
-        })}
+        {particles.map((particle) => (
+          <Particle
+            key={particle}
+            particle={particle}
+            rotate={rotate}
+            color={theme.primary}
+          />
+        ))}
       </View>
     );
   };
@@ -395,21 +376,22 @@ export default function LoadingState({
           },
         ]}
       >
-        {message}
+        {message || t("common:status.loading")}
       </Animated.Text>
 
-      {/* Subtle background pattern for modern type */}
+      {/* Subtle background pattern for modern type. Positions are computed
+          once per width so dots don't re-randomize on every render. */}
       {type === "modern" && (
         <View style={styles.backgroundPattern}>
-          {[...Array(20)].map((_, i) => (
+          {patternDots.map((dot, i) => (
             <View
               key={i}
               style={[
                 styles.patternDot,
                 {
                   backgroundColor: `${theme.primary}15`,
-                  left: Math.random() * width,
-                  top: Math.random() * 200,
+                  left: dot.left,
+                  top: dot.top,
                 },
               ]}
             />
@@ -417,6 +399,77 @@ export default function LoadingState({
         </View>
       )}
     </Animated.View>
+  );
+}
+
+/**
+ * Single floating particle for the FloatingParticlesLoader.
+ * Extracted so the animation hooks run at component top level
+ * (previously `useEffect` was called inside a `.map()` callback,
+ * violating the rules of hooks).
+ */
+function Particle({
+  particle,
+  rotate,
+  color,
+}: {
+  particle: number;
+  rotate: Animated.AnimatedInterpolation<string>;
+  color: string;
+}) {
+  const particleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const particleLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(particleAnim, {
+          toValue: 1,
+          duration: 1200 + particle * 200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(particleAnim, {
+          toValue: 0,
+          duration: 1200 + particle * 200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+    particleLoop.start();
+
+    return () => {
+      particleLoop.stop();
+    };
+  }, [particle]);
+
+  const translateY = particleAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -30],
+  });
+
+  const opacity = particleAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0.3, 1, 0.3],
+  });
+
+  const scale = particleAnim.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0.8, 1.2, 0.8],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.particle,
+        {
+          backgroundColor: color,
+          transform: [{ translateY }, { scale }, { rotate }],
+          opacity,
+          left: 20 + particle * 15,
+        },
+      ]}
+    />
   );
 }
 
