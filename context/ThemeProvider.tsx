@@ -1,9 +1,10 @@
 import React, {
   createContext,
   useContext,
+  useEffect,
   type PropsWithChildren,
 } from "react";
-import { useColorScheme } from "react-native";
+import { Appearance, useColorScheme } from "react-native";
 import {
   Colors,
   type ColorScheme,
@@ -45,6 +46,15 @@ export function ThemeProvider({ children }: PropsWithChildren) {
   const themeMode = useSettingsStore((s) => s.themeMode);
   const colorScheme = resolveColorScheme(themeMode, systemColorScheme);
   const colors = Colors[colorScheme];
+
+  // Keep native surfaces (bottom sheets, alerts, pickers, keyboard) on the
+  // in-app theme. Without this they follow the device theme, so choosing dark
+  // inside the app still opened a light native sheet.
+  useEffect(() => {
+    Appearance.setColorScheme(
+      themeMode === "system" ? "unspecified" : colorScheme,
+    );
+  }, [themeMode, colorScheme]);
 
   const contextValue: ThemeContextType = {
     colors,
