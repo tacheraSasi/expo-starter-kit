@@ -17,8 +17,10 @@ export const brandGradient = ["#00A670", "#00402B"] as const;
 
 export const Colors = {
   tabColors: {
-    home: "#00A670",
-    profile: "#00A670",
+    home: "#9333ea",
+    expenses: "#00A670",
+    reports: "#2563eb",
+    profile: "#f59e0b",
   },
 
   // ─── Light Theme ────────────────────────────────────────────────

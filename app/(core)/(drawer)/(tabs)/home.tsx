@@ -1,232 +1,316 @@
+import HapticTouchableOpacity from "@/components/HapticTouchableOpacity";
 import ScreenLayout from "@/components/ScreenLayout";
 import { useCurrentTheme } from "@/context/CentralTheme";
+import { useApiItem } from "@/hooks/useApi";
+import Api from "@/lib/api";
+import { formatCurrency } from "@/lib/utils";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React from "react";
+import { useNavigation, useRouter } from "expo-router";
 import {
-  Dimensions,
-  Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { useNavigation } from "expo-router";
 
-const { width } = Dimensions.get("window");
-
+/**
+ * Overview screen for the demo expense tracker. Everything is powered by the
+ * mock API in `lib/api` so the loading, refresh and empty states are real.
+ */
 export default function HomeScreen() {
   const theme = useCurrentTheme();
   const router = useRouter();
   const navigation = useNavigation();
 
-  const quickActions = [
-    { icon: "search-outline", label: "Search", color: "#6C5CE7" },
-    { icon: "notifications-outline", label: "Alerts", color: "#45B7D1" },
-    { icon: "bookmark-outline", label: "Saved", color: "#96CEB4" },
-    { icon: "settings-outline", label: "Settings", color: "#FFB84D" },
-  ];
+  const { data, loading, refreshing, refresh } = useApiItem({
+    fetcher: () => Api.getDemoSummary(),
+    cachePrefix: "demo:summary",
+  });
+
+  const budgetLeft = Math.max(0, (data?.budget ?? 0) - (data?.spent ?? 0));
+  const progress =
+    data && data.budget > 0 ? Math.min(1, data.spent / data.budget) : 0;
 
   return (
-    <ScreenLayout>
+    <ScreenLayout insideTabs>
       <ScrollView
-        style={styles.container}
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={refresh}
+            tintColor={theme.primary}
+          />
+        }
       >
-        {/* Header */}
         <View style={styles.header}>
-          <Pressable
+          <HapticTouchableOpacity
+            hapticType="light"
+            style={[styles.iconButton, { backgroundColor: theme.card }]}
             onPress={() => (navigation as any)?.openDrawer?.()}
-            style={({ pressed }) => [
-              styles.menuButton,
-              {
-                backgroundColor: theme.cardBackground,
-                opacity: pressed ? 0.7 : 1,
-              },
-            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Open menu"
           >
-            <Ionicons name="menu" size={24} color={theme.text} />
-          </Pressable>
-          <Text style={[styles.headerTitle, { color: theme.text }]}>Home</Text>
-          <View style={{ width: 40 }} />
-        </View>
+            <Ionicons name="menu" size={22} color={theme.text} />
+          </HapticTouchableOpacity>
 
-        {/* Welcome Card */}
-        <View
-          style={[
-            styles.welcomeCard,
-            { backgroundColor: theme.cardBackground },
-          ]}
-        >
-          <Text style={[styles.welcomeTitle, { color: theme.text }]}>
-            Welcome to Your App
-          </Text>
-          <Text style={[styles.welcomeSubtitle, { color: theme.subtleText }]}>
-            This is a starter template. Customize this screen to build your app.
-          </Text>
-        </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.greeting, { color: theme.subtleText }]}>
+              Welcome back
+            </Text>
+            <Text style={[styles.name, { color: theme.text }]}>
+              {data?.month ?? "This month"}
+            </Text>
+          </View>
 
-        {/* Quick Actions */}
-        <View style={styles.quickActionsContainer}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>
-            Quick Actions
-          </Text>
-          <View style={styles.quickActionsGrid}>
-            {quickActions.map((action, index) => (
-              <Pressable
-                key={index}
-                style={({ pressed }) => [
-                  styles.quickActionCard,
-                  {
-                    backgroundColor: theme.cardBackground,
-                    opacity: pressed ? 0.7 : 1,
-                  },
-                ]}
-                onPress={() => {
-                  if (action.label === "Settings") {
-                    router.push("/(core)/settings");
-                  }
-                }}
-              >
-                <View
-                  style={[
-                    styles.quickActionIcon,
-                    { backgroundColor: `${action.color}15` },
-                  ]}
-                >
-                  <Ionicons
-                    name={action.icon as any}
-                    size={24}
-                    color={action.color}
-                  />
-                </View>
-                <Text style={[styles.quickActionLabel, { color: theme.text }]}>
-                  {action.label}
-                </Text>
-              </Pressable>
-            ))}
+          <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
+            <Ionicons name="person" size={20} color="#fff" />
           </View>
         </View>
 
-        {/* Placeholder Content */}
-        <View
-          style={[
-            styles.placeholderCard,
-            { backgroundColor: theme.cardBackground },
-          ]}
-        >
-          <Ionicons
-            name="construct-outline"
-            size={48}
-            color={theme.mutedText}
-          />
-          <Text style={[styles.placeholderTitle, { color: theme.text }]}>
-            Start Building
-          </Text>
-          <Text style={[styles.placeholderText, { color: theme.subtleText }]}>
-            Replace this content with your app's features. This starter kit
-            includes authentication, navigation, theming, and more.
-          </Text>
-        </View>
+        {loading && !data ? (
+          <View style={styles.skeletonCard}>
+            <Text style={{ color: theme.subtleText }}>Loading summary...</Text>
+          </View>
+        ) : (
+          <>
+            <View style={[styles.heroCard, { backgroundColor: theme.primary }]}>
+              <Text style={styles.heroLabel}>Spent this month</Text>
+              <Text style={styles.heroAmount}>
+                {formatCurrency(data?.spent ?? 0)}
+              </Text>
+
+              <View style={styles.progressTrack}>
+                <View
+                  style={[
+                    styles.progressFill,
+                    { width: `${Math.round(progress * 100)}%` },
+                  ]}
+                />
+              </View>
+
+              <View style={styles.heroFooter}>
+                <Text style={styles.heroMeta}>
+                  Budget {formatCurrency(data?.budget ?? 0)}
+                </Text>
+                <Text style={styles.heroMeta}>
+                  {formatCurrency(budgetLeft)} left
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.statRow}>
+              <View
+                style={[styles.statCard, { backgroundColor: theme.card }]}
+              >
+                <View
+                  style={[styles.statIcon, { backgroundColor: theme.successBg }]}
+                >
+                  <Ionicons
+                    name="arrow-down"
+                    size={16}
+                    color={theme.success}
+                  />
+                </View>
+                <Text style={[styles.statLabel, { color: theme.subtleText }]}>
+                  Income
+                </Text>
+                <Text style={[styles.statValue, { color: theme.text }]}>
+                  {formatCurrency(data?.income ?? 0)}
+                </Text>
+              </View>
+
+              <View
+                style={[styles.statCard, { backgroundColor: theme.card }]}
+              >
+                <View
+                  style={[styles.statIcon, { backgroundColor: theme.warningBg }]}
+                >
+                  <Ionicons name="trending-up" size={16} color={theme.warning} />
+                </View>
+                <Text style={[styles.statLabel, { color: theme.subtleText }]}>
+                  Top category
+                </Text>
+                <Text
+                  style={[styles.statValue, { color: theme.text }]}
+                  numberOfLines={1}
+                >
+                  {data?.topCategory ?? "-"}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.sectionHeader}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                Recent activity
+              </Text>
+              <HapticTouchableOpacity
+                hapticType="light"
+                onPress={() =>
+                  router.navigate("/(core)/(drawer)/(tabs)/expenses" as any)
+                }
+              >
+                <Text style={[styles.link, { color: theme.primary }]}>
+                  See all
+                </Text>
+              </HapticTouchableOpacity>
+            </View>
+
+            <View style={[styles.card, { backgroundColor: theme.card }]}>
+              {(data?.recent ?? []).map((txn, index) => (
+                <View
+                  key={txn.uuid}
+                  style={[
+                    styles.row,
+                    index > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.divider },
+                  ]}
+                >
+                  <View style={[styles.rowIcon, { backgroundColor: theme.surface }]}>
+                    <Ionicons
+                      name={txn.type === "income" ? "arrow-down" : "card-outline"}
+                      size={16}
+                      color={txn.type === "income" ? theme.success : theme.primary}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text
+                      style={[styles.rowTitle, { color: theme.text }]}
+                      numberOfLines={1}
+                    >
+                      {txn.title}
+                    </Text>
+                    <Text style={[styles.rowMeta, { color: theme.subtleText }]}>
+                      {txn.category} · {txn.date}
+                    </Text>
+                  </View>
+                  <Text
+                    style={[
+                      styles.rowAmount,
+                      { color: txn.type === "income" ? theme.success : theme.text },
+                    ]}
+                  >
+                    {txn.type === "income" ? "+" : "-"}
+                    {formatCurrency(txn.amount)}
+                  </Text>
+                </View>
+              ))}
+
+              {!loading && (data?.recent?.length ?? 0) === 0 && (
+                <Text style={[styles.emptyText, { color: theme.subtleText }]}>
+                  No transactions yet. Add your first expense to get started.
+                </Text>
+              )}
+            </View>
+          </>
+        )}
       </ScrollView>
     </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingBottom: 32,
-  },
+  content: { padding: 16, paddingBottom: 120 },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    gap: 12,
+    marginBottom: 20,
   },
-  menuButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: "center",
+  iconButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     alignItems: "center",
+    justifyContent: "center",
   },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    fontFamily: 'Inter_700Bold',
+  greeting: { fontSize: 12, fontFamily: "Inter_500Medium" },
+  name: { fontSize: 18, fontFamily: "Inter_700Bold" },
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  welcomeCard: {
-    marginHorizontal: 16,
-    marginBottom: 24,
+  skeletonCard: {
     padding: 24,
-    borderRadius: 16,
+    borderRadius: 20,
+    alignItems: "center",
   },
-  welcomeTitle: {
-    fontSize: 24,
-    fontWeight: "700",
-    marginBottom: 8,
-    fontFamily: 'Inter_700Bold',
+  heroCard: { borderRadius: 24, padding: 20, marginBottom: 12 },
+  heroLabel: {
+    fontSize: 13,
+    fontFamily: "Inter_500Medium",
+    color: "rgba(255,255,255,0.85)",
   },
-  welcomeSubtitle: {
-    fontSize: 15,
-    lineHeight: 22,
-    fontFamily: 'Inter_400Regular',
-  },
-  quickActionsContainer: {
-    paddingHorizontal: 16,
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
+  heroAmount: {
+    fontSize: 34,
+    fontFamily: "Inter_700Bold",
+    color: "#fff",
+    marginTop: 4,
     marginBottom: 16,
-    fontFamily: 'Inter_600SemiBold',
+    letterSpacing: -0.5,
   },
-  quickActionsGrid: {
+  progressTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(255,255,255,0.25)",
+    overflow: "hidden",
+  },
+  progressFill: { height: 6, borderRadius: 3, backgroundColor: "#fff" },
+  heroFooter: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: 12,
+    justifyContent: "space-between",
+    marginTop: 10,
   },
-  quickActionCard: {
-    width: (width - 56) / 2,
-    padding: 20,
-    borderRadius: 16,
+  heroMeta: {
+    fontSize: 12,
+    fontFamily: "Inter_500Medium",
+    color: "rgba(255,255,255,0.85)",
+  },
+  statRow: { flexDirection: "row", gap: 12, marginBottom: 20 },
+  statCard: { flex: 1, borderRadius: 18, padding: 14, gap: 6 },
+  statIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     alignItems: "center",
-    gap: 12,
-  },
-  quickActionIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
     justifyContent: "center",
+  },
+  statLabel: { fontSize: 12, fontFamily: "Inter_500Medium" },
+  statValue: { fontSize: 16, fontFamily: "Inter_700Bold" },
+  sectionHeader: {
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
-  quickActionLabel: {
-    fontSize: 14,
-    fontWeight: "600",
-    fontFamily: 'Inter_600SemiBold',
-  },
-  placeholderCard: {
-    marginHorizontal: 16,
-    padding: 32,
-    borderRadius: 16,
+  sectionTitle: { fontSize: 16, fontFamily: "Inter_700Bold" },
+  link: { fontSize: 13, fontFamily: "Inter_600SemiBold" },
+  card: { borderRadius: 20, paddingHorizontal: 16 },
+  row: {
+    flexDirection: "row",
     alignItems: "center",
     gap: 12,
+    paddingVertical: 12,
   },
-  placeholderTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    fontFamily: 'Inter_700Bold',
+  rowIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  placeholderText: {
-    fontSize: 14,
-    lineHeight: 20,
+  rowTitle: { fontSize: 14, fontFamily: "Inter_600SemiBold" },
+  rowMeta: { fontSize: 12, fontFamily: "Inter_400Regular", marginTop: 2 },
+  rowAmount: { fontSize: 14, fontFamily: "Inter_700Bold" },
+  emptyText: {
+    paddingVertical: 24,
     textAlign: "center",
-    fontFamily: 'Inter_400Regular',
+    fontSize: 13,
+    fontFamily: "Inter_400Regular",
   },
 });

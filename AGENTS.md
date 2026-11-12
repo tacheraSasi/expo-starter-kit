@@ -35,7 +35,7 @@ Three route groups:
 - `app/(core)/` - authenticated screens behind `Stack.Protected guard={!!session}`
 
 Core sub-routes:
-- `(drawer)/(tabs)/` - home, profile (main screens)
+- `(drawer)/(tabs)/` - home, expenses, reports, profile (demo expense tracker)
 - `(modals)/` - `presentation: "modal"` (full-screen overlays)
 - `(formsheets)/` - `presentation: "formSheet"` (iOS native sheet)
 
@@ -56,7 +56,11 @@ are set.
 - Bounded persistent cache (`cacheGet`, `cacheGetStaleWhileRevalidate`,
   `withMinInterval`, `invalidateCache`, `warmCache`) in `lib/api/cache.ts`.
 - Data hooks in `hooks/useApi/` (`useApiList`, `useApiItem`, `useApiAction`,
-  `useDebouncedValue`). Demo source: `Api.listDemoItems`.
+  `useDebouncedValue`).
+- Demo endpoints backed by `lib/api/demo.ts` (fake transactions, categories and
+  a monthly summary with simulated latency and pagination):
+  `getDemoSummary`, `listDemoTransactions`, `listDemoCategories`, plus the
+  older `listDemoItems` used by the hook docs.
 
 ## Storage layers
 

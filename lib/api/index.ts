@@ -17,6 +17,7 @@
 import {
   ApiResponse,
   AuthResponse,
+  PaginatedResponse,
   ForgotPasswordDto,
   LoginDto,
   RegisterDto,
@@ -32,6 +33,14 @@ import {
   currentUser,
   saveUser,
 } from "./authToken";
+import {
+  DEMO_CATEGORIES,
+  DEMO_SUMMARY,
+  DEMO_TRANSACTIONS,
+  paginate,
+  type DemoSummary,
+  type DemoTransaction,
+} from "./demo";
 import { appAlert } from "@/lib/ui/appAlert";
 import logger from "@/lib/logger";
 
@@ -316,6 +325,43 @@ class Api {
       status: "received",
       created: new Date().toISOString(),
     };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Demo endpoints (fake data, no backend). See lib/api/demo.ts.
+  // ---------------------------------------------------------------------------
+
+  /** Monthly totals, budget, category breakdown and recent activity. */
+  static async getDemoSummary(): Promise<DemoSummary> {
+    await delay(500);
+    return DEMO_SUMMARY;
+  }
+
+  /** Transactions with search + category filtering. */
+  static async listDemoTransactions(
+    params: {
+      page?: number;
+      per_page?: number;
+      search?: string;
+      category?: string;
+    } = {},
+  ): Promise<PaginatedResponse<DemoTransaction>> {
+    await delay(450);
+    const q = (params.search ?? "").trim().toLowerCase();
+    const category = params.category;
+    const rows = DEMO_TRANSACTIONS.filter((t) => {
+      const matchesQuery = !q || t.title.toLowerCase().includes(q);
+      const matchesCategory =
+        !category || category === "All Categories" || t.category === category;
+      return matchesQuery && matchesCategory;
+    });
+    return paginate(rows, params);
+  }
+
+  /** Category chips for the filter rows. */
+  static async listDemoCategories(): Promise<readonly string[]> {
+    await delay(200);
+    return DEMO_CATEGORIES;
   }
 
   /** Demo paginated list for testing `useApiList` without a backend. */
