@@ -39,6 +39,21 @@ Core sub-routes:
 - `(modals)/` - `presentation: "modal"` (full-screen overlays)
 - `(formsheets)/` - `presentation: "formSheet"` (iOS native sheet)
 
+### Native UI (`@expo/ui`)
+
+Screens render platform-native controls through `@expo/ui` instead of imitating
+them with RN views:
+
+- `components/NativeScreen.tsx` wraps content in `Host`, which dispatches to
+  SwiftUI on iOS and Jetpack Compose on Android. Pass `seedColor` so the
+  platform derives its palette from the app brand.
+- Layout and controls come from the universal layer (`Column`, `Row`, `Text`,
+  `Button`, `List`, `ListItem`, `Picker`, `Switch`, `TextInput`, `ScrollView`).
+- The iOS tab bar uses `expo-router/unstable-native-tabs` in
+  `(tabs)/_layout.ios.tsx`; Android and web use the JS tabs in `_layout.tsx`.
+- Universal `Text` takes a single string child, and `ListItem` slots are safest
+  as plain strings (elements are hosted as RN views on iOS).
+
 **Prefer screens over bottom sheets.** `NativeAppBottomSheet` (from
 `@expo/ui/community/bottom-sheet`) is the canonical sheet component, for
 secondary actions only - never primary create/edit flows.
