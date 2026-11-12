@@ -60,6 +60,10 @@ function RootNavigator() {
   }
 
   return (
+    // Keep the navigator out of any animated `opacity` ancestor. On iOS 26 a
+    // non-1 layer opacity above the navigation tree makes UIKit skip the Liquid
+    // Glass material for the native surfaces inside it. Switching the tabs to
+    // expo-router native tabs later would render a bar with no background.
     <Stack
       screenOptions={{
         headerShown: false,
